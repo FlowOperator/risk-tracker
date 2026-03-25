@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angstrom · Risk Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ── Angstrom brand theme ── */
+  --bg:#f5f3f0;--bg2:#ffffff;--bg3:#f0ede8;--bg4:#e8e4de;
+  --border:#ddd9d3;--border2:#c8c3bb;
+  --text:#1a1814;--text2:#6b6560;--text3:#9e9890;
+  --accent:#e8500a;--ag:#c94008;   /* Angstrom orange */
+  --accent2:#ff7a3d;               /* lighter orange */
+  --green:#2a8a52;--amber:#b07d10;--red:#c0392b;
+  --purple:#6b4fa8;--slate:#8a8278;
+  --teal:#1a7a74;
+  --r:8px;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --space:32px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg3)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ═══ LOGIN ═══ */
+#LS{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999}
+#LS.gone{display:none}
+.lcard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:48px 44px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,.12);position:relative;overflow:hidden}
+.lcard::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(232,80,10,.07) 0%,transparent 70%);pointer-events:none}
+.llogo{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--text2);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.ang-mark{width:30px;height:30px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;letter-spacing:0;flex-shrink:0}
+.ldot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ltitle{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;margin-bottom:5px;color:var(--text)}
+.lsub{font-size:13px;color:var(--text3);margin-bottom:34px}
+.fl{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:11px 14px;font-size:14px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s;margin-bottom:16px}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,80,10,.1)}
+.fi::placeholder{color:var(--text3)}
+.bp_{width:100%;background:var(--accent);border:none;border-radius:6px;color:#fff;padding:12px;font-size:14px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:background .15s}
+.bp_:hover{background:var(--ag)}
+.lerr{margin-top:10px;font-size:13px;color:var(--red);text-align:center;min-height:18px}
+.lhint{margin-top:18px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-size:12px;color:var(--text3);line-height:1.8}
+.lhint strong{color:var(--text2)}
+
+/* ═══ APP ═══ */
+#app{display:none;flex-direction:column;min-height:100vh}
+#app.on{display:flex}
+
+/* ═══ NAV ═══ */
+.nav{background:var(--text);border-bottom:none;height:56px;display:flex;align-items:center;padding:0 24px;gap:14px;position:sticky;top:0;z-index:50}
+.navlogo{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:10px;white-space:nowrap;color:#fff}
+.navlogo em{color:var(--accent2);font-style:normal;font-weight:700}
+.nav-ang-mark{width:28px;height:28px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.navdot{display:none}
+.navsep{width:1px;height:22px;background:rgba(255,255,255,.2)}
+.navr{display:flex;align-items:center;gap:10px;margin-left:auto}
+.uchip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px 4px 6px;font-size:12px;color:rgba(255,255,255,.8)}
+.uav{width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.rbadge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
+.r-admin{background:rgba(212,166,58,.25);color:#f0c040;border:1px solid rgba(212,166,58,.3)}
+.r-user{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.2)}
+.btnout{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:rgba(255,255,255,.7);font-size:12px;padding:5px 10px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.btnout:hover{color:#fff;background:rgba(255,255,255,.18)}
+
+/* ═══ TAB BAR ═══ */
+.tabbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0}
+.tabbtn{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;padding:14px 20px;cursor:pointer;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.tabbtn:hover{color:var(--text2)}
+.tabbtn.active{color:var(--text);border-bottom-color:var(--accent)}
+.tabbtn .tcnt{font-size:11px;color:var(--text3);padding:0 4px}
+.tabbtn.active .tcnt{color:var(--accent)}
+
+/* ═══ WRAP ═══ */
+.wrap{flex:1;padding:28px 32px;max-width:1720px;margin:0 auto;width:100%}
+
+/* ═══ PAGE HEADER ═══ */
+.phead{margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.phtitle{font-family:'Outfit',sans-serif;font-size:20px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.phsub{font-size:12px;color:var(--text3);margin-top:3px;font-weight:400}
+.btnadd{display:flex;align-items:center;gap:6px;background:var(--accent);border:none;border-radius:8px;color:#fff;padding:10px 20px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap;box-shadow:0 2px 8px rgba(232,80,10,.3)}
+.btnadd:hover{background:var(--ag);box-shadow:0 4px 14px rgba(232,80,10,.4);transform:translateY(-1px)}
+.adminonly{display:none!important}
+.adminonly.show{display:flex!important}
+.adminonly-blk{display:none!important}
+.adminonly-blk.show{display:block!important}
+
+/* ═══ STAT CARDS ═══ */
+.scrow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:1100px){.scrow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.scrow{grid-template-columns:repeat(2,1fr)}}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative;overflow:hidden;user-select:none;min-width:0;display:flex;flex-direction:column}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--c,var(--border));}
+.sc:hover{border-color:var(--c,var(--border2));box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.sc.active::after{background:var(--c,var(--accent))}
+.sc.active{border-color:var(--c,var(--accent))}
+.sclabel{font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text3);margin-bottom:10px;white-space:nowrap}
+.scval{font-family:'Outfit',sans-serif;font-size:30px;font-weight:700;color:var(--c,var(--text));line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;height:36px;display:flex;align-items:center}
+.scdesc{font-size:12px;color:var(--text3);margin-top:8px;white-space:nowrap}
+
+/* ═══ LEGEND ═══ */
+.legbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.btnleg{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s}
+.btnleg:hover{border-color:var(--border2);color:var(--text)}
+.btnleg.on{border-color:var(--accent);color:var(--accent)}
+.legpanel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.legpanel.on{display:block}
+.leggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:20px}
+.legsec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:9px;font-family:'Outfit',sans-serif}
+.legitems{display:flex;flex-direction:column;gap:6px}
+.legitem{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2)}
+.legsw{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legsw.rect{border-radius:3px;width:28px;height:12px}
+
+/* ═══ MULTI-SELECT FILTERS ═══ */
+.mf-wrap{position:relative}
+.mf-btn{
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  color:var(--text2);padding:9px 12px;font-size:12px;font-family:'Outfit',sans-serif;
+  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;
+  transition:border-color .15s,color .15s;
+}
+.mf-btn:hover{border-color:var(--border2);color:var(--text)}
+.mf-btn.active{border-color:var(--accent);color:var(--accent)}
+.mf-arrow{font-size:10px;opacity:.6}
+.mf-dropdown{
+  position:fixed;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:500;min-width:190px;padding:6px;
+  animation:popIn .12s ease;
+}
+.mf-header{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.mf-header-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-family:'Outfit',sans-serif}
+.mf-clear{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;padding:0}
+.mf-clear:hover{color:var(--accent)}
+.mf-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:7px;cursor:pointer;
+  font-size:13px;color:var(--text2);transition:background .1s;
+  user-select:none;
+}
+.mf-item:hover{background:var(--bg3)}
+.mf-item.checked{color:var(--text)}
+.mf-check{
+  width:15px;height:15px;border-radius:4px;flex-shrink:0;
+  border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;transition:all .12s;
+}
+.mf-item.checked .mf-check{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ═══ TOOLBAR ═══ */
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.swrap{position:relative;flex:1;min-width:200px;max-width:340px}
+.sico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:15px;pointer-events:none}
+.sinput{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:9px 12px 9px 34px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}
+.sinput:focus{border-color:var(--accent)}
+.sinput::placeholder{color:var(--text3)}
+.fsel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 12px;font-size:12px;font-family:'Outfit',sans-serif;outline:none;cursor:pointer;transition:border-color .15s}
+.fsel:focus{border-color:var(--accent)}
+.fsel option{background:var(--bg3)}
+.fsel.af{border-color:var(--accent);color:var(--accent)}
+.vtabs{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.vtab{background:none;border:none;color:var(--text3);padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .12s;white-space:nowrap}
+.vtab.active{background:var(--accent);color:#fff}
+.vtab:hover:not(.active){color:var(--text)}
+.cpill{margin-left:auto;font-size:12px;font-weight:500;color:var(--text2);white-space:nowrap}
+
+/* ═══ TABLE ═══ */
+.tbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:auto;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:980px}
+thead{background:var(--bg3);position:sticky;top:0;z-index:2}
+th{padding:11px 16px;text-align:left;font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text3);font-family:'Outfit',sans-serif;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--text2)}
+th.sorted{color:var(--accent)}
+/* Owner column header */
+th.th-owner{position:relative}
+.ow-filter-wrap{display:inline-flex;align-items:center;gap:5px}
+.ow-filter-ico{font-size:10px;opacity:.5;cursor:pointer}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer;transition:background .12s;}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg3)}
+td{padding:13px 16px;color:var(--text2);vertical-align:middle;font-size:13px}
+
+/* ═══ ROW STATUS COLOURS ═══ */
+tbody tr.rs-proposed   { background: #ffffff; }
+tbody tr.rs-proposed:hover { background: #f7f6f5; }
+tbody tr.rs-scoping    { background: #f0f4ff; }
+tbody tr.rs-scoping:hover  { background: #e4ecff; }
+tbody tr.rs-inprogress { background: #f0f4ff; }
+tbody tr.rs-inprogress:hover { background: #e4ecff; }
+tbody tr.rs-parking    { background: #f2f1ef; }
+tbody tr.rs-parking:hover  { background: #eae8e5; }
+tbody tr.rs-done       { background: #f0faf4; }
+tbody tr.rs-done:hover { background: #dff2e8; }
+tbody tr.rs-selected   { background: #f0faf4; }
+tbody tr.rs-selected:hover { background: #dff2e8; }
+tbody tr.rs-done td, tbody tr.rs-selected td { opacity: 0.6; }
+tbody tr.rs-done .ctit span, tbody tr.rs-selected .ctit span { text-decoration: line-through; }
+/* Overdue — red tint + left border, always wins regardless of status */
+tbody tr.rov { background: #fff0ee !important; border-left: 3px solid #c0392b !important; }
+tbody tr.rov:hover { background: #ffe4e0 !important; }
+tbody tr.rH { box-shadow: inset 3px 0 0 #c0392b; }
+tbody tr.rM { box-shadow: inset 3px 0 0 #b07d10; }
+tbody tr.rL { box-shadow: inset 3px 0 0 #ccc; }
+
+/* ═══ DRAG AND DROP ═══ */
+tbody tr[draggable=true] { cursor: grab; }
+tbody tr[draggable=true]:active { cursor: grabbing; }
+tbody tr.drag-over {
+  border-top: 2px solid var(--accent) !important;
+  background: #fff0e8 !important;
+}
+tbody tr.dragging {
+  opacity: 0.35;
+  background: var(--bg4) !important;
+}
+.drag-handle {
+  color: var(--text3);
+  font-size: 14px;
+  cursor: grab;
+  padding: 0 4px 0 0;
+  user-select: none;
+  opacity: 0.4;
+  transition: opacity .15s;
+}
+td:hover .drag-handle, tr:hover .drag-handle { opacity: 1; }
+.ctit{max-width:280px}
+.ctit span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-weight:600;font-size:13.5px}
+.ctit .sub{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ═══ BADGES — solid filled, matched to row tints ═══ */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+/* Proposed — neutral grey */
+.bp{ background:#6b6560; color:#fff; border:none }
+/* Scoping — blue (matches blue row tint) */
+.bs{ background:#3557d4; color:#fff; border:none }
+/* Selected Dev — teal */
+.bsd{ background:#0e7a5a; color:#fff; border:none }
+/* In Progress — blue (same as Scoping, matches blue row tint) */
+.bi{ background:#3557d4; color:#fff; border:none }
+/* Done — green */
+.bd{ background:#2a7a48; color:#fff; border:none }
+/* Parking Lot — slate grey */
+.bk{ background:#7a7470; color:#fff; border:none }
+.prio{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500}
+.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.pH .pdot{background:#c0392b}.pH{color:#c0392b;font-weight:600}
+.pM .pdot{background:#b07d10}.pM{color:#b07d10;font-weight:600}
+.pL .pdot{background:#aaa8a4}.pL{color:#9e9890;font-weight:500}
+.jchip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:rgba(232,80,10,.08);color:#b83a06;border:1px solid rgba(232,80,10,.2);border-radius:4px;padding:2px 7px;font-family:monospace;text-decoration:none;cursor:pointer}
+.jchip:hover{background:rgba(232,80,10,.14)}
+.ntick{font-size:11px;color:#b07d10;font-weight:500;font-family:monospace}
+.dN{font-size:12px;color:var(--text3);font-family:monospace}
+.dS{font-size:12px;color:#b07d10;font-family:monospace;font-weight:600}
+.dO{font-size:12px;color:#c0392b;font-family:monospace;font-weight:700;background:#fff0ee;padding:1px 6px;border-radius:3px;border:1px solid rgba(192,57,43,.25)}
+.tchip{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+
+/* ═══ INLINE QUICK-EDIT CELLS ═══ */
+/* cells that support inline edit get a subtle hover affordance */
+td.qe{position:relative}
+td.qe:hover::after{content:'✎';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--text3);opacity:.6;pointer-events:none}
+
+/* ─── INLINE POPUP ─── */
+.qpop{
+  position:fixed;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+  z-index:500;
+  min-width:180px;
+  padding:6px;
+  animation:popIn .12s ease;
+}
+@keyframes popIn{from{opacity:0;transform:scale(.95) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.qpop-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:4px 8px 8px;font-family:'Outfit',sans-serif}
+.qpop-opt{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:7px;cursor:pointer;
+  font-size:13px;color:var(--text2);
+  transition:background .1s;
+}
+.qpop-opt:hover{background:var(--bg3)}
+.qpop-opt.current{background:rgba(232,98,42,.08);color:var(--text)}
+.qpop-sep{height:1px;background:var(--border);margin:4px 0}
+
+/* date & jira inline inputs */
+.qpop-input{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;
+  color:var(--text);padding:8px 10px;font-size:13px;font-family:'Outfit',sans-serif;
+  outline:none;transition:border-color .15s;
+}
+.qpop-input:focus{border-color:var(--accent)}
+.qpop-row{display:flex;gap:6px;margin-top:8px}
+.qpop-btn{flex:1;background:var(--accent);border:none;border-radius:6px;color:#fff;padding:7px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
+.qpop-btn:hover{background:var(--ag)}
+.qpop-btn.sec{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.qpop-btn.sec:hover{color:var(--text)}
+.qpop-hint{font-size:11px;color:var(--text3);padding:4px 2px 0;line-height:1.5}
+
+/* ═══ HOVER TOOLTIPS ═══ */
+.htip{position:relative;display:inline-block;max-width:100%}
+.htip-box{
+  visibility:hidden;opacity:0;
+  position:fixed;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:9px;
+  padding:10px 13px;
+  font-size:12px;color:var(--text2);
+  line-height:1.6;
+  max-width:300px;
+  box-shadow:var(--shadow);
+  z-index:800;
+  pointer-events:none;
+  transition:opacity .15s .25s;
+  white-space:normal;
+  word-break:break-word;
+}
+.htip:hover .htip-box{visibility:visible;opacity:1}
+.htip-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:5px;font-family:'Outfit',sans-serif}
+/* owner pill list inside tooltip */
+.htip-owners{display:flex;flex-direction:column;gap:4px}
+.htip-owner-pill{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
+.htip-owner-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+
+/* ═══ EMPTY ═══ */
+.empty{padding:60px;text-align:center;color:var(--text3)}
+.emptyico{font-size:32px;margin-bottom:10px}
+
+/* ═══ KANBAN ═══ */
+.kboard{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:start}
+@media(max-width:1300px){.kboard{grid-template-columns:repeat(3,1fr)}}
+.kcol{}
+.kch{border-radius:8px 8px 0 0;padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:space-between;border:1px solid transparent;border-bottom:none}
+.kcb{border-radius:0 0 8px 8px;border:1px solid var(--border);border-top:none;background:var(--bg2);min-height:50px}
+.kh-p{background:rgba(232,80,10,.07);color:#b83a06;border-color:rgba(232,80,10,.18)!important}
+.kh-s{background:rgba(212,166,58,.1);color:#b8a0e8;border-color:rgba(212,166,58,.2)!important}
+.kh-sd{background:rgba(42,138,82,.07);color:#1a6b3a;border-color:rgba(42,138,82,.15)!important}
+.kh-i{background:rgba(212,166,58,.1);color:var(--amber);border-color:rgba(212,166,58,.2)!important}
+.kh-d{background:rgba(42,138,82,.07);color:#1a6b3a;border-color:rgba(42,138,82,.15)!important}
+.kh-k{background:rgba(138,130,120,.07);color:#524e4a;border-color:rgba(138,130,120,.18)!important}
+.kcount{background:rgba(255,255,255,.1);border-radius:10px;padding:1px 7px;font-size:10px}
+.kcard{padding:11px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.kcard:last-child{border-bottom:none}
+.kcard:hover{background:var(--bg3)}
+.kctit{font-size:12px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.4}
+.kcmeta{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.kcown{font-size:10px;color:var(--text3);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kempty{padding:18px;text-align:center;font-size:12px;color:var(--text3)}
+
+/* ═══ ARCHIVE SECTION ═══ */
+.arch-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:4px}
+.arch-title{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:var(--text2)}
+.arch-cnt{font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:2px 9px;color:var(--text3)}
+.arch-hint{font-size:12px;color:var(--text3)}
+.arch-toggle{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text3);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'Outfit',sans-serif;margin-left:auto;transition:color .15s,border-color .15s}
+.arch-toggle:hover{color:var(--text);border-color:var(--border2)}
+.arch-table-wrap{display:none}
+.arch-table-wrap.on{display:block}
+.arch-row td{opacity:.55}
+.arch-row .ctit span{text-decoration:line-through}
+.arch-restore{font-size:11px;background:rgba(232,98,42,.08);color:var(--accent);border:1px solid rgba(232,98,42,.18);border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap}
+.arch-restore:hover{background:rgba(232,98,42,.15)}
+
+/* show history clock on row hover */
+tbody tr:hover .hist-btn { opacity: 1 !important; }
+
+/* ═══ HISTORY PANEL ═══ */
+.hpanel{
+  position:fixed;top:0;right:0;bottom:0;
+  width:480px;max-width:100%;
+  background:var(--bg2);
+  border-left:1px solid var(--border);
+  box-shadow:-4px 0 20px rgba(0,0,0,.1);
+  z-index:102;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .22s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+.hpanel.on{transform:translateX(0)}
+.hpanel-hdr{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.hpanel-title{font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hpanel-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.hpanel-body{flex:1;overflow-y:auto;padding:16px 20px}
+.hentry{
+  border-left:2px solid var(--border);
+  padding:0 0 20px 16px;
+  position:relative;
+}
+.hentry:last-child{padding-bottom:0;border-left-color:transparent}
+.hentry::before{
+  content:'';position:absolute;left:-5px;top:4px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--bg3);border:2px solid var(--border2);
+}
+.hentry.ha-CREATE::before{border-color:var(--green);background:var(--green)}
+.hentry.ha-UPDATE::before{border-color:var(--accent);background:var(--accent)}
+.hentry.ha-DELETE::before{border-color:var(--red);background:var(--red)}
+.hentry.ha-RESTORE::before{border-color:var(--amber);background:var(--amber)}
+.hentry-when{font-size:11px;color:var(--text3);font-family:monospace;margin-bottom:5px}
+.hentry-action{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:4px;margin-right:6px}
+.ha-CREATE .hentry-action{background:rgba(76,175,125,.15);color:var(--green)}
+.ha-UPDATE .hentry-action{background:rgba(232,98,42,.15);color:var(--accent)}
+.ha-DELETE .hentry-action{background:rgba(217,95,75,.15);color:var(--red)}
+.ha-RESTORE .hentry-action{background:rgba(212,166,58,.15);color:var(--amber)}
+.hentry-field{font-size:12px;color:var(--text2);font-weight:600}
+.hentry-diff{margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px}
+.hentry-old{background:rgba(217,95,75,.08);border:1px solid rgba(217,95,75,.15);border-radius:5px;padding:5px 8px;color:var(--red);word-break:break-word}
+.hentry-new{background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.15);border-radius:5px;padding:5px 8px;color:var(--green);word-break:break-word}
+.hentry-old::before{content:'Before: ';font-size:10px;opacity:.6;display:block;margin-bottom:2px}
+.hentry-new::before{content:'After: ';font-size:10px;opacity:.6;display:block;margin-bottom:2px}
+.hentry-user{font-size:11px;color:var(--text3);margin-top:5px}
+.hrollback{font-size:11px;background:rgba(176,125,16,.1);color:#8a5f08;border:1px solid rgba(176,125,16,.2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:6px;transition:background .15s}
+.hrollback:hover{background:rgba(212,166,58,.2)}
+.hpanel-empty{padding:40px 0;text-align:center;color:var(--text3);font-size:13px}
+
+/* ═══ AUDIT TABLE ═══ */
+.aaction{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:4px}
+.aa-CREATE{background:rgba(76,175,125,.15);color:var(--green)}
+.aa-UPDATE{background:rgba(232,98,42,.15);color:var(--accent)}
+.aa-DELETE{background:rgba(217,95,75,.15);color:var(--red)}
+.aa-RESTORE{background:rgba(212,166,58,.15);color:var(--amber)}
+.audit-old{color:var(--red);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.audit-new{color:var(--green);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ═══ DRAWER ═══ */
+.dov{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;display:none}
+.dov.on{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);overflow:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
+.drawer.on{transform:translateX(0)}
+.dhdr{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.dtitle{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmode{font-size:11px;color:var(--text3)}
+.dclose{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .12s}
+.dclose:hover{color:var(--text)}
+.dbody{flex:1;overflow-y:auto;padding:20px 24px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dfull{grid-column:1/-1}
+.dlabel{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px}
+.dinput,.dsel,.dtarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:9px 12px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}
+.dinput:focus,.dsel:focus,.dtarea:focus{border-color:var(--accent)}
+.dtarea{resize:vertical;min-height:80px}
+.dsel option{background:var(--bg3)}
+.dftr{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.btsave{background:var(--accent);border:none;border-radius:8px;color:#fff;padding:10px 22px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:background .15s}
+.btsave:hover{background:var(--ag)}
+.btcancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:10px 18px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:border-color .15s}
+.btcancel:hover{border-color:var(--border2)}
+.btdel{margin-left:auto;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.18);border-radius:6px;color:var(--red);padding:10px 16px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:background .15s;display:none;pointer-events:all;position:relative;z-index:10}
+.btdel:hover{background:rgba(192,57,43,.15);border-color:var(--red)}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);border:none;border-radius:8px;padding:12px 18px;font-size:13px;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:600;transform:translateY(20px);opacity:0;transition:transform .2s,opacity .2s;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.t-green{border-left:3px solid var(--green)}
+.t-red{border-left:3px solid var(--red)}
+.t-amber{border-left:3px solid var(--amber)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="LS">
+  <div class="lcard">
+    <div class="llogo"><div class="ang-mark">Å</div>Angstrom Sports</div>
+    <div class="ltitle">Risk Tracker</div>
+    <div class="lsub">Sign in to view and manage intake items</div>
+    <label class="fl">Username</label>
+    <input class="fi" id="lU" type="text" placeholder="Enter username" autocomplete="off">
+    <label class="fl">Password</label>
+    <input class="fi" id="lP" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="bp_" onclick="doLogin()">Sign In →</button>
+    <div class="lerr" id="lerr"></div>
+    <div class="lhint">
+      <strong>Admin:</strong> admin / admin123<br>
+      <strong>Team:</strong> jason · neal · samuel · nicholas · aidan · dylan · gavin <em style="color:var(--text3)">(all: pass123)</em><br>
+      <strong>Guest:</strong> guest / guest
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <nav class="nav">
+    <div class="navlogo">
+      <div class="nav-ang-mark">Å</div>
+      ANGSTROM <em>Risk Tracker</em>
+    </div>
+    <div class="navsep"></div>
+    <div class="navr">
+      <button class="btnout adminonly" id="btnNotif" onclick="openNotifCentre()" style="gap:6px">📬 Notifications</button>
+      <div class="uchip">
+        <div class="uav" id="nAv">?</div>
+        <span id="nName">—</span>
+        <span class="rbadge" id="nRole">—</span>
+      </div>
+      <button class="btnout" onclick="doLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <!-- TAB BAR -->
+  <div class="tabbar">
+    <button class="tabbtn active" id="tab-active" onclick="switchTab('active',this)">
+      Active Work <span class="tcnt" id="cnt-active">0</span>
+    </button>
+    <button class="tabbtn" id="tab-archive" onclick="switchTab('archive',this)">
+      Archive — Done &amp; Selected Dev <span class="tcnt" id="cnt-archive">0</span>
+    </button>
+    <button class="tabbtn adminonly" id="tab-audit" onclick="switchTab('audit',this)">
+      🕓 Audit Log <span class="tcnt" id="cnt-audit">0</span>
+    </button>
+  </div>
+
+  <div class="wrap">
+
+    <!-- ══ ACTIVE TAB ══ -->
+    <div id="view-active">
+      <div class="phead">
+        <div>
+          <div class="phtitle">Work Intake Tracker</div>
+          <div class="phsub">Click any cell to edit inline · click a title to open full details</div>
+        </div>
+        <button class="btnadd adminonly" id="btnAdd" onclick="openDrawer(null)">＋ Add Item</button>
+      </div>
+
+      <!-- STATS -->
+      <div class="scrow">
+      <div class="sc" id="sc0" style="--c:#1a1814" onclick="sF('')"><div class="sclabel">Active items</div><div class="scval" id="sv0">0</div><div class="scdesc">in tracker</div></div>
+      <div class="sc" id="sc1" style="--c:#6b6560" onclick="sF('Proposed')"><div class="sclabel">Proposed</div><div class="scval" id="sv1">0</div><div class="scdesc">awaiting review</div></div>
+      <div class="sc" id="sc2" style="--c:#3557d4" onclick="sF('Scoping')"><div class="sclabel">In scoping</div><div class="scval" id="sv2">0</div><div class="scdesc">being scoped</div></div>
+      <div class="sc" id="sc3" style="--c:#3557d4" onclick="sF('In Progress')"><div class="sclabel">In progress</div><div class="scval" id="sv3">0</div><div class="scdesc">work started</div></div>
+      <div class="sc" id="sc4" style="--c:#c0392b" onclick="sF('__ov__')"><div class="sclabel">Overdue</div><div class="scval" id="sv4">0</div><div class="scdesc">past due date</div></div>
+      <div class="sc" id="sc5" style="--c:#b07d10" onclick="sF('__nt__')"><div class="sclabel">No ticket</div><div class="scval" id="sv5">0</div><div class="scdesc">no jira link</div></div>
+      </div>
+
+      <!-- LEGEND -->
+      <div class="legbar">
+        <button class="btnleg" id="btnleg" onclick="toggleLeg()">▤ Status &amp; Colour Key</button>
+      </div>
+      <div class="legpanel" id="legpanel">
+        <div class="leggrid">
+          <div>
+            <div class="legsec">Statuses</div>
+            <div class="legitems">
+              <div class="legitem"><span class="badge bp">Proposed</span> New request, ready to review or ticket</div>
+              <div class="legitem"><span class="badge bs">Scoping</span> Actively being scoped by the team</div>
+              <div class="legitem"><span class="badge bsd">Selected Dev</span> Agreed &amp; on roadmap → moves to Archive</div>
+              <div class="legitem"><span class="badge bi">In Progress</span> Work has started</div>
+              <div class="legitem"><span class="badge bd">Done</span> Completed → moves to Archive</div>
+              <div class="legitem"><span class="badge bk">Parking Lot</span> Deferred / not currently active</div>
+            </div>
+          </div>
+          <div>
+            <div class="legsec">Priority (left border)</div>
+            <div class="legitems">
+              <div class="legitem"><div class="legsw" style="background:var(--red)"></div> High — urgent or high risk priority</div>
+              <div class="legitem"><div class="legsw" style="background:var(--amber)"></div> Medium — should be tracked &amp; progressed</div>
+              <div class="legitem"><div class="legsw" style="background:var(--text3)"></div> Low — nice to have, lower urgency</div>
+            </div>
+          </div>
+          <div>
+            <div class="legsec">Row Highlights</div>
+            <div class="legitems">
+              <div class="legitem"><div class="legsw rect" style="background:rgba(217,95,75,.2)"></div> Red tint — overdue (due date passed, not done)</div>
+              <div class="legitem"><div class="legsw rect" style="background:rgba(212,166,58,.2)"></div> Amber date — due within 7 days</div>
+            </div>
+          </div>
+          <div>
+            <div class="legsec">Quick Edit (click any cell)</div>
+            <div class="legitems">
+              <div class="legitem"><span style="font-size:12px">📋</span> Status — pick from popup</div>
+              <div class="legitem"><span style="font-size:12px">⚡</span> Priority — High / Medium / Low</div>
+              <div class="legitem"><span style="font-size:12px">👤</span> Owner — type name(s), semicolon-separated</div>
+              <div class="legitem"><span style="font-size:12px">🏷️</span> Team — pick preset or type custom</div>
+              <div class="legitem"><span style="font-size:12px">📌</span> Type — Request or Task</div>
+              <div class="legitem"><span style="font-size:12px">📅</span> Due Date — calendar picker</div>
+              <div class="legitem"><span style="font-size:12px">🗓️</span> Requested date — calendar picker</div>
+              <div class="legitem"><span style="font-size:12px">🔗</span> Jira — paste URL or key</div>
+              <div class="legitem"><span style="font-size:12px">✎</span> Title — opens full edit drawer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="swrap">
+          <span class="sico">⌕</span>
+          <input class="sinput" id="qInput" type="text" placeholder="Search title, owner, description, jira…" oninput="ra()">
+        </div>
+        <!-- Multi-select filter buttons -->
+        <div class="mf-wrap" id="mf-status"><button class="mf-btn" onclick="toggleMF('status',this)">All Statuses <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-priority"><button class="mf-btn" onclick="toggleMF('priority',this)">All Priorities <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-team"><button class="mf-btn" onclick="toggleMF('team',this)">All Teams <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-type"><button class="mf-btn" onclick="toggleMF('type',this)">All Types <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-owner"><button class="mf-btn" onclick="toggleMF('owner',this)">All Owners <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-source"><button class="mf-btn" onclick="toggleMF('source',this)">All Sources <span class="mf-arrow">▾</span></button></div>
+        <!-- Hidden selects kept for syncSF compatibility -->
+        <select id="fSt" style="display:none"></select>
+        <select id="fOw" style="display:none"></select>
+        <div class="vtabs">
+          <button class="vtab active" onclick="setV('table',this)">≡ Table</button>
+          <button class="vtab" onclick="setV('kanban',this)">⊞ Board</button>
+        </div>
+        <div class="cpill" id="cpill">— items</div>
+        <button onclick="exportCSV()" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:8px 14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s;white-space:nowrap" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">⬇ Export CSV</button>
+      </div>
+
+      <!-- TABLE VIEW -->
+      <div id="vTable">
+        <div class="tbox">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:24px;padding:10px 8px"></th>
+                <th onclick="sb('title')">Title <span id="si-title">↕</span></th>
+                <th onclick="sb('owner')">Owner <span id="si-owner">↕</span></th>
+                <th onclick="sb('status')">Status <span id="si-status">↕</span></th>
+                <th onclick="sb('priority')">Priority <span id="si-priority">↕</span></th>
+                <th onclick="sb('team')">Team <span id="si-team">↕</span></th>
+                <th onclick="sb('source')">Source <span id="si-source">↕</span></th>
+                <th onclick="sb('due')">Due <span id="si-due">↕</span></th>
+                <th>Jira</th>
+                <th onclick="sb('type')">Type <span id="si-type">↕</span></th>
+                <th onclick="sb('dateReq')">Requested <span id="si-dateReq">↕</span></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div id="emptyMsg" class="empty" style="display:none"><div class="emptyico">◌</div><div>No items match your filters</div></div>
+        </div>
+      </div>
+
+      <!-- KANBAN VIEW -->
+      <div id="vKanban" style="display:none">
+        <div class="kboard" id="kboard"></div>
+      </div>
+    </div><!-- /view-active -->
+
+    <!-- ══ ARCHIVE TAB ══ -->
+    <div id="view-archive" style="display:none">
+      <div class="phead">
+        <div>
+          <div class="phtitle">Archive</div>
+          <div class="phsub">Items marked Done or Selected For Development · restore an item to move it back to the active list</div>
+        </div>
+      </div>
+      <div class="tbox">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Owner</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Team</th>
+              <th>Jira</th>
+              <th>Completed / Updated</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="archbody"></tbody>
+        </table>
+        <div id="archEmpty" class="empty" style="display:none"><div class="emptyico">✓</div><div>No archived items yet</div></div>
+      </div>
+    </div><!-- /view-archive -->
+
+    <!-- ══ AUDIT LOG TAB ══ -->
+    <div id="view-audit" style="display:none">
+      <div class="phead">
+        <div>
+          <div class="phtitle">🕓 Audit Log</div>
+          <div class="phsub">Full change history across all items · click Rollback to restore any previous value</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select class="fsel" id="audit-filter-item" onchange="renderAudit()" style="max-width:260px">
+            <option value="">All Items</option>
+          </select>
+          <select class="fsel" id="audit-filter-action" onchange="renderAudit()">
+            <option value="">All Actions</option>
+            <option>CREATE</option><option>UPDATE</option><option>DELETE</option><option>RESTORE</option>
+          </select>
+          <select class="fsel" id="audit-filter-user" onchange="renderAudit()">
+            <option value="">All Users</option>
+          </select>
+        </div>
+      </div>
+      <div class="tbox">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:160px">When</th>
+              <th style="width:90px">Action</th>
+              <th>Item</th>
+              <th style="width:120px">Field</th>
+              <th>Previous Value</th>
+              <th>New Value</th>
+              <th style="width:110px">Changed By</th>
+              <th style="width:90px"></th>
+            </tr>
+          </thead>
+          <tbody id="audit-tbody"></tbody>
+        </table>
+        <div id="audit-empty" class="empty" style="display:none"><div class="emptyico">🕓</div><div>No changes recorded yet</div></div>
+        <div id="audit-loading" style="padding:40px;text-align:center;color:var(--text3);font-size:13px">Loading audit log…</div>
+      </div>
+    </div><!-- /view-audit -->
+
+  </div><!-- /wrap -->
+</div><!-- /app -->
+
+<!-- HISTORY PANEL -->
+<div class="hpanel" id="hpanel">
+  <div class="hpanel-hdr">
+    <div style="flex:1;overflow:hidden">
+      <div class="hpanel-title" id="hpanel-title">Item History</div>
+      <div class="hpanel-sub" id="hpanel-sub"></div>
+    </div>
+    <button class="dclose" onclick="closeHistory()">✕</button>
+  </div>
+  <div class="hpanel-body" id="hpanel-body">
+    <div class="hpanel-empty">Loading…</div>
+  </div>
+</div>
+
+<!-- DRAWER OVERLAY -->
+<div class="dov" id="dov" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dhdr">
+    <div class="dtitle" id="dtitle">Item Details</div>
+    <span class="dmode" id="dmode"></span>
+    <button class="dclose" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="dbody">
+    <input type="hidden" id="dIdx">
+    <input type="hidden" id="dItemId">
+    <div class="dgrid">
+      <div class="dfull"><label class="dlabel">Title *</label><input class="dinput" id="d_title" type="text" placeholder="Item title…"></div>
+      <div class="dfull"><label class="dlabel">Description</label><textarea class="dtarea" id="d_desc" placeholder="Full description…" style="min-height:100px"></textarea></div>
+      <div><label class="dlabel">Owner(s)</label>
+        <input class="dinput" id="d_owner" type="text" placeholder="Name; Name2; Name3" list="owner-list" autocomplete="off">
+        <datalist id="owner-list"></datalist>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px" id="owner-pills"></div>
+      </div>
+      <div><label class="dlabel">Status</label>
+        <select class="dsel" id="d_status">
+          <option>Proposed</option><option>Scoping</option>
+          <option value="Selected For Development">Selected For Development</option>
+          <option value="In Progress">In Progress</option>
+          <option>Done</option><option value="Parking Lot">Parking Lot</option>
+        </select>
+      </div>
+      <div><label class="dlabel">Priority</label>
+        <select class="dsel" id="d_priority"><option>High</option><option>Medium</option><option>Low</option></select>
+      </div>
+      <div><label class="dlabel">Risk Priority</label>
+        <select class="dsel" id="d_riskPriority"><option>High</option><option>Medium</option><option>Low</option></select>
+      </div>
+      <div><label class="dlabel">Type</label>
+        <select class="dsel" id="d_type"><option value="">— select —</option><option>Request</option><option>Task</option></select>
+      </div>
+      <div><label class="dlabel">Requesting Team</label><input class="dinput" id="d_team" type="text" placeholder="Risk / Trading / Sports Product"></div>
+      <div><label class="dlabel">Requested By</label><input class="dinput" id="d_reqBy" type="text" placeholder="Person or team name"></div>
+      <div><label class="dlabel">Source</label>
+        <input class="dinput" id="d_source" type="text" placeholder="Email / RiskTeam / Workshop" list="source-list">
+        <datalist id="source-list">
+          <option value="Email"><option value="RiskTeam"><option value="Workshop">
+          <option value="Slack"><option value="Meeting"><option value="Other">
+        </datalist>
+      </div>
+      <div><label class="dlabel">Date Requested</label><input class="dinput" id="d_dateReq" type="date"></div>
+      <div><label class="dlabel">Due Date</label><input class="dinput" id="d_due" type="date"></div>
+      <div><label class="dlabel">Jira Ticket / URL</label><input class="dinput" id="d_jira" type="text" placeholder="RW-000 or full URL"></div>
+      <div><label class="dlabel">Estimate</label><input class="dinput" id="d_estimate" type="text" placeholder="e.g. 3 wks"></div>
+      <div class="dfull"><label class="dlabel">Notes / Links</label><textarea class="dtarea" id="d_notes" placeholder="Extra notes, links, context…"></textarea></div>
+    </div>
+  </div>
+  <div class="dftr">
+    <button class="btsave" onclick="saveItem()">Save Changes</button>
+    <button class="btcancel" onclick="closeDrawer()">Cancel</button>
+    <button class="btdel" id="btdel" onclick="deleteItem()">Delete</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ════════════════════════════════════════
+   ⚙️  SUPABASE CONFIG — paste your values here
+════════════════════════════════════════ */
+const SUPABASE_URL = 'https://qggaxsiqhrfmnjznkvbq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnZ2F4c2lxaHJmbW5qem5rdmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzQ2OTAsImV4cCI6MjA4OTUxMDY5MH0.pFxI9wFhEvgNqOkzfcMgBiGfGeLoVnyjyD72mlCynwo';
+
+const sbc = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ════════════════════════════════════════
+   AUTH
+════════════════════════════════════════ */
+const USERS={
+  admin:{pass:'admin123',role:'admin',name:'Admin'},
+  jason:{pass:'pass123',role:'user',name:'Jason Foster'},
+  neal:{pass:'pass123',role:'user',name:'Neal Beavis'},
+  samuel:{pass:'pass123',role:'user',name:'Samuel Heel'},
+  nicholas:{pass:'pass123',role:'user',name:'Nicholas Haynes'},
+  aidan:{pass:'pass123',role:'user',name:'Aidan Nutbrown'},
+  dylan:{pass:'pass123',role:'user',name:'Dylan Day'},
+  gavin:{pass:'pass123',role:'user',name:'Gavin Wood'},
+  guest:{pass:'guest',role:'user',name:'Guest'},
+};
+let CU=null;
+
+function doLogin(){
+  const u=document.getElementById('lU').value.trim().toLowerCase();
+  const p=document.getElementById('lP').value;
+  const e=document.getElementById('lerr');
+  if(!USERS[u]||USERS[u].pass!==p){e.textContent='Incorrect username or password.';return;}
+  e.textContent='Loading data…';
+  const btn=document.querySelector('.bp_');
+  btn.textContent='Loading…';btn.disabled=true;
+  CU={...USERS[u],username:u};
+  loadFromSupabase().then(()=>{
+    e.textContent='';btn.textContent='Sign In →';btn.disabled=false;
+    document.getElementById('LS').classList.add('gone');
+    document.getElementById('app').classList.add('on');
+    document.getElementById('nAv').textContent=CU.name[0];
+    document.getElementById('nName').textContent=CU.name;
+    const rb=document.getElementById('nRole');
+    rb.textContent=CU.role==='admin'?'Admin':'Member';
+    rb.className='rbadge '+(CU.role==='admin'?'r-admin':'r-user');
+    document.querySelectorAll('.adminonly').forEach(el=>el.classList.toggle('show',CU.role==='admin'));
+    document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.toggle('show',CU.role==='admin'));
+    subscribeRealtime();
+    buildOwnerFilter();ra();
+    // Start 10am daily auto-email scheduler for admins
+    if(CU.role==='admin') startDailyScheduler();
+  }).catch(err=>{
+    e.textContent='Failed to load data: '+err.message;
+    btn.textContent='Sign In →';btn.disabled=false;
+    CU=null;
+  });
+}
+function doLogout(){
+  if(realtimeChannel){sbc.removeChannel(realtimeChannel);realtimeChannel=null;}
+  CU=null;D=[];
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('LS').classList.remove('gone');
+  document.getElementById('lU').value='';document.getElementById('lP').value='';
+}
+
+/* ════════════════════════════════════════
+   DATA — loaded from Supabase, kept in memory for fast filtering/sorting
+════════════════════════════════════════ */
+let D = [];          // in-memory cache — rows from Supabase, each has an `id` (uuid)
+let realtimeChannel = null;
+const ARCHIVE_STATUSES=['Done','Selected For Development'];
+
+/* ── Map DB row (snake_case) → app object (camelCase) ── */
+function rowToItem(r){
+  return {
+    id:           r.id,
+    title:        r.title        ||'',
+    desc:         r.description  ||'',
+    owner:        r.owner        ||'',
+    status:       r.status       ||'Proposed',
+    priority:     r.priority     ||'Medium',
+    riskPriority: r.risk_priority||'Medium',
+    type:         r.type         ||'',
+    team:         r.team         ||'',
+    requestedBy:  r.requested_by ||'',
+    source:       r.source       ||'',
+    dateReq:      r.date_req     ||'',
+    due:          r.due_date     ||'',
+    jira:         r.jira         ||'',
+    estimate:     r.estimate     ||'',
+    notes:        r.notes        ||'',
+  };
+}
+
+/* ── Map app object → DB row ── */
+function itemToRow(item){
+  return {
+    title:        item.title,
+    description:  item.desc,
+    owner:        item.owner,
+    status:       item.status,
+    priority:     item.priority,
+    risk_priority:item.riskPriority,
+    type:         item.type,
+    team:         item.team,
+    requested_by: item.requestedBy,
+    source:       item.source,
+    date_req:     item.dateReq||null,
+    due_date:     item.due||null,
+    jira:         item.jira,
+    estimate:     item.estimate,
+    notes:        item.notes,
+  };
+}
+
+/* ── Load all rows ── */
+async function loadFromSupabase(){
+  const {data,error}=await sbc.from('work_items').select('*').order('sort_order',{ascending:true,nullsFirst:false}).order('created_at',{ascending:true});
+  if(error)throw error;
+  D=data.map(rowToItem);
+}
+
+/* ── Realtime subscription — keeps D in sync when others edit ── */
+function subscribeRealtime(){
+  realtimeChannel=sbc.channel('work_items_changes')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'work_items'},payload=>{
+      D.unshift(rowToItem(payload.new));
+      buildOwnerFilter();ra();
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'work_items'},payload=>{
+      const idx=D.findIndex(i=>i.id===payload.new.id);
+      if(idx>=0)D[idx]=rowToItem(payload.new);
+      buildOwnerFilter();ra();
+    })
+    .on('postgres_changes',{event:'DELETE',schema:'public',table:'work_items'},payload=>{
+      const before=D.length;
+      D=D.filter(i=>i.id!==payload.old.id);
+      if(D.length!==before){buildOwnerFilter();ra();}
+    })
+    .subscribe();
+}
+
+const TODAY=new Date(); TODAY.setHours(0,0,0,0);
+let sKey='',sDir=1,activeSF='',currentTab='active';
+
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+function isArchived(i){return ARCHIVE_STATUSES.includes(i.status)}
+function isOv(i){return i.due&&!isArchived(i)&&new Date(i.due)<TODAY}
+function isSn(i){if(!i.due||isArchived(i))return false;const d=(new Date(i.due)-TODAY)/86400000;return d>=0&&d<=7}
+function fd(d){if(!d)return'';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})}
+function owners(i){return i.owner?i.owner.split(';').map(s=>s.trim()).filter(Boolean):[]}
+
+/* parse jira field — may be plain key "RW-123" or full URL */
+function parseJira(v){
+  if(!v)return{key:'',url:''};
+  v=v.trim();
+  if(v.startsWith('http')){
+    // extract key from URL e.g. .../browse/RW-123
+    const m=v.match(/([A-Z]+-\d+)/);
+    return{key:m?m[1]:v.split('/').pop(),url:v};
+  }
+  return{key:v,url:''};
+}
+
+function sbadge(s){
+  const m={'Proposed':'bp','Scoping':'bs','Selected For Development':'bsd','In Progress':'bi','Done':'bd','Parking Lot':'bk'};
+  const l={'Selected For Development':'Selected Dev'};
+  return`<span class="badge ${m[s]||'bp'}">${l[s]||s}</span>`;
+}
+function prioH(p){return`<div class="prio p${p?p[0]:'L'}"><div class="pdot"></div>${p||'—'}</div>`}
+
+/* ════════════════════════════════════════
+   TAB SWITCH
+════════════════════════════════════════ */
+function switchTab(t,btn){
+  currentTab=t;
+  document.getElementById('view-active').style.display   =t==='active'  ?'block':'none';
+  document.getElementById('view-archive').style.display  =t==='archive' ?'block':'none';
+  document.getElementById('view-audit').style.display    =t==='audit'   ?'block':'none';
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(t==='archive') renderArchive();
+  if(t==='audit')   loadAuditLog();
+}
+
+/* ════════════════════════════════════════
+   OWNER FILTER
+════════════════════════════════════════ */
+function buildOwnerFilter(){
+  // Update the dynamic owner options for multi-filter
+  MF_OPTIONS.owner = [...new Set(D.filter(i=>!isArchived(i)).flatMap(i=>owners(i)))].sort();
+  // Remove any selected owners that no longer exist
+  MF.owner.forEach(o=>{ if(!MF_OPTIONS.owner.includes(o)) MF.owner.delete(o); });
+  updateMFBtn('owner');
+}
+
+/* ════════════════════════════════════════
+   MULTI-SELECT FILTERS
+════════════════════════════════════════ */
+// State: each key holds a Set of selected values (empty = all)
+const MF = {
+  status:   new Set(),
+  priority: new Set(),
+  team:     new Set(),
+  type:     new Set(),
+  owner:    new Set(),
+  source:   new Set(),
+};
+
+const MF_OPTIONS = {
+  status:   ['Proposed','Scoping','In Progress','Parking Lot','Selected For Development'],
+  priority: ['High','Medium','Low'],
+  team:     ['Risk','Trading','Sports Product'],
+  type:     ['Request','Task'],
+  owner:    [], // built dynamically
+  source:   ['Email','RiskTeam','Workshop','Slack','Meeting','Other'],
+};
+
+const MF_LABELS = {
+  status:'Statuses', priority:'Priorities', team:'Teams',
+  type:'Types', owner:'Owners', source:'Sources',
+};
+
+let activeMFKey = null;
+
+function toggleMF(key, btnEl){
+  if(activeMFKey === key){ closeMF(); return; }
+  closeMF();
+  activeMFKey = key;
+
+  // For owners, build dynamically from data
+  if(key==='owner'){
+    MF_OPTIONS.owner = [...new Set(D.flatMap(i=>owners(i)))].sort();
+  }
+
+  const opts = MF_OPTIONS[key];
+  const selected = MF[key];
+
+  const drop = document.createElement('div');
+  drop.className = 'mf-dropdown';
+  drop.id = 'mf-drop';
+
+  const checkedAll = selected.size === 0;
+  drop.innerHTML = `
+    <div class="mf-header">
+      <span class="mf-header-label">${MF_LABELS[key]}</span>
+      <button class="mf-clear" onclick="clearMF('${key}')">Clear all</button>
+    </div>
+    ${opts.map(o=>{
+      const label = key==='status'&&o==='Selected For Development'?'Selected Dev':o;
+      const chk = selected.has(o);
+      return `<div class="mf-item${chk?' checked':''}" onclick="toggleMFOption('${key}','${o.replace(/'/g,"\\'")}',this)">
+        <div class="mf-check">${chk?'✓':''}</div>
+        ${key==='status'?`<span class="badge ${statusCls(o)}">${label}</span>`
+          :key==='priority'?prioH(o)
+          :`<span style="font-size:13px">${label}</span>`}
+      </div>`;
+    }).join('')}`;
+
+  document.body.appendChild(drop);
+
+  // Position below button
+  const r = btnEl.getBoundingClientRect();
+  let top = r.bottom + 5, left = r.left;
+  if(left + 200 > window.innerWidth) left = window.innerWidth - 210;
+  drop.style.top = top+'px'; drop.style.left = left+'px';
+
+  btnEl.classList.add('active');
+
+  setTimeout(()=>{
+    document.addEventListener('click', outsideMF, {once:true, capture:true});
+  }, 0);
+}
+
+function outsideMF(e){
+  const drop = document.getElementById('mf-drop');
+  if(drop && !drop.contains(e.target)){
+    closeMF();
+  } else if(drop){
+    // clicked inside — re-attach listener
+    setTimeout(()=>{
+      document.addEventListener('click', outsideMF, {once:true, capture:true});
+    }, 0);
+  }
+}
+
+function closeMF(){
+  const drop = document.getElementById('mf-drop');
+  if(drop) drop.remove();
+  if(activeMFKey){
+    const wrap = document.getElementById('mf-'+activeMFKey);
+    if(wrap) wrap.querySelector('.mf-btn').classList.remove('active');
+  }
+  activeMFKey = null;
+}
+
+function toggleMFOption(key, value, itemEl){
+  const s = MF[key];
+  if(s.has(value)){ s.delete(value); itemEl.classList.remove('checked'); itemEl.querySelector('.mf-check').textContent=''; }
+  else             { s.add(value);    itemEl.classList.add('checked');    itemEl.querySelector('.mf-check').textContent='✓'; }
+  updateMFBtn(key);
+  ra();
+}
+
+function clearMF(key){
+  MF[key].clear();
+  updateMFBtn(key);
+  // re-render dropdown items
+  const drop = document.getElementById('mf-drop');
+  if(drop) drop.querySelectorAll('.mf-item').forEach(el=>{ el.classList.remove('checked'); el.querySelector('.mf-check').textContent=''; });
+  ra();
+}
+
+function updateMFBtn(key){
+  const wrap = document.getElementById('mf-'+key);
+  if(!wrap) return;
+  const btn = wrap.querySelector('.mf-btn');
+  const s = MF[key];
+  const arrow = '<span class="mf-arrow">▾</span>';
+  if(s.size === 0){
+    btn.innerHTML = `All ${MF_LABELS[key]} ${arrow}`;
+    btn.classList.remove('active');
+  } else {
+    const labels = [...s].map(v=>v==='Selected For Development'?'Selected Dev':v);
+    const display = labels.length <= 2 ? labels.join(', ') : `${labels.length} selected`;
+    btn.innerHTML = `${display} ${arrow}`;
+    btn.classList.add('active');
+  }
+}
+
+function statusCls(s){
+  return{Proposed:'bp',Scoping:'bs','Selected For Development':'bsd','In Progress':'bi',Done:'bd','Parking Lot':'bk'}[s]||'bp';
+}
+
+/* ════════════════════════════════════════
+   FILTERS & SORT
+════════════════════════════════════════ */
+function getF(){
+  const q=document.getElementById('qInput').value.toLowerCase();
+  return D.filter(i=>{
+    if(isArchived(i))return false;
+    if(q&&![i.title,i.owner,i.desc,i.jira,i.requestedBy].join(' ').toLowerCase().includes(q))return false;
+    if(MF.status.size   && !MF.status.has(i.status))   return false;
+    if(MF.priority.size && !MF.priority.has(i.priority))return false;
+    if(MF.team.size     && !MF.team.has(i.team))        return false;
+    if(MF.type.size     && !MF.type.has(i.type))        return false;
+    if(MF.source.size   && !MF.source.has(i.source))    return false;
+    if(MF.owner.size    && !owners(i).some(o=>MF.owner.has(o))) return false;
+    if(activeSF==='__ov__')return isOv(i);
+    if(activeSF==='__nt__')return!i.jira;
+    if(activeSF)return i.status===activeSF;
+    return true;
+  });
+}
+function getS(items){
+  if(!sKey)return items;
+  return[...items].sort((a,b)=>{
+    if(sKey==='priority'){const o={High:0,Medium:1,Low:2,'':3};return(o[a.priority]-o[b.priority])*sDir;}
+    return(a[sKey]||'').localeCompare(b[sKey]||'')*sDir;
+  });
+}
+function sb(k){
+  if(sKey===k)sDir*=-1;else{sKey=k;sDir=1;}
+  document.querySelectorAll('thead th').forEach(t=>t.classList.remove('sorted'));
+  const m={title:0,owner:1,status:2,priority:3,team:4,due:5,type:7,dateReq:8};
+  if(m[k]!=null)document.querySelectorAll('#vTable thead th')[m[k]]?.classList.add('sorted');
+  ra();
+}
+function sF(v){
+  activeSF=activeSF===v?'':v;
+  const m={'':'sc0','Proposed':'sc1','Scoping':'sc2','In Progress':'sc3','__ov__':'sc4','__nt__':'sc5'};
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('active'));
+  if(m[activeSF])document.getElementById(m[activeSF])?.classList.add('active');
+  // Clear status multi-filter when using stat card filters
+  MF.status.clear(); updateMFBtn('status');
+  ra();
+}
+function syncSF(){
+  // When stat card sets a status filter, clear MF.status and let activeSF handle it
+  MF.status.clear();
+  updateMFBtn('status');
+  ra();
+}
+
+/* ════════════════════════════════════════
+   STATS
+════════════════════════════════════════ */
+function renderStats(){
+  const active=D.filter(i=>!isArchived(i));
+  document.getElementById('sv0').textContent=active.length;
+  document.getElementById('sv1').textContent=active.filter(i=>i.status==='Proposed').length;
+  document.getElementById('sv2').textContent=active.filter(i=>i.status==='Scoping').length;
+  document.getElementById('sv3').textContent=active.filter(i=>i.status==='In Progress').length;
+  document.getElementById('sv4').textContent=active.filter(isOv).length;
+  document.getElementById('sv5').textContent=active.filter(i=>!i.jira).length;
+  document.getElementById('cnt-active').textContent=active.length;
+  document.getElementById('cnt-archive').textContent=D.filter(isArchived).length;
+}
+
+/* ════════════════════════════════════════
+   RENDER TABLE (active)
+════════════════════════════════════════ */
+function renderTable(items){
+  const tb=document.getElementById('tbody');
+  tb.innerHTML='';
+  document.getElementById('emptyMsg').style.display=items.length?'none':'block';
+  items.forEach(item=>{
+    const idx=D.indexOf(item);
+    const ov=isOv(item),sn=isSn(item);
+    const tr=document.createElement('tr');
+
+    // status-based row colour class
+    const statusClass = {
+      'Proposed':                'rs-proposed',
+      'Scoping':                 'rs-scoping',
+      'In Progress':             'rs-inprogress',
+      'Parking Lot':             'rs-parking',
+      'Done':                    'rs-done',
+      'Selected For Development':'rs-selected',
+    }[item.status] || '';
+
+    tr.className=`r${(item.priority||'L')[0]}${ov?' rov':''} ${statusClass}`;
+    tr.dataset.idx=idx;
+    tr.draggable=true;
+    addDragEvents(tr, idx);
+
+    const ows=owners(item);
+
+    // owner cell — show up to 2 owners stacked, tooltip for the rest
+    const owDisplay = ows.length===0
+      ? '<span style="color:var(--text3)">—</span>'
+      : ows.length===1
+        ? `<span style="font-size:12px;display:block">${ows[0]}</span>`
+        : `<div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:12px;line-height:1.3">${ows[0]}</span>
+            <span style="font-size:12px;line-height:1.3">${ows[1]}${ows.length>2?` <span style="color:var(--text3);font-size:11px">+${ows.length-2}</span>`:''}</span>
+           </div>`;
+    const owTipPills = ows.map(o=>`<div class="htip-owner-pill">${o}</div>`).join('');
+    const owTipHtml = ows.length>2
+      ? `<div class="htip-label">All Owners</div><div class="htip-owners">${owTipPills}</div>`
+      : '';
+    const owC = ows.length>2
+      ? `<div class="htip" style="display:inline-block">${owDisplay}<div class="htip-box" id="ht-ow-${idx}">${owTipHtml}</div></div>`
+      : owDisplay;
+
+    // title cell with description hover tooltip
+    const descSafe = (item.desc||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    const titleTip = item.desc
+      ? `<div class="htip-box" id="ht-ti-${idx}"><div class="htip-label">Description</div>${descSafe}</div>`
+      : '';
+
+    // jira cell
+    const j=parseJira(item.jira);
+    const jC=j.key
+      ?(j.url?`<a class="jchip" href="${j.url}" target="_blank" onclick="event.stopPropagation()">⎗ ${j.key}</a>`
+             :`<span class="jchip">⎗ ${j.key}</span>`)
+      :`<span class="ntick">— no ticket</span>`;
+
+    const dC=!item.due?'<span class="dN">—</span>'
+      :ov?`<span class="dO">${fd(item.due)} ⚠</span>`
+      :sn?`<span class="dS">${fd(item.due)} ●</span>`
+         :`<span class="dN">${fd(item.due)}</span>`;
+
+    const typeHtml = item.type?`<span class="tchip">${item.type}</span>`:`<span style="color:var(--text3);font-size:12px">—</span>`;
+    const teamHtml = item.team||`<span style="color:var(--text3)">—</span>`;
+
+    tr.innerHTML=`
+      <td style="padding:9px 8px 9px 10px;width:24px">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
+      </td>
+      <td class="ctit" style="cursor:pointer">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="htip" style="flex:1;min-width:0;overflow:hidden" onclick="openDrawer(${idx})">
+            <span title="${item.title}">${item.title}</span>
+            ${titleTip}
+          </div>
+          <span title="View history" onclick="event.stopPropagation();openHistory('${item.id}')" style="color:var(--text3);font-size:12px;cursor:pointer;opacity:0;transition:opacity .15s;flex-shrink:0" class="hist-btn">🕓</span>
+        </div>
+        ${item.estimate?`<span class="sub">${item.estimate}</span>`:''}
+      </td>
+      <td class="qe" data-qe="owner" data-idx="${idx}" onclick="qeOwner(event,${idx})" style="white-space:nowrap">${owC}</td>
+      <td class="qe" data-qe="status" data-idx="${idx}" onclick="qeStatus(event,${idx})">${sbadge(item.status)}</td>
+      <td class="qe" data-qe="priority" data-idx="${idx}" onclick="qePriority(event,${idx})">${prioH(item.priority)}</td>
+      <td class="qe" data-qe="team" data-idx="${idx}" onclick="qeTeam(event,${idx})" style="font-size:12px;color:var(--text2)">${teamHtml}</td>
+      <td class="qe" data-qe="source" data-idx="${idx}" onclick="qeSource(event,${idx})" style="font-size:12px;color:var(--text3)">${item.source||'<span style="color:var(--text3)">—</span>'}</td>
+      <td class="qe" data-qe="due" data-idx="${idx}" onclick="qeDue(event,${idx})">${dC}</td>
+      <td class="qe" data-qe="jira" data-idx="${idx}" onclick="qeJira(event,${idx})">${jC}</td>
+      <td class="qe" data-qe="type" data-idx="${idx}" onclick="qeType(event,${idx})">${typeHtml}</td>
+      <td class="qe" data-qe="dateReq" data-idx="${idx}" onclick="qeDateReq(event,${idx})"><span class="dN">${fd(item.dateReq)||'—'}</span></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+/* ════════════════════════════════════════
+   RENDER ARCHIVE
+════════════════════════════════════════ */
+function renderArchive(){
+  const archived=D.filter(isArchived);
+  const tb=document.getElementById('archbody');
+  tb.innerHTML='';
+  document.getElementById('archEmpty').style.display=archived.length?'none':'block';
+  archived.forEach(item=>{
+    const idx=D.indexOf(item);
+    const j=parseJira(item.jira);
+    const jC=j.key
+      ?(j.url?`<a class="jchip" href="${j.url}" target="_blank">⎗ ${j.key}</a>`
+             :`<span class="jchip">⎗ ${j.key}</span>`)
+      :`<span class="ntick" style="opacity:.4">—</span>`;
+    const tr=document.createElement('tr');
+    tr.className='arch-row';
+    tr.innerHTML=`
+      <td class="ctit"><span title="${item.title}">${item.title}</span></td>
+      <td style="font-size:12px">${owners(item)[0]||'—'}</td>
+      <td>${sbadge(item.status)}</td>
+      <td>${prioH(item.priority)}</td>
+      <td style="font-size:12px;color:var(--text3)">${item.team||'—'}</td>
+      <td>${jC}</td>
+      <td><span class="dN">${fd(item.due)||fd(item.dateReq)||'—'}</span></td>
+      <td><button class="arch-restore" onclick="restoreItem(${idx})">↩ Restore</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+async function restoreItem(idx){
+  const {error}=await sbc.from('work_items').update({status:'Proposed'}).eq('id',D[idx].id);
+  if(error){showToast('Restore failed: '+error.message,'red');return;}
+  const title=D[idx].title;
+  D[idx].status='Proposed';
+  buildOwnerFilter();ra();renderArchive();
+  showToast(`"${title}" restored to Proposed`,'amber');
+}
+
+/* ════════════════════════════════════════
+   KANBAN
+════════════════════════════════════════ */
+function renderKanban(items){
+  const COLS=[
+    {k:'Parking Lot',l:'Parking Lot',c:'kh-k'},
+    {k:'Proposed',l:'Proposed',c:'kh-p'},
+    {k:'Scoping',l:'Scoping',c:'kh-s'},
+    {k:'In Progress',l:'In Progress',c:'kh-i'},
+  ];
+  const kb=document.getElementById('kboard');
+  kb.innerHTML='';
+  COLS.forEach(col=>{
+    const ci=items.filter(i=>i.status===col.k);
+    const div=document.createElement('div');div.className='kcol';
+    div.innerHTML=`<div class="kch ${col.c}"><span>${col.l}</span><span class="kcount">${ci.length}</span></div><div class="kcb">${ci.length===0?'<div class="kempty">empty</div>':''}</div>`;
+    kb.appendChild(div);
+    const body=div.querySelector('.kcb');
+    ci.forEach(item=>{
+      const idx=D.indexOf(item);const ov=isOv(item);
+      const card=document.createElement('div');card.className='kcard';
+      card.onclick=()=>openDrawer(idx);
+      const of=owners(item)[0]||'';
+      card.innerHTML=`<div class="kctit">${item.title}</div><div class="kcmeta">${prioH(item.priority)}${item.jira?`<span class="jchip" style="font-size:10px;padding:1px 5px">${parseJira(item.jira).key}</span>`:''}${ov?'<span style="font-size:10px;color:var(--red)">⚠ overdue</span>':''}</div>${of?`<div class="kcown">${of}</div>`:''}`;
+      body.appendChild(card);
+    });
+  });
+}
+
+/* ════════════════════════════════════════
+   RENDER ALL
+════════════════════════════════════════ */
+function ra(){
+  const items=getS(getF());
+  document.getElementById('cpill').textContent=`${items.length} item${items.length!==1?'s':''}`;
+  renderStats();renderTable(items);renderKanban(items);
+  if(currentTab==='archive')renderArchive();
+  resyncOpenDrawer();
+}
+
+/* Re-sync the open drawer's item id by matching on title */
+function resyncOpenDrawer(){
+  const drawer = document.getElementById('drawer');
+  if(!drawer.classList.contains('on')) return;
+  const currentId    = document.getElementById('dItemId').value.trim();
+  const currentTitle = document.getElementById('d_title').value.trim();
+  if(!currentTitle) return;
+  if(currentId) return; // already synced — do nothing at all
+  // No id yet (new item just saved) — try to find by title
+  const match = D.find(i=>i.title===currentTitle);
+  if(match){
+    document.getElementById('dItemId').value = match.id;
+    // Only show delete button once we have a confirmed id, for admin
+    if(CU?.role==='admin'){
+      document.getElementById('btdel').style.display = 'block';
+    }
+  }
+}
+
+/* ════════════════════════════════════════
+   VIEW TOGGLE
+════════════════════════════════════════ */
+function setV(v,btn){
+  document.getElementById('vTable').style.display=v==='table'?'block':'none';
+  document.getElementById('vKanban').style.display=v==='kanban'?'block':'none';
+  document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ════════════════════════════════════════
+   LEGEND
+════════════════════════════════════════ */
+function toggleLeg(){
+  const p=document.getElementById('legpanel');const b=document.getElementById('btnleg');
+  const on=p.classList.toggle('on');b.classList.toggle('on',on);
+  b.textContent=on?'▤ Hide Key':'▤ Status & Colour Key';
+}
+
+/* ════════════════════════════════════════
+   INLINE QUICK-EDIT POPUPS
+════════════════════════════════════════ */
+let activePopup=null;
+
+function closePopup(){
+  if(activePopup){activePopup.remove();activePopup=null;}
+}
+
+function showPopup(triggerEl,html){
+  closePopup();
+  const pop=document.createElement('div');
+  pop.className='qpop';pop.id='qpop';
+  pop.innerHTML=html;
+  document.body.appendChild(pop);
+  activePopup=pop;
+
+  // position below trigger
+  const r=triggerEl.getBoundingClientRect();
+  let top=r.bottom+6,left=r.left;
+  if(left+220>window.innerWidth)left=window.innerWidth-230;
+  if(top+280>window.innerHeight)top=r.top-6-pop.offsetHeight;
+  pop.style.top=top+'px';pop.style.left=left+'px';
+
+  // close on outside click
+  setTimeout(()=>{
+    document.addEventListener('click',outsidePopup,{once:true,capture:true});
+  },0);
+}
+function outsidePopup(e){
+  if(activePopup&&!activePopup.contains(e.target)){closePopup();}
+}
+
+/* ─── STATUS quick edit ─── */
+function qeStatus(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const statuses=['Proposed','Scoping','In Progress','Parking Lot','Selected For Development','Done'];
+  const opts=statuses.map(s=>`
+    <div class="qpop-opt${item.status===s?' current':''}" onclick="setField(${idx},'status','${s}');closePopup()">
+      ${sbadge(s)}
+    </div>`).join('');
+  showPopup(e.currentTarget,`<div class="qpop-title">Change Status</div>${opts}`);
+}
+
+/* ─── PRIORITY quick edit ─── */
+function qePriority(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const opts=['High','Medium','Low'].map(p=>`
+    <div class="qpop-opt${item.priority===p?' current':''}" onclick="setField(${idx},'priority','${p}');closePopup()">
+      ${prioH(p)}
+    </div>`).join('');
+  showPopup(e.currentTarget,`<div class="qpop-title">Change Priority</div>${opts}`);
+}
+
+/* ─── DUE DATE quick edit ─── */
+function qeDue(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const html=`
+    <div class="qpop-title">Set Due Date</div>
+    <input class="qpop-input" type="date" id="qpop-date" value="${item.due||''}" onclick="event.stopPropagation()">
+    <div class="qpop-row">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'due',document.getElementById('qpop-date').value);closePopup()">Set</button>
+      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'due','');closePopup()">Clear</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+  setTimeout(()=>document.getElementById('qpop-date')?.focus(),50);
+}
+
+/* ─── JIRA quick edit ─── */
+function qeJira(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const j=parseJira(item.jira);
+  const html=`
+    <div class="qpop-title">Jira Ticket</div>
+    <input class="qpop-input" type="text" id="qpop-jira" value="${item.jira||''}"
+      placeholder="Paste full URL or enter RW-000" onclick="event.stopPropagation()">
+    <div class="qpop-hint">Paste the full Jira URL — it will display as the ticket key with a clickable link.</div>
+    <div class="qpop-row">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'jira',document.getElementById('qpop-jira').value.trim());closePopup()">Save</button>
+      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'jira','');closePopup()">Clear</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+  setTimeout(()=>{const el=document.getElementById('qpop-jira');if(el){el.focus();el.select();}},50);
+}
+
+/* ─── OWNER quick edit — combo dropdown + free type ─── */
+function qeOwner(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const escaped=(item.owner||'').replace(/"/g,'&quot;');
+  // Build list of all known unique owner names from D
+  const known=[...new Set(D.flatMap(i=>owners(i)))].sort();
+  const pills=known.map(n=>`
+    <div class="qpop-opt" onclick="event.stopPropagation();ownerToggle('${n.replace(/'/g,"\\'")}')">
+      <span style="font-size:12px;color:var(--text2)">${n}</span>
+      <span id="otick-${n.replace(/\s/g,'_')}" style="margin-left:auto;color:var(--green);display:none">✓</span>
+    </div>`).join('');
+  const html=`
+    <div class="qpop-title">Edit Owner(s)</div>
+    <div style="max-height:160px;overflow-y:auto">${pills}</div>
+    <div class="qpop-sep"></div>
+    <input class="qpop-input" type="text" id="qpop-owner" value="${escaped}"
+      placeholder="Type name or select above…" onclick="event.stopPropagation()">
+    <div class="qpop-hint">Separate multiple with semicolons · click names above to add</div>
+    <div class="qpop-row">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'owner',document.getElementById('qpop-owner').value.trim());closePopup()">Save</button>
+      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'owner','');closePopup()">Clear</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+  // Mark already-selected owners
+  const cur=owners(item);
+  cur.forEach(n=>{
+    const tick=document.getElementById('otick-'+n.replace(/\s/g,'_'));
+    if(tick)tick.style.display='inline';
+  });
+  setTimeout(()=>document.getElementById('qpop-owner')?.focus(),50);
+}
+
+function ownerToggle(name){
+  const inp=document.getElementById('qpop-owner');
+  if(!inp)return;
+  const cur=inp.value.split(';').map(s=>s.trim()).filter(Boolean);
+  const pos=cur.findIndex(n=>n===name);
+  if(pos>=0){ cur.splice(pos,1); }
+  else { cur.push(name); }
+  inp.value=cur.join('; ');
+  // update tick
+  const tick=document.getElementById('otick-'+name.replace(/\s/g,'_'));
+  if(tick)tick.style.display=pos>=0?'none':'inline';
+}
+
+/* ─── SOURCE quick edit ─── */
+function qeSource(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const sources=['Email','RiskTeam','Workshop','Slack','Meeting','Other'];
+  const opts=sources.map(s=>`
+    <div class="qpop-opt${item.source===s?' current':''}" onclick="setField(${idx},'source','${s}');closePopup()">
+      <span style="font-size:13px;color:var(--text2)">${s}</span>
+    </div>`).join('');
+  const html=`
+    <div class="qpop-title">Set Source</div>
+    ${opts}
+    <div class="qpop-sep"></div>
+    <input class="qpop-input" type="text" id="qpop-source" value="${item.source||''}"
+      placeholder="Or type custom source…" onclick="event.stopPropagation()">
+    <div class="qpop-row">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'source',document.getElementById('qpop-source').value.trim());closePopup()">Set</button>
+      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'source','');closePopup()">Clear</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+}
+
+/* ─── TEAM quick edit ─── */
+function qeTeam(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const teams=['Risk','Trading','Sports Product'];
+  const opts=teams.map(t=>`
+    <div class="qpop-opt${item.team===t?' current':''}" onclick="setField(${idx},'team','${t}');closePopup()">
+      <span style="font-size:13px;color:var(--text2)">${t}</span>
+    </div>`).join('');
+  // also a free-text option
+  const html=`
+    <div class="qpop-title">Change Team</div>
+    ${opts}
+    <div class="qpop-sep"></div>
+    <input class="qpop-input" type="text" id="qpop-team" value="${item.team||''}"
+      placeholder="Or type custom team…" onclick="event.stopPropagation()">
+    <div class="qpop-row">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'team',document.getElementById('qpop-team').value.trim());closePopup()">Set</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+}
+
+/* ─── TYPE quick edit ─── */
+function qeType(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const opts=['Request','Task'].map(t=>`
+    <div class="qpop-opt${item.type===t?' current':''}" onclick="setField(${idx},'type','${t}');closePopup()">
+      <span class="tchip">${t}</span>
+    </div>`).join('');
+  const html=`
+    <div class="qpop-title">Set Type</div>
+    ${opts}
+    <div class="qpop-sep"></div>
+    <div class="qpop-opt${!item.type?' current':''}" onclick="setField(${idx},'type','');closePopup()">
+      <span style="color:var(--text3);font-size:12px">— Clear type</span>
+    </div>`;
+  showPopup(e.currentTarget,html);
+}
+
+/* ─── DATE REQUESTED quick edit ─── */
+function qeDateReq(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const html=`
+    <div class="qpop-title">Date Requested</div>
+    <input class="qpop-input" type="date" id="qpop-dr" value="${item.dateReq||''}" onclick="event.stopPropagation()">
+    <div class="qpop-row">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'dateReq',document.getElementById('qpop-dr').value);closePopup()">Set</button>
+      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'dateReq','');closePopup()">Clear</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+  setTimeout(()=>document.getElementById('qpop-dr')?.focus(),50);
+}
+
+/* ─── apply field change → Supabase ─── */
+async function setField(idxOrId, field, val){
+  // Accept either a numeric array index or a uuid string
+  const item = typeof idxOrId === 'string'
+    ? D.find(i=>i.id===idxOrId)
+    : D[idxOrId];
+  if(!item){showToast('Item not found','red');return;}
+  const colMap={
+    title:'title',desc:'description',owner:'owner',status:'status',
+    priority:'priority',riskPriority:'risk_priority',type:'type',team:'team',
+    requestedBy:'requested_by',source:'source',dateReq:'date_req',
+    due:'due_date',jira:'jira',estimate:'estimate',notes:'notes',
+  };
+  const col=colMap[field];
+  if(!col){showToast('Unknown field','red');return;}
+  const dbVal=(field==='dateReq'||field==='due')?(val||null):val;
+  const oldVal = item[field];
+  const {error}=await sbc.from('work_items').update({[col]:dbVal}).eq('id',item.id);
+  if(error){showToast('Save failed: '+error.message,'red');return;}
+  if(String(oldVal||'') !== String(val||'')){
+    auditLog(item.id, item.title, 'UPDATE', field, oldVal||null, val||null);
+  }
+  showToast('Updated ✓','green');
+}
+
+/* ════════════════════════════════════════
+   FULL EDIT DRAWER
+════════════════════════════════════════ */
+function openDrawer(idx){
+  const isNew=idx===null;
+  const item=isNew?{}:D[idx];
+  document.getElementById('dIdx').value    = idx??-1;
+  document.getElementById('dItemId').value = isNew ? '' : (item.id||'');
+  document.getElementById('btdel').style.display = CU?.role==='admin'&&!isNew ? 'block' : 'none';
+  document.getElementById('dtitle').textContent = isNew?'New Item':item.title;
+  document.getElementById('dmode').textContent  = isNew?'Adding new item':CU?.role==='admin'?'Admin edit':'Edit item';
+  const map={title:'title',desc:'desc',owner:'owner',status:'status',priority:'priority',
+    riskPriority:'riskPriority',type:'type',team:'team',reqBy:'requestedBy',
+    source:'source',dateReq:'dateReq',due:'due',jira:'jira',estimate:'estimate',notes:'notes'};
+  Object.keys(map).forEach(f=>{const el=document.getElementById('d_'+f);if(el)el.value=item[map[f]]||'';});
+  // Populate owner datalist with all known names
+  const dl=document.getElementById('owner-list');
+  if(dl){
+    const known=[...new Set(D.flatMap(i=>owners(i)))].sort();
+    dl.innerHTML=known.map(n=>`<option value="${n}">`).join('');
+  }
+  // Render quick-pick owner pills
+  refreshOwnerPills(item[map['owner']]||'');
+  document.getElementById('dov').classList.add('on');
+  document.getElementById('drawer').classList.add('on');
+}
+function closeDrawer(){
+  document.getElementById('dov').classList.remove('on');
+  document.getElementById('drawer').classList.remove('on');
+  // Clear id fields so stale values can't affect the next open
+  document.getElementById('dItemId').value = '';
+  document.getElementById('dIdx').value    = '-1';
+  document.getElementById('btdel').style.display = 'none';
+}
+async function saveItem(){
+  const storedId = document.getElementById('dItemId').value;
+  const isNew = !storedId;
+  const t=document.getElementById('d_title').value.trim();
+  if(!t){showToast('Title is required','red');return;}
+  const obj={
+    title:t,desc:document.getElementById('d_desc').value.trim(),
+    owner:document.getElementById('d_owner').value.trim(),
+    status:document.getElementById('d_status').value,
+    priority:document.getElementById('d_priority').value,
+    riskPriority:document.getElementById('d_riskPriority').value,
+    type:document.getElementById('d_type').value,
+    team:document.getElementById('d_team').value.trim(),
+    requestedBy:document.getElementById('d_reqBy').value.trim(),
+    source:document.getElementById('d_source').value.trim(),
+    dateReq:document.getElementById('d_dateReq').value,
+    due:document.getElementById('d_due').value,
+    jira:document.getElementById('d_jira').value.trim(),
+    estimate:document.getElementById('d_estimate').value.trim(),
+    notes:document.getElementById('d_notes').value.trim(),
+  };
+  const row=itemToRow(obj);
+  let error;
+  if(isNew){
+    const res=await sbc.from('work_items').insert([row]).select().single();
+    error=res.error;
+    if(!error){
+      obj.id=res.data.id;
+      // Update the hidden id field so Delete works immediately without reopening
+      document.getElementById('dItemId').value=obj.id;
+      document.getElementById('btdel').style.display=CU?.role==='admin'?'block':'none';
+      auditLog(obj.id, obj.title, 'CREATE', null, null, obj.title);
+    }
+  } else {
+    const existingItem = D.find(i=>i.id===storedId);
+    const oldItem = existingItem ? {...existingItem} : null;
+    const res=await sbc.from('work_items').update(row).eq('id',storedId);
+    error=res.error;
+    if(!error){
+      obj.id=storedId;
+      if(oldItem) auditItemChanges(oldItem, obj, false);
+      const pos=D.findIndex(i=>i.id===storedId);
+      if(pos>=0) D[pos]=obj;
+    }
+  }
+  if(error){showToast('Save failed: '+error.message,'red');return;}
+  closeDrawer();buildOwnerFilter();ra();
+  showToast(isNew?'Item added ✓':'Saved ✓','green');
+}
+async function deleteItem(){
+  const storedId    = document.getElementById('dItemId').value.trim();
+  const storedTitle = document.getElementById('d_title').value.trim();
+
+  // Find by id, fallback to title
+  let item = storedId ? D.find(i=>i.id===storedId) : null;
+  if(!item && storedTitle) item = D.find(i=>i.title===storedTitle);
+
+  if(!item){
+    showToast('Could not find item — please close and reopen','red');
+    return;
+  }
+
+  if(!item){
+    showToast('Could not find item — please close, reopen and try again','red');
+    return;
+  }
+  if(!confirm(`Delete "${item.title}"? This cannot be undone.`)) return;
+  const {error}=await sbc.from('work_items').delete().eq('id',item.id);
+  if(error){showToast('Delete failed: '+error.message,'red');return;}
+  // Store full item snapshot in old_value so it can be restored from audit log
+  auditLog(item.id, item.title, 'DELETE', null, JSON.stringify(item), null);
+  const pos=D.findIndex(i=>i.id===item.id);
+  if(pos>=0) D.splice(pos,1);
+  closeDrawer();buildOwnerFilter();ra();
+  showToast('Item deleted','red');
+}
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+let TT;
+function showToast(msg,type='green'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast t-${type} show`;
+  clearTimeout(TT);TT=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ════════════════════════════════════════
+   TOOLTIP POSITIONING
+   (positions .htip-box relative to mouse so it never clips off screen)
+════════════════════════════════════════ */
+document.addEventListener('mouseover',e=>{
+  const htip=e.target.closest('.htip');
+  if(!htip)return;
+  const box=htip.querySelector('.htip-box');
+  if(!box)return;
+  const r=htip.getBoundingClientRect();
+  // default: below and left-aligned
+  let top=r.bottom+8, left=r.left;
+  box.style.visibility='hidden';box.style.opacity='0';box.style.top=top+'px';box.style.left=left+'px';
+  // measure after display
+  requestAnimationFrame(()=>{
+    const bw=box.offsetWidth, bh=box.offsetHeight;
+    if(left+bw>window.innerWidth-8)left=window.innerWidth-bw-8;
+    if(top+bh>window.innerHeight-8)top=r.top-bh-8;
+    box.style.top=top+'px';box.style.left=left+'px';
+    box.style.visibility='';box.style.opacity='';
+  });
+});
+
+/* ════════════════════════════════════════
+   DRAG AND DROP
+════════════════════════════════════════ */
+let dragSrcIdx = null;
+
+function addDragEvents(tr, idx){
+  tr.addEventListener('dragstart', e=>{
+    dragSrcIdx = idx;
+    tr.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', idx);
+  });
+  tr.addEventListener('dragend', ()=>{
+    tr.classList.remove('dragging');
+    document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('drag-over'));
+  });
+  tr.addEventListener('dragover', e=>{
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    document.querySelectorAll('#tbody tr').forEach(r=>r.classList.remove('drag-over'));
+    tr.classList.add('drag-over');
+  });
+  tr.addEventListener('dragleave', ()=>{
+    tr.classList.remove('drag-over');
+  });
+  tr.addEventListener('drop', e=>{
+    e.preventDefault();
+    tr.classList.remove('drag-over');
+    if(dragSrcIdx === null || dragSrcIdx === idx) return;
+
+    // reorder D array — move dragged item to new position
+    const dragged = D[dragSrcIdx];
+    const target  = D[idx];
+    D.splice(dragSrcIdx, 1);
+    const newIdx = D.indexOf(target);
+    D.splice(newIdx, 0, dragged);
+
+    // persist new sort_order to Supabase for each item
+    saveSortOrder();
+    dragSrcIdx = null;
+    ra();
+  });
+}
+
+async function saveSortOrder(){
+  // Update sort_order for all items based on their current position in D
+  const updates = D.map((item, i) => ({id: item.id, sort_order: i}));
+  // Batch update — fire and forget, one update per item
+  for(const u of updates){
+    await sbc.from('work_items').update({sort_order: u.sort_order}).eq('id', u.id);
+  }
+}
+
+/* ════════════════════════════════════════
+   EXPORT CSV
+════════════════════════════════════════ */
+function exportCSV(){
+  const items = getS(getF()); // export whatever is currently filtered/visible
+  const cols = [
+    {h:'Title',        f:i=>i.title},
+    {h:'Owner',        f:i=>i.owner},
+    {h:'Status',       f:i=>i.status},
+    {h:'Priority',     f:i=>i.priority},
+    {h:'Risk Priority',f:i=>i.riskPriority},
+    {h:'Team',         f:i=>i.team},
+    {h:'Type',         f:i=>i.type},
+    {h:'Requested By', f:i=>i.requestedBy},
+    {h:'Source',       f:i=>i.source},
+    {h:'Date Requested',f:i=>i.dateReq},
+    {h:'Due Date',     f:i=>i.due},
+    {h:'Jira',         f:i=>parseJira(i.jira).key},
+    {h:'Estimate',     f:i=>i.estimate},
+    {h:'Description',  f:i=>i.desc},
+    {h:'Notes',        f:i=>i.notes},
+  ];
+
+  const esc = v => {
+    const s = (v||'').toString().replace(/"/g,'""');
+    return /[,"\n\r]/.test(s) ? `"${s}"` : s;
+  };
+
+  const header = cols.map(c=>esc(c.h)).join(',');
+  const rows   = items.map(i=>cols.map(c=>esc(c.f(i))).join(','));
+  const csv    = [header, ...rows].join('\r\n');
+
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href     = url;
+  a.download = `risk-tracker-${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`Exported ${items.length} item${items.length!==1?'s':''}  ✓`,'green');
+}
+
+/* ════════════════════════════════════════
+   AUDIT LOGGING
+════════════════════════════════════════ */
+async function auditLog(itemId, itemTitle, action, field, oldVal, newVal){
+  try {
+    await sbc.from('audit_log').insert([{
+      item_id:    itemId  || null,
+      item_title: itemTitle || '',
+      action,
+      field:      field   || null,
+      old_value:  oldVal!=null ? String(oldVal) : null,
+      new_value:  newVal!=null ? String(newVal) : null,
+      changed_by: CU?.name || CU?.username || 'unknown',
+    }]);
+  } catch(e){ console.warn('Audit log failed:', e); }
+}
+
+/* Call this to log all changed fields when saving via the full drawer */
+function auditItemChanges(oldItem, newItem, isNew){
+  if(isNew){
+    auditLog(newItem.id, newItem.title, 'CREATE', null, null, newItem.title);
+    return;
+  }
+  const fields = ['title','desc','owner','status','priority','riskPriority',
+    'type','team','requestedBy','source','dateReq','due','jira','estimate','notes'];
+  fields.forEach(f=>{
+    const ov = oldItem[f]||'', nv = newItem[f]||'';
+    if(ov !== nv){
+      auditLog(newItem.id, newItem.title, 'UPDATE', f, ov||null, nv||null);
+    }
+  });
+}
+
+/* ════════════════════════════════════════
+   ITEM HISTORY PANEL
+════════════════════════════════════════ */
+async function openHistory(itemId){
+  const item = D.find(i=>i.id===itemId);
+  document.getElementById('hpanel-title').textContent = item?.title || 'Item History';
+  document.getElementById('hpanel-sub').textContent   = 'Full change log for this item';
+  document.getElementById('hpanel-body').innerHTML    = '<div class="hpanel-empty">Loading…</div>';
+  document.getElementById('hpanel').classList.add('on');
+
+  const {data, error} = await sbc
+    .from('audit_log')
+    .select('*')
+    .eq('item_id', itemId)
+    .order('changed_at', {ascending:false});
+
+  if(error || !data?.length){
+    document.getElementById('hpanel-body').innerHTML =
+      '<div class="hpanel-empty">No history recorded for this item yet.<br><span style="font-size:12px;opacity:.6">Changes made from now on will appear here.</span></div>';
+    return;
+  }
+
+  const body = document.getElementById('hpanel-body');
+  body.innerHTML = data.map(entry=>`
+    <div class="hentry ha-${entry.action}">
+      <div class="hentry-when">${fmtAuditDate(entry.changed_at)}</div>
+      <span class="hentry-action">${entry.action}</span>
+      ${entry.field ? `<span class="hentry-field">${entry.field}</span>` : ''}
+      ${entry.action==='UPDATE' && entry.field ? `
+        <div class="hentry-diff">
+          <div class="hentry-old">${entry.old_value||'<em style="opacity:.5">empty</em>'}</div>
+          <div class="hentry-new">${entry.new_value||'<em style="opacity:.5">empty</em>'}</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="hentry-user">by ${entry.changed_by}</div>
+          <button class="hrollback hist-rb"
+            data-item-id="${itemId}"
+            data-field="${entry.field}"
+            data-old="${(entry.old_value||'').replace(/"/g,'&quot;')}">↩ Rollback</button>
+        </div>` :
+      `<div class="hentry-user">by ${entry.changed_by}</div>`}
+    </div>`).join('');
+
+  // Attach click handlers after rendering
+  body.querySelectorAll('.hist-rb').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      rollbackField(btn.dataset.itemId, btn.dataset.field, btn.dataset.old, '');
+    });
+  });
+}
+
+function closeHistory(){
+  document.getElementById('hpanel').classList.remove('on');
+}
+
+async function rollbackField(itemId, field, oldValue, auditEntryId){
+  const item = D.find(i=>i.id===itemId);
+  if(!item){ showToast('Item not found','red'); return; }
+  const displayVal = oldValue || '(empty)';
+  if(!confirm(`Restore "${field}" back to: "${displayVal}"?\n\nThis will overwrite the current value.`)) return;
+  const currentVal = item[field];
+  await setField(itemId, field, oldValue||'');
+  await auditLog(itemId, item.title, 'RESTORE', field, currentVal, oldValue||'');
+  showToast(`"${field}" rolled back ✓`, 'amber');
+  openHistory(itemId);
+}
+
+function fmtAuditDate(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})
+    + ' ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ════════════════════════════════════════
+   AUDIT LOG TAB
+════════════════════════════════════════ */
+let auditData = [];
+
+async function loadAuditLog(){
+  document.getElementById('audit-loading').style.display='block';
+  document.getElementById('audit-empty').style.display='none';
+  const {data,error} = await sbc
+    .from('audit_log')
+    .select('*')
+    .order('changed_at',{ascending:false})
+    .limit(500);
+  document.getElementById('audit-loading').style.display='none';
+  if(error){ showToast('Failed to load audit log','red'); return; }
+  auditData = data || [];
+  document.getElementById('cnt-audit').textContent = auditData.length;
+
+  // populate item filter
+  const titles = [...new Set(auditData.map(e=>e.item_title).filter(Boolean))].sort();
+  const itemSel = document.getElementById('audit-filter-item');
+  itemSel.innerHTML='<option value="">All Items</option>'
+    + titles.map(t=>`<option value="${t}">${t}</option>`).join('');
+
+  // populate user filter
+  const users = [...new Set(auditData.map(e=>e.changed_by).filter(Boolean))].sort();
+  const userSel = document.getElementById('audit-filter-user');
+  userSel.innerHTML='<option value="">All Users</option>'
+    + users.map(u=>`<option value="${u}">${u}</option>`).join('');
+
+  renderAudit();
+}
+
+function renderAudit(){
+  const fItem   = document.getElementById('audit-filter-item').value;
+  const fAction = document.getElementById('audit-filter-action').value;
+  const fUser   = document.getElementById('audit-filter-user').value;
+
+  const rows = auditData.filter(e=>{
+    if(fItem   && e.item_title  !== fItem)   return false;
+    if(fAction && e.action      !== fAction) return false;
+    if(fUser   && e.changed_by  !== fUser)   return false;
+    return true;
+  });
+
+  const tb = document.getElementById('audit-tbody');
+  document.getElementById('audit-empty').style.display = rows.length?'none':'block';
+  tb.innerHTML = rows.map(e=>{
+    // For DELETE rows, old_value is JSON snapshot — show just the title
+    let displayOld = e.old_value||'';
+    let isDeleteWithSnapshot = false;
+    if(e.action==='DELETE' && e.old_value){
+      try {
+        const parsed = JSON.parse(e.old_value);
+        displayOld = parsed.title || e.old_value;
+        isDeleteWithSnapshot = true;
+      } catch(x){ displayOld = e.old_value; }
+    }
+    return `
+    <tr style="border-bottom:1px solid var(--border)">
+      <td><span class="dN">${fmtAuditDate(e.changed_at)}</span></td>
+      <td><span class="aaction aa-${e.action}">${e.action}</span></td>
+      <td style="font-size:12px;color:var(--text);font-weight:500;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.item_title||''}">
+        ${e.item_title||'<span style="color:var(--text3)">—</span>'}
+        ${e.action==='DELETE'?'<span style="font-size:10px;color:var(--red);margin-left:4px">deleted</span>':''}
+      </td>
+      <td style="font-size:12px;color:var(--text2)">${e.field||'—'}</td>
+      <td><div class="audit-old" title="${displayOld}">${displayOld||'<span style="opacity:.4">—</span>'}</div></td>
+      <td><div class="audit-new" title="${e.new_value||''}">${e.new_value||'<span style="opacity:.4">—</span>'}</div></td>
+      <td style="font-size:12px;color:var(--text3)">${e.changed_by}</td>
+      <td>
+        ${e.action==='UPDATE'&&e.field&&e.item_id?`
+          <button class="hrollback audit-rb"
+            data-item-id="${e.item_id}"
+            data-field="${e.field}"
+            data-old="${(e.old_value||'').replace(/"/g,'&quot;')}"
+            data-title="${(e.item_title||'').replace(/"/g,'&quot;')}">↩ Rollback</button>`:''}
+        ${isDeleteWithSnapshot?`
+          <button class="hrollback audit-restore-del"
+            data-snapshot="${(e.old_value||'').replace(/"/g,'&quot;')}"
+            data-title="${(e.item_title||'').replace(/"/g,'&quot;')}">↩ Restore</button>`:''}
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Attach click handlers after rendering — avoids all inline JS escaping issues
+  tb.querySelectorAll('.audit-rb').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const itemId  = btn.dataset.itemId;
+      const field   = btn.dataset.field;
+      const oldVal  = btn.dataset.old;
+      const title   = btn.dataset.title;
+      rollbackFromAudit(itemId, field, oldVal, title);
+    });
+  });
+
+  tb.querySelectorAll('.audit-restore-del').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      restoreDeletedItem(btn.dataset.snapshot, btn.dataset.title);
+    });
+  });
+}
+
+async function restoreDeletedItem(snapshotStr, title){
+  if(!confirm(`Restore "${title}" back to the active list?\n\nIt will be re-created as a new item with all its original data.`)) return;
+  let snapshot;
+  try { snapshot = JSON.parse(snapshotStr); }
+  catch(e){ showToast('Could not parse snapshot — cannot restore','red'); return; }
+
+  // Re-insert as a new row (new id, preserving all other fields)
+  const row = itemToRow(snapshot);
+  delete row.id; // let Supabase generate a fresh id
+  const {data, error} = await sbc.from('work_items').insert([row]).select().single();
+  if(error){ showToast('Restore failed: '+error.message,'red'); return; }
+
+  auditLog(data.id, snapshot.title, 'RESTORE', null, null, snapshot.title);
+  showToast(`"${snapshot.title}" restored ✓`, 'amber');
+  loadAuditLog();
+  const activeBtn = document.getElementById('tab-active');
+  switchTab('active', activeBtn);
+}
+
+async function rollbackFromAudit(itemId, field, oldValue, auditEntryId){
+  const item = D.find(i=>i.id===itemId);
+  if(!item){ showToast('Item no longer exists in active list','red'); return; }
+  const displayVal = oldValue||'(empty)';
+  if(!confirm(`Restore "${field}" on "${item.title}" back to: "${displayVal}"?`)) return;
+  const currentVal = item[field];
+  await setField(itemId, field, oldValue||'');
+  await auditLog(itemId, item.title, 'RESTORE', field, currentVal, oldValue||'');
+  showToast(`"${field}" rolled back ✓`, 'amber');
+  loadAuditLog();
+}
+
+/* ════════════════════════════════════════
+   OWNER PILLS (drawer)
+════════════════════════════════════════ */
+function refreshOwnerPills(currentVal){
+  const container = document.getElementById('owner-pills');
+  if(!container) return;
+  const val = currentVal !== undefined ? currentVal : document.getElementById('d_owner').value;
+  const selected = val.split(';').map(s=>s.trim()).filter(Boolean);
+  const known = [...new Set(D.flatMap(i=>owners(i)))].sort();
+  container.innerHTML = known.map(n=>{
+    const active = selected.includes(n);
+    return `<span onclick="drawerOwnerToggle('${n.replace(/'/g,"\\'")}',this)"
+      style="display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:12px;cursor:pointer;transition:all .12s;
+        background:${active?'rgba(232,98,42,.2)':'var(--bg4)'};
+        color:${active?'var(--accent)':'var(--text3)'};
+        border:1px solid ${active?'rgba(232,98,42,.3)':'var(--border)'}"
+      data-active="${active}">${n}</span>`;
+  }).join('');
+}
+
+function drawerOwnerToggle(name, el){
+  const inp = document.getElementById('d_owner');
+  const cur = inp.value.split(';').map(s=>s.trim()).filter(Boolean);
+  const pos = cur.findIndex(n=>n===name);
+  if(pos>=0) cur.splice(pos,1);
+  else cur.push(name);
+  inp.value = cur.join('; ');
+  // refresh all pills
+  refreshOwnerPills();
+}
+
+/* ════════════════════════════════════════
+   EMAIL NOTIFICATIONS (mailto-based)
+════════════════════════════════════════ */
+
+// User email map — add team members here when ready
+const USER_EMAILS = {
+  'Nicholas Haynes': 'nicholas.haynes@angstromsports.com',
+  'Nick Haynes':     'nicholas.haynes@angstromsports.com',
+  // Add others later:
+  // 'Jason Foster':   'jason.foster@angstromsports.com',
+  // 'Neal Beavis':    'neal.beavis@angstromsports.com',
+};
+
+const TRACKER_URL = 'https://risk-work-intake.netlify.app';
+
+function getEmail(ownerName){
+  // Try exact match first, then partial
+  if(USER_EMAILS[ownerName]) return USER_EMAILS[ownerName];
+  const key = Object.keys(USER_EMAILS).find(k =>
+    k.toLowerCase().includes(ownerName.toLowerCase()) ||
+    ownerName.toLowerCase().includes(k.toLowerCase())
+  );
+  return key ? USER_EMAILS[key] : null;
+}
+
+function buildMailto(to, subject, body){
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function fd2(d){ // formatted date for emails
+  if(!d) return '—';
+  return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function daysUntil(d){
+  if(!d) return null;
+  const diff = new Date(d).setHours(0,0,0,0) - new Date().setHours(0,0,0,0);
+  return Math.round(diff / 86400000);
+}
+
+/* Build all pending notifications, grouped by owner */
+function buildNotifications(){
+  const active = D.filter(i => !isArchived(i));
+  const groups = {}; // keyed by email address
+
+  function addNote(email, ownerName, category, item){
+    if(!groups[email]) groups[email] = { ownerName, cats:{} };
+    if(!groups[email].cats[category]) groups[email].cats[category] = [];
+    groups[email].cats[category].push(item);
+  }
+
+  active.forEach(item => {
+    const ows = owners(item);
+    if(!ows.length) return;
+    const days = daysUntil(item.due);
+
+    ows.forEach(ownerName => {
+      const email = getEmail(ownerName);
+      if(!email) return; // skip if no email mapped
+
+      if(days !== null){
+        if(days < 0 && days >= -7) addNote(email, ownerName, 'overdue',    item);
+        else if(days < -7)         addNote(email, ownerName, 'overdue7',   item);
+        else if(days <= 2)         addNote(email, ownerName, 'due2',       item);
+        else if(days <= 7)         addNote(email, ownerName, 'due7',       item);
+      }
+    });
+  });
+
+  return groups;
+}
+
+function formatItemLine(item, showDue=true){
+  const days = daysUntil(item.due);
+  const dueStr = showDue && item.due ? ` (due ${fd2(item.due)}${days!==null?`, ${Math.abs(days)}d ${days<0?'overdue':'remaining'}`:''})`:'';
+  return `  • ${item.title}${dueStr} — ${item.status}, ${item.priority} priority`;
+}
+
+function openNotificationEmail(email, ownerName, cats){
+  const catOrder = ['overdue7','overdue','due2','due7'];
+  const catConfig = {
+    overdue7: { label:'🔴 Overdue by more than 7 days' },
+    overdue:  { label:'🟠 Overdue' },
+    due2:     { label:'🟡 Due within 2 days' },
+    due7:     { label:'📅 Due within 7 days' },
+  };
+
+  const firstName = ownerName.split(' ')[0];
+  const totalItems = Object.values(cats).flat().length;
+
+  const bodyLines = [
+    `Hi ${firstName},`,
+    ``,
+    `Please see below a summary of your Risk Tracker items that need attention:`,
+    ``,
+  ];
+
+  catOrder.forEach(cat => {
+    if(!cats[cat]) return;
+    bodyLines.push(catConfig[cat].label);
+    cats[cat].forEach(item => bodyLines.push(formatItemLine(item)));
+    bodyLines.push('');
+  });
+
+  bodyLines.push(`View and update your items here: ${TRACKER_URL}`);
+  bodyLines.push('');
+  bodyLines.push('Thanks,');
+  bodyLines.push('Angstrom Risk Tracker');
+
+  const urgentCats = cats.overdue7 || cats.overdue;
+  const subject = urgentCats
+    ? `⚠️ ACTION REQUIRED — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Need Your Attention`
+    : `📅 REMINDER — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Due Soon`;
+
+  const a = document.createElement('a');
+  a.href = buildMailto(email, subject, bodyLines.join('\n'));
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => a.remove(), 500);
+}
+
+/* ── Sent tracking — persists in localStorage by date ── */
+function getSentKey(email){ return `notif_sent_${email}_${new Date().toISOString().slice(0,10)}`; }
+function markSent(email){ localStorage.setItem(getSentKey(email), '1'); }
+function wasSentToday(email){ return !!localStorage.getItem(getSentKey(email)); }
+function clearSent(email){ localStorage.removeItem(getSentKey(email)); }
+
+const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`;
+
+/* ════════════════════════════════════════
+   10AM DAILY AUTO-EMAIL SCHEDULER
+════════════════════════════════════════ */
+function startDailyScheduler(){
+  // Don't fire again if already fired today
+  if(localStorage.getItem(AUTO_FIRED_KEY)) return;
+
+  function msUntil10am(){
+    const now = new Date();
+    const target = new Date();
+    target.setHours(10, 0, 0, 0);
+    if(target <= now) return null; // already past 10am today
+    return target - now;
+  }
+
+  const ms = msUntil10am();
+  if(ms === null){
+    // Past 10am — don't fire, wait until tomorrow (user will reload)
+    return;
+  }
+
+  setTimeout(()=>{
+    // Check if already fired (e.g. from another tab)
+    if(localStorage.getItem(AUTO_FIRED_KEY)) return;
+    localStorage.setItem(AUTO_FIRED_KEY, '1');
+
+    const groups = buildNotifications();
+    const keys = Object.keys(groups);
+    if(!keys.length) return; // nothing to send
+
+    // Show a brief toast so user knows what's happening
+    showToast(`📬 Sending ${keys.length} notification email${keys.length!==1?'s':''}…`, 'amber');
+
+    // Open each email with a short delay between them so Outlook handles them
+    keys.forEach((email, i) => {
+      const {ownerName, cats} = groups[email];
+      setTimeout(()=>{
+        openNotificationEmail(email, ownerName, cats);
+        markSent(email);
+      }, i * 1800); // 1.8 seconds between each
+    });
+
+  }, ms);
+}
+
+/* ── Notification Centre UI ── */
+function openNotifCentre(){
+  const groups = buildNotifications();
+  const keys = Object.keys(groups);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'notif-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:600;display:flex;align-items:center;justify-content:center';
+
+  if(!keys.length){
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:12px;padding:40px 36px;max-width:440px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.15)">
+        <div style="font-size:32px;margin-bottom:12px">✅</div>
+        <div style="font-size:16px;font-weight:600;color:#1a1814;margin-bottom:6px">No notifications needed</div>
+        <div style="font-size:13px;color:#9e9890;margin-bottom:24px">No items are overdue or due soon for tracked users.</div>
+        <button onclick="document.getElementById('notif-overlay').remove()" style="background:#1a1814;color:#fff;border:none;border-radius:6px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Close</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+    return;
+  }
+
+  // Ping Slack when admin opens notification centre — removed
+  // pingSlack(groups);
+
+  const catLabels  = { overdue7:'Overdue 7+ days', overdue:'Overdue', due2:'Due in 2 days', due7:'Due in 7 days' };
+  const catColours = { overdue7:'#c0392b', overdue:'#e8500a', due2:'#b07d10', due7:'#3557d4' };
+  const catOrder   = ['overdue7','overdue','due2','due7'];
+
+  const cards = keys.map(email => {
+    const {ownerName, cats} = groups[email];
+    const totalItems = Object.values(cats).flat().length;
+    const sent = wasSentToday(email);
+
+    const itemRows = catOrder.flatMap(cat => {
+      if(!cats[cat]) return [];
+      return cats[cat].map(item => `
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0ede8">
+          <span style="width:7px;height:7px;border-radius:50%;background:${catColours[cat]};flex-shrink:0;margin-top:4px;display:inline-block"></span>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:500;color:#1a1814;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.title}</div>
+            <div style="font-size:11px;color:#9e9890">${catLabels[cat]}${item.due?' · '+fd2(item.due):''}</div>
+          </div>
+        </div>`);
+    }).join('');
+
+    return `
+      <div class="notif-card" data-email="${email}" style="background:#fff;border:1px solid ${sent?'#b8e4c8':'#ddd9d3'};border-radius:10px;padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div style="font-size:14px;font-weight:600;color:#1a1814">${ownerName}</div>
+              ${sent?`<span class="sent-badge" style="font-size:10px;font-weight:700;background:#d4f0e0;color:#1a6b3a;border-radius:4px;padding:2px 8px">✓ Sent today</span>`:''}
+            </div>
+            <div style="font-size:12px;color:#9e9890;margin-top:2px">${email} · ${totalItems} item${totalItems!==1?'s':''}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            ${sent?`<button class="notif-unsend-btn" data-email="${email}" style="background:none;border:1px solid #ddd9d3;border-radius:6px;padding:8px 10px;font-size:11px;color:#9e9890;cursor:pointer;font-family:'Outfit',sans-serif">Resend</button>`:''}
+            <button class="notif-send-btn"
+              data-email="${email}" data-owner="${ownerName}"
+              data-cats="${encodeURIComponent(JSON.stringify(cats))}"
+              style="background:${sent?'#6b6560':'#e8500a'};color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap">
+              ✉ ${sent?'Send again':'Open in Outlook'}
+            </button>
+          </div>
+        </div>
+        <div>${itemRows}</div>
+        ${sent?'':`<div style="margin-top:12px;padding-top:12px;border-top:1px solid #f0ede8;display:flex;align-items:center;justify-content:flex-end">
+          <button class="notif-marksent-btn" data-email="${email}" style="background:none;border:none;font-size:12px;color:#9e9890;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:underline">
+            Mark as sent without opening Outlook
+          </button>
+        </div>`}
+      </div>`;
+  }).join('');
+
+  overlay.innerHTML = `
+    <div style="background:#f5f3f0;border-radius:12px;width:90%;max-width:600px;max-height:82vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.18)">
+      <div style="padding:20px 24px;background:#fff;border-bottom:1px solid #ddd9d3;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#1a1814">📬 Notifications</div>
+          <div style="font-size:12px;color:#9e9890;margin-top:2px">${keys.length} recipient${keys.length!==1?'s':''} · opens pre-filled in Outlook · sent status resets daily</div>
+        </div>
+        <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:20px;color:#9e9890;cursor:pointer;line-height:1">✕</button>
+      </div>
+      <div style="padding:20px 24px;overflow-y:auto">${cards}</div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+
+  // Open in Outlook + auto mark sent
+  overlay.querySelectorAll('.notif-send-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const email = btn.dataset.email;
+      const cats  = JSON.parse(decodeURIComponent(btn.dataset.cats));
+      openNotificationEmail(email, btn.dataset.owner, cats);
+      markSent(email);
+      refreshCard(overlay, email, groups[email]);
+    });
+  });
+
+  // Mark as sent without opening Outlook
+  overlay.querySelectorAll('.notif-marksent-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      markSent(btn.dataset.email);
+      refreshCard(overlay, btn.dataset.email, groups[btn.dataset.email]);
+    });
+  });
+
+  // Resend — clear sent status and reopen
+  overlay.querySelectorAll('.notif-unsend-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      clearSent(btn.dataset.email);
+      overlay.remove();
+      openNotifCentre();
+    });
+  });
+}
+
+function refreshCard(overlay, email, group){
+  const card = overlay.querySelector(`.notif-card[data-email="${email}"]`);
+  if(!card) return;
+  card.style.borderColor = '#b8e4c8';
+  // Add sent badge
+  const nameRow = card.querySelector('div[style*="display:flex;align-items:center;gap:8px"]');
+  if(nameRow && !nameRow.querySelector('.sent-badge')){
+    const badge = document.createElement('span');
+    badge.className = 'sent-badge';
+    badge.style.cssText = 'font-size:10px;font-weight:700;background:#d4f0e0;color:#1a6b3a;border-radius:4px;padding:2px 8px';
+    badge.textContent = '✓ Sent today';
+    nameRow.appendChild(badge);
+  }
+  // Update button
+  const sendBtn = card.querySelector('.notif-send-btn');
+  if(sendBtn){ sendBtn.style.background='#6b6560'; sendBtn.textContent='✉ Send again'; }
+  // Remove "mark as sent" link row
+  const markRow = card.querySelector('.notif-marksent-btn');
+  if(markRow) markRow.closest('div[style*="margin-top:12px"]')?.remove();
+  // Add resend button if not there
+  const btnGroup = card.querySelector('.notif-send-btn')?.parentElement;
+  if(btnGroup && !card.querySelector('.notif-unsend-btn')){
+    const resend = document.createElement('button');
+    resend.className = 'notif-unsend-btn';
+    resend.dataset.email = email;
+    resend.style.cssText = 'background:none;border:1px solid #ddd9d3;border-radius:6px;padding:8px 10px;font-size:11px;color:#9e9890;cursor:pointer;font-family:\'Outfit\',sans-serif';
+    resend.textContent = 'Resend';
+    resend.addEventListener('click', ev => { ev.stopPropagation(); clearSent(email); overlay.remove(); openNotifCentre(); });
+    btnGroup.insertBefore(resend, card.querySelector('.notif-send-btn'));
+  }
+}
+
+/* ════════════════════════════════════════
+   KEYBOARD
+════════════════════════════════════════ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();}
+});
+</script>
+</body>
+</html>
