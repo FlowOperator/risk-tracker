@@ -33,6 +33,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .llogo{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--text2);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .ang-mark{width:30px;height:30px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;letter-spacing:0;flex-shrink:0}
 .ldot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .ltitle{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;margin-bottom:5px;color:var(--text)}
 .lsub{font-size:13px;color:var(--text3);margin-bottom:34px}
@@ -2163,7 +2164,7 @@ const USER_EMAILS = {
   // 'Neal Beavis':    'neal.beavis@angstromsports.com',
 };
 
-const TRACKER_URL = 'https://risk-work-intake.netlify.app';
+const TRACKER_URL = 'https://flowoperator.github.io/risk-tracker';
 
 function getEmail(ownerName){
   // Try exact match first, then partial
@@ -2284,45 +2285,60 @@ const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`
    10AM DAILY AUTO-EMAIL SCHEDULER
 ════════════════════════════════════════ */
 function startDailyScheduler(){
-  // Don't fire again if already fired today
   if(localStorage.getItem(AUTO_FIRED_KEY)) return;
 
   function msUntil10am(){
     const now = new Date();
     const target = new Date();
     target.setHours(10, 0, 0, 0);
-    if(target <= now) return null; // already past 10am today
+    if(target <= now) return null;
     return target - now;
   }
 
   const ms = msUntil10am();
-  if(ms === null){
-    // Past 10am — don't fire, wait until tomorrow (user will reload)
-    return;
-  }
+  if(ms === null) return;
 
   setTimeout(()=>{
-    // Check if already fired (e.g. from another tab)
     if(localStorage.getItem(AUTO_FIRED_KEY)) return;
     localStorage.setItem(AUTO_FIRED_KEY, '1');
 
     const groups = buildNotifications();
     const keys = Object.keys(groups);
-    if(!keys.length) return; // nothing to send
+    if(!keys.length) return;
 
-    // Show a brief toast so user knows what's happening
-    showToast(`📬 Sending ${keys.length} notification email${keys.length!==1?'s':''}…`, 'amber');
-
-    // Open each email with a short delay between them so Outlook handles them
-    keys.forEach((email, i) => {
-      const {ownerName, cats} = groups[email];
-      setTimeout(()=>{
-        openNotificationEmail(email, ownerName, cats);
-        markSent(email);
-      }, i * 1800); // 1.8 seconds between each
-    });
-
+    const totalItems = Object.values(groups).flatMap(g=>Object.values(g.cats)).flat().length;
+    showNotifBanner(keys.length, totalItems);
   }, ms);
+}
+
+function showNotifBanner(recipients, totalItems){
+  // Remove any existing banner
+  document.getElementById('notif-banner')?.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'notif-banner';
+  banner.style.cssText = `
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:#1a1814;color:#fff;
+    border-radius:8px;padding:12px 18px;
+    display:flex;align-items:center;gap:14px;
+    box-shadow:0 4px 20px rgba(0,0,0,.25);
+    z-index:900;font-family:'Outfit',sans-serif;font-size:13px;
+    animation:slideUp .25s ease;white-space:nowrap;
+  `;
+  banner.innerHTML = `
+    <span style="font-size:16px">📬</span>
+    <span style="color:rgba(255,255,255,.7)">${totalItems} item${totalItems!==1?'s':''} need attention across ${recipients} recipient${recipients!==1?'s':''}</span>
+    <button onclick="document.getElementById('notif-banner').remove();openNotifCentre()"
+      style="background:#e8500a;border:none;border-radius:5px;color:#fff;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap">
+      Review &amp; Send
+    </button>
+    <button onclick="document.getElementById('notif-banner').remove()"
+      style="background:none;border:none;color:rgba(255,255,255,.4);font-size:16px;cursor:pointer;padding:0 2px;line-height:1">
+      ✕
+    </button>
+  `;
+  document.body.appendChild(banner);
 }
 
 /* ── Notification Centre UI ── */
