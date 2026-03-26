@@ -33,7 +33,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .llogo{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--text2);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .ang-mark{width:30px;height:30px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;letter-spacing:0;flex-shrink:0}
 .ldot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
-@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .ltitle{font-family:'Outfit',sans-serif;font-size:26px;font-weight:700;margin-bottom:5px;color:var(--text)}
 .lsub{font-size:13px;color:var(--text3);margin-bottom:34px}
@@ -430,6 +429,46 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
 .audit-old{color:var(--red);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .audit-new{color:var(--green);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+/* ═══ CUSTOM DATE PICKER ═══ */
+.dpick{cursor:pointer!important}
+.dpick:hover{border-color:var(--border2)}
+.dp-overlay{position:fixed;inset:0;z-index:800}
+.dp-cal{
+  position:fixed;background:#fff;border:1px solid var(--border2);
+  border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.14);
+  z-index:801;width:280px;overflow:hidden;
+  animation:popIn .12s ease;font-family:'Outfit',sans-serif;
+}
+.dp-head{background:var(--text);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.dp-title{font-size:14px;font-weight:600;cursor:pointer;user-select:none}
+.dp-title:hover{color:var(--accent2)}
+.dp-nav{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:5px;transition:background .12s}
+.dp-nav:hover{background:rgba(255,255,255,.15)}
+.dp-dow{display:grid;grid-template-columns:repeat(7,1fr);padding:10px 10px 4px;gap:2px}
+.dp-dow span{text-align:center;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;padding:4px 0}
+.dp-days{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 10px;gap:2px}
+.dp-day{text-align:center;padding:7px 4px;font-size:13px;border-radius:6px;cursor:pointer;transition:background .1s;color:var(--text);user-select:none}
+.dp-day:hover:not(.dp-empty):not(.dp-selected){background:var(--bg3)}
+.dp-day.dp-empty{cursor:default}
+.dp-day.dp-today{font-weight:700;color:var(--accent)}
+.dp-day.dp-selected{background:var(--accent);color:#fff;font-weight:600}
+.dp-day.dp-selected.dp-today{background:var(--accent)}
+.dp-footer{padding:8px 12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.dp-footer button{background:none;border:none;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;padding:4px 8px;border-radius:5px}
+.dp-clear{color:var(--text3)}
+.dp-clear:hover{color:var(--red);background:rgba(192,57,43,.06)}
+.dp-today-btn{color:var(--accent);font-weight:600}
+.dp-today-btn:hover{background:rgba(232,80,10,.08)}
+/* month/year selector */
+.dp-months{display:grid;grid-template-columns:repeat(3,1fr);padding:12px;gap:6px}
+.dp-month{padding:10px 4px;text-align:center;font-size:13px;border-radius:6px;cursor:pointer;transition:background .1s}
+.dp-month:hover{background:var(--bg3)}
+.dp-month.dp-sel-m{background:var(--accent);color:#fff;font-weight:600}
+.dp-years{display:grid;grid-template-columns:repeat(4,1fr);padding:12px;gap:6px;max-height:200px;overflow-y:auto}
+.dp-year{padding:8px 4px;text-align:center;font-size:13px;border-radius:6px;cursor:pointer;transition:background .1s}
+.dp-year:hover{background:var(--bg3)}
+.dp-year.dp-sel-y{background:var(--accent);color:#fff;font-weight:600}
+
 /* ═══ DRAWER ═══ */
 .dov{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;display:none}
 .dov.on{display:block}
@@ -473,16 +512,11 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
     <div class="ltitle">Risk Tracker</div>
     <div class="lsub">Sign in to view and manage intake items</div>
     <label class="fl">Username</label>
-    <input class="fi" id="lU" type="text" placeholder="Enter username" autocomplete="off">
+    <input class="fi" id="lU" type="text" placeholder="firstname.lastname@angstromsports.com" autocomplete="off">
     <label class="fl">Password</label>
     <input class="fi" id="lP" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="bp_" onclick="doLogin()">Sign In →</button>
     <div class="lerr" id="lerr"></div>
-    <div class="lhint">
-      <strong>Admin:</strong> admin / admin123<br>
-      <strong>Team:</strong> jason · neal · samuel · nicholas · aidan · dylan · gavin <em style="color:var(--text3)">(all: pass123)</em><br>
-      <strong>Guest:</strong> guest / guest
-    </div>
   </div>
 </div>
 
@@ -496,6 +530,7 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
     <div class="navsep"></div>
     <div class="navr">
       <button class="btnout adminonly" id="btnNotif" onclick="openNotifCentre()" style="gap:6px">📬 Notifications</button>
+      <button class="btnout adminonly" onclick="openUserMgmt()" title="Content Management" style="font-size:15px;padding:5px 10px">🛡</button>
       <div class="uchip">
         <div class="uav" id="nAv">?</div>
         <span id="nName">—</span>
@@ -610,6 +645,7 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
           <button class="vtab" onclick="setV('kanban',this)">⊞ Board</button>
         </div>
         <div class="cpill" id="cpill">— items</div>
+        <button onclick="clearAllFilters()" id="btnClearFilters" style="display:none;background:rgba(232,80,10,.1);border:1px solid rgba(232,80,10,.2);border-radius:6px;color:var(--accent);padding:9px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:all .15s">✕ Clear filters</button>
         <button onclick="exportCSV()" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:8px 14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s;white-space:nowrap" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">⬇ Export CSV</button>
       </div>
 
@@ -775,8 +811,8 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
           <option value="Slack"><option value="Meeting"><option value="Other">
         </datalist>
       </div>
-      <div><label class="dlabel">Date Requested</label><input class="dinput" id="d_dateReq" type="date"></div>
-      <div><label class="dlabel">Due Date</label><input class="dinput" id="d_due" type="date"></div>
+      <div><label class="dlabel">Date Requested</label><input class="dinput dpick" id="d_dateReq" type="text" placeholder="DD MMM YYYY" autocomplete="off" readonly onclick="openDatePicker(this,'d_dateReq_val')" style="cursor:pointer"><input type="hidden" id="d_dateReq_val"></div>
+      <div><label class="dlabel">Due Date</label><input class="dinput dpick" id="d_due" type="text" placeholder="DD MMM YYYY" autocomplete="off" readonly onclick="openDatePicker(this,'d_due_val')" style="cursor:pointer"><input type="hidden" id="d_due_val"></div>
       <div><label class="dlabel">Jira Ticket / URL</label><input class="dinput" id="d_jira" type="text" placeholder="RW-000 or full URL"></div>
       <div><label class="dlabel">Estimate</label><input class="dinput" id="d_estimate" type="text" placeholder="e.g. 3 wks"></div>
       <div class="dfull"><label class="dlabel">Notes / Links</label><textarea class="dtarea" id="d_notes" placeholder="Extra notes, links, context…"></textarea></div>
@@ -806,26 +842,36 @@ const sbc = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 ════════════════════════════════════════ */
 const USERS={
   admin:{pass:'admin123',role:'admin',name:'Admin'},
-  jason:{pass:'pass123',role:'user',name:'Jason Foster'},
-  neal:{pass:'pass123',role:'user',name:'Neal Beavis'},
-  samuel:{pass:'pass123',role:'user',name:'Samuel Heel'},
+  'jason.foster@angstromsports.com':{pass:'angstrom',role:'user',name:'Jason Foster'},
+  'neal.beavis@angstromsports.com':{pass:'angstrom',role:'user',name:'Neal Beavis'},
+  'samuel.heel@angstromsports.com':{pass:'angstrom',role:'user',name:'Sam Heel'},
   nicholas:{pass:'pass123',role:'user',name:'Nicholas Haynes'},
-  aidan:{pass:'pass123',role:'user',name:'Aidan Nutbrown'},
-  dylan:{pass:'pass123',role:'user',name:'Dylan Day'},
-  gavin:{pass:'pass123',role:'user',name:'Gavin Wood'},
+  'aidan.nutbrown@angstromsports.com':{pass:'angstrom',role:'user',name:'Aidan Nutbrown'},
+  dylan:{pass:'angstrom',role:'user',name:'Dylan Day'},
+  'gavin.wood@angstromsports.com':{pass:'angstrom',role:'user',name:'Gavin Wood'},
   guest:{pass:'guest',role:'user',name:'Guest'},
 };
 let CU=null;
 
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('lU').value.trim().toLowerCase();
   const p=document.getElementById('lP').value;
   const e=document.getElementById('lerr');
-  if(!USERS[u]||USERS[u].pass!==p){e.textContent='Incorrect username or password.';return;}
-  e.textContent='Loading data…';
   const btn=document.querySelector('.bp_');
-  btn.textContent='Loading…';btn.disabled=true;
-  CU={...USERS[u],username:u};
+  e.textContent='Checking…';btn.textContent='Loading…';btn.disabled=true;
+  // Check Supabase app_users first, fall back to hardcoded USERS
+  let matched=null;
+  try{
+    const {data}=await sbc.from('app_users').select('*').ilike('username',u).eq('active',true).single();
+    if(data && data.password===p) matched={name:data.full_name,role:data.role,username:u,email:data.email};
+  }catch(ex){}
+  if(!matched){
+    // fallback to hardcoded
+    if(USERS[u]&&USERS[u].pass===p) matched={...USERS[u],username:u};
+  }
+  if(!matched){e.textContent='Incorrect username or password.';btn.textContent='Sign In →';btn.disabled=false;return;}
+  e.textContent='Loading data…';
+  CU=matched;
   loadFromSupabase().then(()=>{
     e.textContent='';btn.textContent='Sign In →';btn.disabled=false;
     document.getElementById('LS').classList.add('gone');
@@ -839,7 +885,8 @@ function doLogin(){
     document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.toggle('show',CU.role==='admin'));
     subscribeRealtime();
     buildOwnerFilter();ra();
-    // Start 10am daily auto-email scheduler for admins
+    loadUserEmails(); // pull emails from Supabase app_users
+    // Start 9:55am daily auto-email scheduler for admins
     if(CU.role==='admin') startDailyScheduler();
   }).catch(err=>{
     e.textContent='Failed to load data: '+err.message;
@@ -1362,6 +1409,18 @@ function ra(){
   renderStats();renderTable(items);renderKanban(items);
   if(currentTab==='archive')renderArchive();
   resyncOpenDrawer();
+  // Show/hide clear filters button
+  const anyActive = Object.values(MF).some(s=>s.size>0) || document.getElementById('qInput').value.trim();
+  const cb = document.getElementById('btnClearFilters');
+  if(cb) cb.style.display = anyActive ? 'block' : 'none';
+}
+
+function clearAllFilters(){
+  Object.keys(MF).forEach(k=>{ MF[k].clear(); updateMFBtn(k); });
+  document.getElementById('qInput').value='';
+  activeSF='';
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('active'));
+  ra();
 }
 
 /* Re-sync the open drawer's item id by matching on title */
@@ -1459,19 +1518,6 @@ function qePriority(e,idx){
 }
 
 /* ─── DUE DATE quick edit ─── */
-function qeDue(e,idx){
-  e.stopPropagation();
-  const item=D[idx];
-  const html=`
-    <div class="qpop-title">Set Due Date</div>
-    <input class="qpop-input" type="date" id="qpop-date" value="${item.due||''}" onclick="event.stopPropagation()">
-    <div class="qpop-row">
-      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'due',document.getElementById('qpop-date').value);closePopup()">Set</button>
-      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'due','');closePopup()">Clear</button>
-    </div>`;
-  showPopup(e.currentTarget,html);
-  setTimeout(()=>document.getElementById('qpop-date')?.focus(),50);
-}
 
 /* ─── JIRA quick edit ─── */
 function qeJira(e,idx){
@@ -1599,19 +1645,48 @@ function qeType(e,idx){
   showPopup(e.currentTarget,html);
 }
 
+/* ─── DUE DATE quick edit ─── */
+function qeDue(e,idx){
+  e.stopPropagation();
+  const item=D[idx];
+  const html=`
+    <div class="qpop-title">Due Date</div>
+    <input class="qpop-input dpick" type="text" id="qpop-due-disp" value="${item.due?fdLong(item.due):''}" placeholder="DD MMM YYYY" readonly style="cursor:pointer">
+    <input type="hidden" id="qpop-due-val" value="${item.due||''}">
+    <div class="qpop-row" style="margin-top:8px">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'due',document.getElementById('qpop-due-val').value);closePopup()">Set</button>
+      <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'due','');closePopup()">Clear</button>
+    </div>`;
+  showPopup(e.currentTarget,html);
+  setTimeout(()=>{
+    const disp = document.getElementById('qpop-due-disp');
+    if(disp) disp.addEventListener('click', ev=>{ ev.stopPropagation(); openDatePicker(disp,'qpop-due-val'); });
+  },50);
+}
+
 /* ─── DATE REQUESTED quick edit ─── */
 function qeDateReq(e,idx){
   e.stopPropagation();
   const item=D[idx];
   const html=`
     <div class="qpop-title">Date Requested</div>
-    <input class="qpop-input" type="date" id="qpop-dr" value="${item.dateReq||''}" onclick="event.stopPropagation()">
-    <div class="qpop-row">
-      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'dateReq',document.getElementById('qpop-dr').value);closePopup()">Set</button>
+    <input class="qpop-input dpick" type="text" id="qpop-dr-disp" value="${item.dateReq?fdLong(item.dateReq):''}" placeholder="DD MMM YYYY" readonly style="cursor:pointer">
+    <input type="hidden" id="qpop-dr-val" value="${item.dateReq||''}">
+    <div class="qpop-row" style="margin-top:8px">
+      <button class="qpop-btn" onclick="event.stopPropagation();setField(${idx},'dateReq',document.getElementById('qpop-dr-val').value);closePopup()">Set</button>
       <button class="qpop-btn sec" onclick="event.stopPropagation();setField(${idx},'dateReq','');closePopup()">Clear</button>
     </div>`;
   showPopup(e.currentTarget,html);
-  setTimeout(()=>document.getElementById('qpop-dr')?.focus(),50);
+  setTimeout(()=>{
+    const disp = document.getElementById('qpop-dr-disp');
+    if(disp) disp.addEventListener('click', ev=>{ ev.stopPropagation(); openDatePicker(disp,'qpop-dr-val'); });
+  },50);
+}
+
+function fdLong(iso){
+  if(!iso) return '';
+  const d = new Date(iso+'T00:00:00');
+  return `${String(d.getDate()).padStart(2,'0')} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /* ─── apply field change → Supabase ─── */
@@ -1652,8 +1727,19 @@ function openDrawer(idx){
   document.getElementById('dmode').textContent  = isNew?'Adding new item':CU?.role==='admin'?'Admin edit':'Edit item';
   const map={title:'title',desc:'desc',owner:'owner',status:'status',priority:'priority',
     riskPriority:'riskPriority',type:'type',team:'team',reqBy:'requestedBy',
-    source:'source',dateReq:'dateReq',due:'due',jira:'jira',estimate:'estimate',notes:'notes'};
+    source:'source',jira:'jira',estimate:'estimate',notes:'notes'};
   Object.keys(map).forEach(f=>{const el=document.getElementById('d_'+f);if(el)el.value=item[map[f]]||'';});
+  // Populate custom date pickers
+  ['dateReq','due'].forEach(f=>{
+    const iso = item[f]||'';
+    const hidEl  = document.getElementById('d_'+f+'_val');
+    const dispEl = document.getElementById('d_'+f);
+    if(hidEl) hidEl.value = iso;
+    if(dispEl){
+      if(iso){ const d=new Date(iso+'T00:00:00'); dispEl.value=`${String(d.getDate()).padStart(2,'0')} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`; }
+      else dispEl.value='';
+    }
+  });
   // Populate owner datalist with all known names
   const dl=document.getElementById('owner-list');
   if(dl){
@@ -1688,8 +1774,8 @@ async function saveItem(){
     team:document.getElementById('d_team').value.trim(),
     requestedBy:document.getElementById('d_reqBy').value.trim(),
     source:document.getElementById('d_source').value.trim(),
-    dateReq:document.getElementById('d_dateReq').value,
-    due:document.getElementById('d_due').value,
+    dateReq:document.getElementById('d_dateReq_val').value,
+    due:document.getElementById('d_due_val').value,
     jira:document.getElementById('d_jira').value.trim(),
     estimate:document.getElementById('d_estimate').value.trim(),
     notes:document.getElementById('d_notes').value.trim(),
@@ -2152,17 +2238,197 @@ function drawerOwnerToggle(name, el){
 }
 
 /* ════════════════════════════════════════
+   USER MANAGEMENT
+════════════════════════════════════════ */
+async function openUserMgmt(){
+  const {data:users, error} = await sbc.from('app_users').select('*').order('full_name');
+  if(error){ showToast('Failed to load users','red'); return; }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'um-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:700;display:flex;align-items:center;justify-content:center;font-family:\'Outfit\',sans-serif';
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+
+  overlay.innerHTML = `
+    <div style="background:#f5f3f0;border-radius:12px;width:92%;max-width:720px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.18)">
+      <div style="padding:20px 24px;background:#fff;border-bottom:1px solid #ddd9d3;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#1a1814">🛡 Content Management</div>
+          <div style="font-size:12px;color:#9e9890;margin-top:2px">Manage logins, emails and permissions</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="openAddUser()" style="background:#e8500a;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">+ Add User</button>
+          <button onclick="document.getElementById('um-overlay').remove()" style="background:none;border:none;font-size:20px;color:#9e9890;cursor:pointer">✕</button>
+        </div>
+      </div>
+      <div style="overflow-y:auto;padding:16px 24px" id="um-list">
+        ${renderUserRows(users)}
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  attachUserRowEvents(overlay);
+}
+
+function renderUserRows(users){
+  const roleBadge = r => r==='admin'
+    ? `<span style="font-size:10px;font-weight:700;background:#fff3e0;color:#e8500a;border:1px solid rgba(232,80,10,.2);border-radius:4px;padding:2px 8px">Admin</span>`
+    : r==='guest'
+    ? `<span style="font-size:10px;font-weight:700;background:#f0ede8;color:#9e9890;border:1px solid #ddd9d3;border-radius:4px;padding:2px 8px">Guest</span>`
+    : `<span style="font-size:10px;font-weight:700;background:#e8f0ff;color:#3557d4;border:1px solid rgba(53,87,212,.2);border-radius:4px;padding:2px 8px">Member</span>`;
+
+  return users.map(u=>`
+    <div class="um-row" data-id="${u.id}" style="background:#fff;border:1px solid #ddd9d3;border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:${u.role==='admin'?'#e8500a':'#3557d4'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0">${(u.full_name||'?')[0]}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:13px;font-weight:600;color:#1a1814">${u.full_name}</span>
+          ${roleBadge(u.role)}
+          ${!u.active?`<span style="font-size:10px;color:#c0392b;font-weight:600">Inactive</span>`:''}
+        </div>
+        <div style="font-size:11px;color:#9e9890;margin-top:2px">
+          @${u.username} · ${u.email||'<span style="color:#c0392b">No email set</span>'}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="um-edit-btn" data-id="${u.id}" style="background:none;border:1px solid #ddd9d3;border-radius:6px;padding:6px 12px;font-size:12px;color:#6b6560;cursor:pointer;font-family:'Outfit',sans-serif">Edit</button>
+        <button class="um-toggle-btn" data-id="${u.id}" data-active="${u.active}" style="background:none;border:1px solid #ddd9d3;border-radius:6px;padding:6px 12px;font-size:12px;color:${u.active?'#c0392b':'#2a8a52'};cursor:pointer;font-family:'Outfit',sans-serif">${u.active?'Disable':'Enable'}</button>
+      </div>
+    </div>`).join('');
+}
+
+function attachUserRowEvents(overlay){
+  overlay.querySelectorAll('.um-edit-btn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const {data} = await sbc.from('app_users').select('*').eq('id',btn.dataset.id).single();
+      if(data) openEditUser(data);
+    });
+  });
+  overlay.querySelectorAll('.um-toggle-btn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const newActive = btn.dataset.active==='true' ? false : true;
+      await sbc.from('app_users').update({active:newActive}).eq('id',btn.dataset.id);
+      showToast(newActive?'User enabled':'User disabled', newActive?'green':'amber');
+      openUserMgmt(); overlay.remove();
+    });
+  });
+}
+
+function userFormHTML(u={}){
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="grid-column:1/-1">
+        <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9e9890;margin-bottom:5px">Full Name *</label>
+        <input id="uf-name" class="dinput" type="text" value="${u.full_name||''}" placeholder="Jason Foster" style="width:100%">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9e9890;margin-bottom:5px">Username *</label>
+        <input id="uf-user" class="dinput" type="text" value="${u.username||''}" placeholder="firstname.lastname@angstromsports.com" style="width:100%">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9e9890;margin-bottom:5px">Password</label>
+        <input id="uf-pass" class="dinput" type="text" value="${u.password||'angstrom'}" placeholder="angstrom" style="width:100%">
+        <div style="font-size:11px;color:#9e9890;margin-top:3px">Default: angstrom</div>
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9e9890;margin-bottom:5px">Email address</label>
+        <input id="uf-email" class="dinput" type="email" value="${u.email||''}" placeholder="name@angstromsports.com" style="width:100%">
+        <div style="font-size:11px;color:#9e9890;margin-top:4px">Used for automatic notification emails</div>
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#9e9890;margin-bottom:5px">Role</label>
+        <select id="uf-role" class="dsel" style="width:100%">
+          <option value="member"${(u.role||'member')==='member'?' selected':''}>Member</option>
+          <option value="admin"${u.role==='admin'?' selected':''}>Admin</option>
+          <option value="guest"${u.role==='guest'?' selected':''}>Guest</option>
+        </select>
+      </div>
+    </div>`;
+}
+
+function openAddUser(){
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:800;display:flex;align-items:center;justify-content:center;font-family:\'Outfit\',sans-serif';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:10px;padding:28px;width:90%;max-width:480px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="font-size:15px;font-weight:700;color:#1a1814;margin-bottom:20px">Add New User</div>
+      ${userFormHTML()}
+      <div id="uf-err" style="font-size:12px;color:#c0392b;min-height:16px;margin-bottom:12px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:1px solid #ddd9d3;border-radius:6px;padding:9px 18px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;color:#6b6560">Cancel</button>
+        <button onclick="saveNewUser(this)" style="background:#e8500a;color:#fff;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Add User</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+}
+
+async function saveNewUser(btn){
+  const name=document.getElementById('uf-name').value.trim();
+  const user=document.getElementById('uf-user').value.trim().toLowerCase();
+  const pass=document.getElementById('uf-pass').value.trim();
+  const email=document.getElementById('uf-email').value.trim();
+  const role=document.getElementById('uf-role').value;
+  const err=document.getElementById('uf-err');
+  if(!name||!user||!pass){err.textContent='Name, username and password are required.';return;}
+  const {error}=await sbc.from('app_users').insert([{full_name:name,username:user,password:pass,email:email||null,role,active:true}]);
+  if(error){err.textContent='Error: '+(error.message.includes('unique')?'Username already exists':error.message);return;}
+  btn.closest('div[style*="fixed"]').remove();
+  showToast(`${name} added ✓`,'green');
+  document.getElementById('um-overlay')?.remove();
+  openUserMgmt();
+}
+
+function openEditUser(u){
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:800;display:flex;align-items:center;justify-content:center;font-family:\'Outfit\',sans-serif';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:10px;padding:28px;width:90%;max-width:480px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="font-size:15px;font-weight:700;color:#1a1814;margin-bottom:20px">Edit User — ${u.full_name}</div>
+      ${userFormHTML(u)}
+      <div id="uf-err" style="font-size:12px;color:#c0392b;min-height:16px;margin-bottom:12px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="this.closest('div[style*=fixed]').remove()" style="background:none;border:1px solid #ddd9d3;border-radius:6px;padding:9px 18px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;color:#6b6560">Cancel</button>
+        <button onclick="saveEditUser('${u.id}',this)" style="background:#e8500a;color:#fff;border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Save Changes</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+}
+
+async function saveEditUser(id, btn){
+  const name=document.getElementById('uf-name').value.trim();
+  const user=document.getElementById('uf-user').value.trim().toLowerCase();
+  const pass=document.getElementById('uf-pass').value.trim();
+  const email=document.getElementById('uf-email').value.trim();
+  const role=document.getElementById('uf-role').value;
+  const err=document.getElementById('uf-err');
+  if(!name||!user||!pass){err.textContent='Name, username and password are required.';return;}
+  const {error}=await sbc.from('app_users').update({full_name:name,username:user,password:pass,email:email||null,role}).eq('id',id);
+  if(error){err.textContent='Error: '+error.message;return;}
+  btn.closest('div[style*="fixed"]').remove();
+  showToast('User updated ✓','green');
+  document.getElementById('um-overlay')?.remove();
+  openUserMgmt();
+}
+
+/* ════════════════════════════════════════
    EMAIL NOTIFICATIONS (mailto-based)
 ════════════════════════════════════════ */
 
 // User email map — add team members here when ready
-const USER_EMAILS = {
+// Emails loaded dynamically from Supabase app_users — seeded with admin fallback
+let USER_EMAILS = {
   'Nicholas Haynes': 'nicholas.haynes@angstromsports.com',
   'Nick Haynes':     'nicholas.haynes@angstromsports.com',
-  // Add others later:
-  // 'Jason Foster':   'jason.foster@angstromsports.com',
-  // 'Neal Beavis':    'neal.beavis@angstromsports.com',
 };
+
+async function loadUserEmails(){
+  try{
+    const {data} = await sbc.from('app_users').select('full_name,email').eq('active',true);
+    if(data) data.forEach(u=>{ if(u.email&&u.full_name) USER_EMAILS[u.full_name]=u.email; });
+  }catch(e){ console.warn('Could not load user emails:',e); }
+}
 
 const TRACKER_URL = 'https://flowoperator.github.io/risk-tracker';
 
@@ -2287,58 +2553,62 @@ const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`
 function startDailyScheduler(){
   if(localStorage.getItem(AUTO_FIRED_KEY)) return;
 
-  function msUntil10am(){
+  function msUntil955amUK(){
     const now = new Date();
-    const target = new Date();
-    target.setHours(10, 0, 0, 0);
-    if(target <= now) return null;
-    return target - now;
+
+    // Work out current UK offset (GMT = 0, BST = +1)
+    // UK is BST (UTC+1) from last Sunday in March to last Sunday in October
+    function isUKSummerTime(d){
+      const year = d.getFullYear();
+      // Last Sunday in March
+      const lastSunMar = new Date(year, 2, 31);
+      lastSunMar.setDate(31 - lastSunMar.getDay());
+      // Last Sunday in October
+      const lastSunOct = new Date(year, 9, 31);
+      lastSunOct.setDate(31 - lastSunOct.getDay());
+      return d >= lastSunMar && d < lastSunOct;
+    }
+
+    const ukOffsetHours = isUKSummerTime(now) ? 1 : 0; // BST=+1, GMT=0
+    const ukOffsetMs = ukOffsetHours * 60 * 60 * 1000;
+
+    // Current UK time as a Date object
+    const nowUTC = now.getTime() + now.getTimezoneOffset() * 60000;
+    const nowUK  = new Date(nowUTC + ukOffsetMs);
+
+    // Target: 9:55am UK time today
+    const target = new Date(nowUK);
+    target.setHours(9, 55, 0, 0);
+
+    if(target <= nowUK) return null; // already past 9:55am UK time today
+
+    return target - nowUK; // ms until 9:55am UK
   }
 
-  const ms = msUntil10am();
+  // ── TEST TIMER — fires in 30 seconds ──────────────────────────
+  const TEST_MODE = true; // ← set to false for production
+  const ms = TEST_MODE ? 30000 : msUntil955amUK();
+  // ──────────────────────────────────────────────────────────────
+
   if(ms === null) return;
 
   setTimeout(()=>{
-    if(localStorage.getItem(AUTO_FIRED_KEY)) return;
-    localStorage.setItem(AUTO_FIRED_KEY, '1');
+    if(!TEST_MODE && localStorage.getItem(AUTO_FIRED_KEY)) return;
+    if(!TEST_MODE) localStorage.setItem(AUTO_FIRED_KEY, '1');
 
     const groups = buildNotifications();
     const keys = Object.keys(groups);
     if(!keys.length) return;
 
-    const totalItems = Object.values(groups).flatMap(g=>Object.values(g.cats)).flat().length;
-    showNotifBanner(keys.length, totalItems);
+    keys.forEach((email, i) => {
+      const {ownerName, cats} = groups[email];
+      setTimeout(()=>{
+        openNotificationEmail(email, ownerName, cats);
+        markSent(email);
+      }, i * 2500); // 2.5s gap so Outlook opens each separately
+    });
+
   }, ms);
-}
-
-function showNotifBanner(recipients, totalItems){
-  // Remove any existing banner
-  document.getElementById('notif-banner')?.remove();
-
-  const banner = document.createElement('div');
-  banner.id = 'notif-banner';
-  banner.style.cssText = `
-    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-    background:#1a1814;color:#fff;
-    border-radius:8px;padding:12px 18px;
-    display:flex;align-items:center;gap:14px;
-    box-shadow:0 4px 20px rgba(0,0,0,.25);
-    z-index:900;font-family:'Outfit',sans-serif;font-size:13px;
-    animation:slideUp .25s ease;white-space:nowrap;
-  `;
-  banner.innerHTML = `
-    <span style="font-size:16px">📬</span>
-    <span style="color:rgba(255,255,255,.7)">${totalItems} item${totalItems!==1?'s':''} need attention across ${recipients} recipient${recipients!==1?'s':''}</span>
-    <button onclick="document.getElementById('notif-banner').remove();openNotifCentre()"
-      style="background:#e8500a;border:none;border-radius:5px;color:#fff;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap">
-      Review &amp; Send
-    </button>
-    <button onclick="document.getElementById('notif-banner').remove()"
-      style="background:none;border:none;color:rgba(255,255,255,.4);font-size:16px;cursor:pointer;padding:0 2px;line-height:1">
-      ✕
-    </button>
-  `;
-  document.body.appendChild(banner);
 }
 
 /* ── Notification Centre UI ── */
@@ -2496,10 +2766,179 @@ function refreshCard(overlay, email, group){
 }
 
 /* ════════════════════════════════════════
+   CUSTOM DATE PICKER
+════════════════════════════════════════ */
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+let _dpTarget = null;   // the display input
+let _dpHidden = null;   // the hidden ISO value input
+let _dpCal = null;      // the calendar element
+let _dpView = 'days';   // 'days' | 'months' | 'years'
+let _dpYear, _dpMonth;  // currently viewed year/month
+
+function openDatePicker(displayInput, hiddenId){
+  closeDatePicker();
+  _dpTarget = displayInput;
+  _dpHidden = document.getElementById(hiddenId);
+
+  // Parse existing value
+  const existing = _dpHidden?.value; // ISO yyyy-mm-dd
+  const today = new Date();
+  if(existing){
+    const d = new Date(existing + 'T00:00:00');
+    _dpYear  = d.getFullYear();
+    _dpMonth = d.getMonth();
+  } else {
+    _dpYear  = today.getFullYear();
+    _dpMonth = today.getMonth();
+  }
+  _dpView = 'days';
+
+  // Overlay to catch outside clicks
+  const ov = document.createElement('div');
+  ov.className = 'dp-overlay';
+  ov.id = 'dp-overlay';
+  ov.addEventListener('click', closeDatePicker);
+  document.body.appendChild(ov);
+
+  _dpCal = document.createElement('div');
+  _dpCal.className = 'dp-cal';
+  _dpCal.id = 'dp-cal';
+  _dpCal.addEventListener('click', e => e.stopPropagation());
+  document.body.appendChild(_dpCal);
+
+  positionDatePicker();
+  renderDatePicker();
+}
+
+function positionDatePicker(){
+  if(!_dpCal || !_dpTarget) return;
+  const r = _dpTarget.getBoundingClientRect();
+  let top = r.bottom + 6;
+  let left = r.left;
+  if(left + 280 > window.innerWidth) left = window.innerWidth - 290;
+  if(top + 340 > window.innerHeight) top = r.top - 346;
+  _dpCal.style.top  = top + 'px';
+  _dpCal.style.left = left + 'px';
+}
+
+function renderDatePicker(){
+  if(!_dpCal) return;
+  if(_dpView === 'months') { renderMonthPicker(); return; }
+  if(_dpView === 'years')  { renderYearPicker();  return; }
+  renderDayPicker();
+}
+
+function renderDayPicker(){
+  const today = new Date();
+  const existing = _dpHidden?.value;
+  const selDate = existing ? new Date(existing + 'T00:00:00') : null;
+
+  const firstDay = new Date(_dpYear, _dpMonth, 1).getDay();
+  const daysInMonth = new Date(_dpYear, _dpMonth + 1, 0).getDate();
+
+  let dayHtml = '';
+  for(let i=0; i<firstDay; i++) dayHtml += `<div class="dp-day dp-empty"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const isToday = today.getFullYear()===_dpYear && today.getMonth()===_dpMonth && today.getDate()===d;
+    const isSel   = selDate && selDate.getFullYear()===_dpYear && selDate.getMonth()===_dpMonth && selDate.getDate()===d;
+    dayHtml += `<div class="dp-day${isToday?' dp-today':''}${isSel?' dp-selected':''}" data-d="${d}">${d}</div>`;
+  }
+
+  _dpCal.innerHTML = `
+    <div class="dp-head">
+      <button class="dp-nav" id="dp-prev">&#8249;</button>
+      <div class="dp-title" id="dp-title">${MONTHS[_dpMonth]} ${_dpYear}</div>
+      <button class="dp-nav" id="dp-next">&#8250;</button>
+    </div>
+    <div class="dp-dow">${DAYS.map(d=>`<span>${d}</span>`).join('')}</div>
+    <div class="dp-days" id="dp-days">${dayHtml}</div>
+    <div class="dp-footer">
+      <button class="dp-clear" id="dp-clear">Clear</button>
+      <button class="dp-today-btn" id="dp-todaybtn">Today</button>
+    </div>`;
+
+  document.getElementById('dp-prev').addEventListener('click', ()=>{ _dpMonth--; if(_dpMonth<0){_dpMonth=11;_dpYear--;} renderDatePicker(); });
+  document.getElementById('dp-next').addEventListener('click', ()=>{ _dpMonth++; if(_dpMonth>11){_dpMonth=0;_dpYear++;} renderDatePicker(); });
+  document.getElementById('dp-title').addEventListener('click', ()=>{ _dpView='months'; renderDatePicker(); });
+  document.getElementById('dp-clear').addEventListener('click', ()=>{ setDatePickerValue(null); closeDatePicker(); });
+  document.getElementById('dp-todaybtn').addEventListener('click', ()=>{ const t=new Date(); setDatePickerValue(`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`); closeDatePicker(); });
+  document.getElementById('dp-days').addEventListener('click', e=>{
+    const day = e.target.dataset.d;
+    if(!day) return;
+    const iso = `${_dpYear}-${String(_dpMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    setDatePickerValue(iso);
+    closeDatePicker();
+  });
+}
+
+function renderMonthPicker(){
+  const current = _dpHidden?.value ? new Date(_dpHidden.value+'T00:00:00').getMonth() : -1;
+  _dpCal.innerHTML = `
+    <div class="dp-head">
+      <button class="dp-nav" id="dp-prev">&#8249;</button>
+      <div class="dp-title" id="dp-title">${_dpYear}</div>
+      <button class="dp-nav" id="dp-next">&#8250;</button>
+    </div>
+    <div class="dp-months">${MONTHS.map((m,i)=>`<div class="dp-month${i===current&&_dpYear===(new Date(_dpHidden?.value||'').getFullYear())?' dp-sel-m':''}" data-m="${i}">${m.slice(0,3)}</div>`).join('')}</div>`;
+  document.getElementById('dp-prev').addEventListener('click', ()=>{ _dpYear--; renderDatePicker(); });
+  document.getElementById('dp-next').addEventListener('click', ()=>{ _dpYear++; renderDatePicker(); });
+  document.getElementById('dp-title').addEventListener('click', ()=>{ _dpView='years'; renderDatePicker(); });
+  _dpCal.querySelectorAll('.dp-month').forEach(el=>{
+    el.addEventListener('click', ()=>{ _dpMonth=parseInt(el.dataset.m); _dpView='days'; renderDatePicker(); });
+  });
+}
+
+function renderYearPicker(){
+  const selYear = _dpHidden?.value ? new Date(_dpHidden.value+'T00:00:00').getFullYear() : -1;
+  const startY = _dpYear - 8;
+  let html = '';
+  for(let y=startY; y<=startY+15; y++) html += `<div class="dp-year${y===selYear?' dp-sel-y':''}" data-y="${y}">${y}</div>`;
+  _dpCal.innerHTML = `
+    <div class="dp-head">
+      <button class="dp-nav" id="dp-prev">&#8249;</button>
+      <div class="dp-title">${startY} – ${startY+15}</div>
+      <button class="dp-nav" id="dp-next">&#8250;</button>
+    </div>
+    <div class="dp-years">${html}</div>`;
+  document.getElementById('dp-prev').addEventListener('click', ()=>{ _dpYear-=16; renderDatePicker(); });
+  document.getElementById('dp-next').addEventListener('click', ()=>{ _dpYear+=16; renderDatePicker(); });
+  _dpCal.querySelectorAll('.dp-year').forEach(el=>{
+    el.addEventListener('click', ()=>{ _dpYear=parseInt(el.dataset.y); _dpView='months'; renderDatePicker(); });
+  });
+}
+
+function setDatePickerValue(iso){
+  if(_dpHidden) _dpHidden.value = iso || '';
+  if(_dpTarget){
+    if(iso){
+      const d = new Date(iso + 'T00:00:00');
+      _dpTarget.value = `${String(d.getDate()).padStart(2,'0')} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+    } else {
+      _dpTarget.value = '';
+    }
+  }
+}
+
+function closeDatePicker(){
+  document.getElementById('dp-overlay')?.remove();
+  document.getElementById('dp-cal')?.remove();
+  _dpCal = null; _dpTarget = null;
+}
+
+/* Helper — read ISO value from the paired hidden field */
+function getDatePickerISO(displayInputId){
+  const hidId = displayInputId + '_val';
+  return document.getElementById(hidId)?.value || '';
+}
+
+/* ════════════════════════════════════════
    KEYBOARD
 ════════════════════════════════════════ */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();}
+  if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();closeDatePicker();}
 });
 </script>
 </body>
