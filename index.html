@@ -7,18 +7,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ── Angstrom brand theme ── */
+  /* ── Angstrom brand theme — Light (default) ── */
   --bg:#f5f3f0;--bg2:#ffffff;--bg3:#f0ede8;--bg4:#e8e4de;
   --border:#ddd9d3;--border2:#c8c3bb;
   --text:#1a1814;--text2:#6b6560;--text3:#9e9890;
-  --accent:#e8500a;--ag:#c94008;   /* Angstrom orange */
-  --accent2:#ff7a3d;               /* lighter orange */
+  --accent:#e8500a;--ag:#c94008;
+  --accent2:#ff7a3d;
   --green:#2a8a52;--amber:#b07d10;--red:#c0392b;
   --purple:#6b4fa8;--slate:#8a8278;
   --teal:#1a7a74;
   --r:8px;--shadow:0 2px 12px rgba(0,0,0,.08);
   --space:32px;
 }
+
+/* ── Dark mode overrides ── */
+body.dark-mode{
+  --bg:#0f0e0d;--bg2:#161514;--bg3:#1d1b19;--bg4:#242220;
+  --border:#2a2725;--border2:#38342f;
+  --text:#f0ede8;--text2:#a09890;--text3:#635d55;
+  --green:#3aaf6a;--amber:#c9920a;--red:#d95040;
+  --purple:#9b7fd4;--slate:#706860;
+  --shadow:0 2px 12px rgba(0,0,0,.4);
+}
+
+/* Dark mode nav stays dark charcoal but slightly lighter */
+body.dark-mode .nav{ background:#0a0908; }
+body.dark-mode .tabbar{ background:var(--bg2); }
+
+/* Dark mode row status tints */
+body.dark-mode tbody tr.rs-proposed   { background: #1a1814; }
+body.dark-mode tbody tr.rs-proposed:hover { background: #211f1b; }
+body.dark-mode tbody tr.rs-scoping    { background: #111624; }
+body.dark-mode tbody tr.rs-scoping:hover  { background: #161d30; }
+body.dark-mode tbody tr.rs-inprogress { background: #111624; }
+body.dark-mode tbody tr.rs-inprogress:hover { background: #161d30; }
+body.dark-mode tbody tr.rs-parking    { background: #161514; }
+body.dark-mode tbody tr.rs-parking:hover  { background: #1c1a18; }
+body.dark-mode tbody tr.rs-done       { background: #0f1a13; }
+body.dark-mode tbody tr.rs-done:hover { background: #141f18; }
+body.dark-mode tbody tr.rs-selected   { background: #0f1a13; }
+body.dark-mode tbody tr.rs-selected:hover { background: #141f18; }
+body.dark-mode tbody tr.rov { background: #1e1210 !important; border-left: 3px solid #d95040 !important; }
+body.dark-mode tbody tr.rov:hover { background: #251510 !important; }
+body.dark-mode tbody tr:hover { background: var(--bg3); }
+
+/* Dark mode badges — slightly brighter for contrast */
+body.dark-mode .bp{ background:#e8500a;color:#fff }
+body.dark-mode .bs{ background:#2e48b8;color:#fff }
+body.dark-mode .bi{ background:#2e48b8;color:#fff }
+body.dark-mode .bsd{ background:#0c6a4c;color:#fff }
+body.dark-mode .bd{ background:#1e6638;color:#fff }
+body.dark-mode .bk{ background:#5a5450;color:#fff }
+
+/* Dark mode date cells */
+body.dark-mode .dO{ background:rgba(217,80,64,.15);border-color:rgba(217,80,64,.3); }
+
+/* ── Dark mode toggle button ── */
+.dm-toggle{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:20px;padding:5px 10px;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-size:12px;color:rgba(255,255,255,.7);
+  display:flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap;
+}
+.dm-toggle:hover{background:rgba(255,255,255,.18);color:#fff}
+.dm-icon{font-size:14px;line-height:1}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 ::-webkit-scrollbar{width:5px;height:5px}
@@ -51,7 +103,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 #app.on{display:flex}
 
 /* ═══ NAV ═══ */
-.nav{background:var(--text);border-bottom:none;height:56px;display:flex;align-items:center;padding:0 24px;gap:14px;position:sticky;top:0;z-index:50}
+.nav{background:var(--text);border-bottom:none;height:52px;display:flex;align-items:center;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
 .navlogo{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:10px;white-space:nowrap;color:#fff}
 .navlogo em{color:var(--accent2);font-style:normal;font-weight:700}
 .nav-ang-mark{width:28px;height:28px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
@@ -67,44 +119,44 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .btnout:hover{color:#fff;background:rgba(255,255,255,.18)}
 
 /* ═══ TAB BAR ═══ */
-.tabbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0}
-.tabbtn{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;padding:14px 20px;cursor:pointer;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.tabbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 28px;display:flex;gap:0}
+.tabbtn{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-size:13px;font-weight:400;font-family:'Outfit',sans-serif;padding:12px 16px;cursor:pointer;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .tabbtn:hover{color:var(--text2)}
-.tabbtn.active{color:var(--text);border-bottom-color:var(--accent)}
+.tabbtn.active{color:var(--text);font-weight:500;border-bottom-color:var(--accent)}
 .tabbtn .tcnt{font-size:11px;color:var(--text3);padding:0 4px}
 .tabbtn.active .tcnt{color:var(--accent)}
 
 /* ═══ WRAP ═══ */
-.wrap{flex:1;padding:28px 32px;max-width:1720px;margin:0 auto;width:100%}
+.wrap{flex:1;padding:32px 36px;max-width:1680px;margin:0 auto;width:100%}
 
 /* ═══ PAGE HEADER ═══ */
-.phead{margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.phtitle{font-family:'Outfit',sans-serif;font-size:20px;font-weight:600;color:var(--text);letter-spacing:-.01em}
-.phsub{font-size:12px;color:var(--text3);margin-top:3px;font-weight:400}
-.btnadd{display:flex;align-items:center;gap:6px;background:var(--accent);border:none;border-radius:8px;color:#fff;padding:10px 20px;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap;box-shadow:0 2px 8px rgba(232,80,10,.3)}
-.btnadd:hover{background:var(--ag);box-shadow:0 4px 14px rgba(232,80,10,.4);transform:translateY(-1px)}
+.phead{margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.phtitle{font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;color:var(--text);letter-spacing:-.02em}
+.phsub{display:none}
+.btnadd{display:flex;align-items:center;gap:6px;background:var(--accent);border:none;border-radius:7px;color:#fff;padding:9px 18px;font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btnadd:hover{background:var(--ag)}
 .adminonly{display:none!important}
 .adminonly.show{display:flex!important}
 .adminonly-blk{display:none!important}
 .adminonly-blk.show{display:block!important}
 
 /* ═══ STAT CARDS ═══ */
-.scrow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px}
+.scrow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:24px}
 @media(max-width:1100px){.scrow{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.scrow{grid-template-columns:repeat(2,1fr)}}
-.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative;overflow:hidden;user-select:none;min-width:0;display:flex;flex-direction:column}
-.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--c,var(--border));}
-.sc:hover{border-color:var(--c,var(--border2));box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.sc{background:var(--bg2);border:1px solid transparent;border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;user-select:none;min-width:0;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--c,transparent);border-radius:0 0 10px 10px}
+.sc:hover{border-color:transparent;box-shadow:0 3px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
 .sc.active::after{background:var(--c,var(--accent))}
-.sc.active{border-color:var(--c,var(--accent))}
-.sclabel{font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text3);margin-bottom:10px;white-space:nowrap}
-.scval{font-family:'Outfit',sans-serif;font-size:30px;font-weight:700;color:var(--c,var(--text));line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;height:36px;display:flex;align-items:center}
-.scdesc{font-size:12px;color:var(--text3);margin-top:8px;white-space:nowrap}
+.sc.active{border-color:var(--c,var(--accent));box-shadow:0 0 0 2px rgba(var(--c-rgb,232,80,10),.12)}
+.sclabel{font-size:11px;font-weight:400;color:var(--text3);margin-bottom:8px;white-space:nowrap}
+.scval{font-family:'Outfit',sans-serif;font-size:28px;font-weight:700;color:var(--c,var(--text));line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;height:32px;display:flex;align-items:center}
+.scdesc{display:none}
 
 /* ═══ LEGEND ═══ */
 .legbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.btnleg{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s}
-.btnleg:hover{border-color:var(--border2);color:var(--text)}
+.btnleg{background:none;border:none;border-radius:6px;color:var(--text3);font-size:12px;padding:4px 0;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:5px;transition:color .15s}
+.btnleg:hover{color:var(--text2)}
 .btnleg.on{border-color:var(--accent);color:var(--accent)}
 .legpanel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin-bottom:16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .legpanel.on{display:block}
@@ -119,8 +171,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .mf-wrap{position:relative}
 .mf-btn{
   background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  color:var(--text2);padding:9px 12px;font-size:12px;font-family:'Outfit',sans-serif;
-  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;
+  color:var(--text2);padding:8px 12px;font-size:12px;font-family:'Outfit',sans-serif;
+  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;
   transition:border-color .15s,color .15s;
 }
 .mf-btn:hover{border-color:var(--border2);color:var(--text)}
@@ -153,10 +205,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .mf-item.checked .mf-check{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ═══ TOOLBAR ═══ */
-.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.toolbar{display:flex;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .swrap{position:relative;flex:1;min-width:200px;max-width:340px}
 .sico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:15px;pointer-events:none}
-.sinput{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:9px 12px 9px 34px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}
+.sinput{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 12px 8px 34px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}
 .sinput:focus{border-color:var(--accent)}
 .sinput::placeholder{color:var(--text3)}
 .fsel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 12px;font-size:12px;font-family:'Outfit',sans-serif;outline:none;cursor:pointer;transition:border-color .15s}
@@ -170,20 +222,20 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .cpill{margin-left:auto;font-size:12px;font-weight:500;color:var(--text2);white-space:nowrap}
 
 /* ═══ TABLE ═══ */
-.tbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:auto;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:980px}
-thead{background:var(--bg3);position:sticky;top:0;z-index:2}
-th{padding:11px 16px;text-align:left;font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text3);font-family:'Outfit',sans-serif;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+thead{background:var(--bg2);position:sticky;top:0;z-index:2;border-bottom:2px solid var(--border)}
+th{padding:9px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--text3);font-family:'Outfit',sans-serif;border-bottom:none;white-space:nowrap;cursor:pointer;user-select:none;letter-spacing:.01em}
 th:hover{color:var(--text2)}
 th.sorted{color:var(--accent)}
 /* Owner column header */
 th.th-owner{position:relative}
 .ow-filter-wrap{display:inline-flex;align-items:center;gap:5px}
 .ow-filter-ico{font-size:10px;opacity:.5;cursor:pointer}
-tbody tr{border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer;transition:background .12s;}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:var(--bg3)}
-td{padding:13px 16px;color:var(--text2);vertical-align:middle;font-size:13px}
+td{padding:11px 16px;color:var(--text2);vertical-align:middle;font-size:13px}
 
 /* ═══ ROW STATUS COLOURS ═══ */
 tbody tr.rs-proposed   { background: #ffffff; }
@@ -229,7 +281,7 @@ tbody tr.dragging {
 }
 td:hover .drag-handle, tr:hover .drag-handle { opacity: 1; }
 .ctit{max-width:280px}
-.ctit span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-weight:600;font-size:13.5px}
+.ctit span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-weight:500;font-size:13px}
 .ctit .sub{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ═══ BADGES — solid filled, matched to row tints ═══ */
@@ -495,6 +547,46 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
 .btdel{margin-left:auto;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.18);border-radius:6px;color:var(--red);padding:10px 16px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:background .15s;display:none;pointer-events:all;position:relative;z-index:10}
 .btdel:hover{background:rgba(192,57,43,.15);border-color:var(--red)}
 
+/* ═══ FOCUS VIEW ═══ */
+.focus-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid;white-space:nowrap}
+.focus-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;margin-bottom:10px;
+  display:flex;align-items:flex-start;gap:16px;
+  cursor:pointer;transition:box-shadow .15s,border-color .15s;
+  position:relative;
+}
+.focus-card:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.focus-rank{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex-shrink:0;margin-top:1px;
+  font-family:'Outfit',sans-serif;
+}
+.focus-rank-1{background:#e8500a;color:#fff}
+.focus-rank-2{background:#c94008;color:#fff}
+.focus-rank-3{background:#f0ede8;color:#6b6560}
+.focus-rank-4{background:#f0ede8;color:#6b6560}
+.focus-rank-5{background:#f0ede8;color:#6b6560}
+.focus-body{flex:1;min-width:0}
+.focus-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.focus-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.focus-tags{display:flex;flex-wrap:wrap;gap:5px}
+.focus-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;border:1px solid}
+.ft-overdue{background:#fff0ee;color:#c0392b;border-color:rgba(192,57,43,.2)}
+.ft-due3{background:#fff5f0;color:#e8500a;border-color:rgba(232,80,10,.2)}
+.ft-high{background:#fff8ec;color:#b07d10;border-color:rgba(176,125,16,.2)}
+.ft-inprog{background:#f0f4ff;color:#3557d4;border-color:rgba(53,87,212,.2)}
+.ft-nojira{background:#f5f3f0;color:#6b6560;border-color:var(--border)}
+.ft-med{background:#f5f3f0;color:#6b6560;border-color:var(--border)}
+.focus-score{
+  font-size:22px;font-weight:800;font-family:'Outfit',sans-serif;
+  color:var(--text3);flex-shrink:0;text-align:right;min-width:48px;
+  font-variant-numeric:tabular-nums;
+}
+.focus-score span{display:block;font-size:10px;font-weight:500;color:var(--text3);text-align:center;margin-top:1px}
+.focus-empty{padding:32px;text-align:center;color:var(--text3);font-size:13px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)}
+
 /* ═══ TOAST ═══ */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--text);border:none;border-radius:8px;padding:12px 18px;font-size:13px;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:600;transform:translateY(20px);opacity:0;transition:transform .2s,opacity .2s;display:flex;align-items:center;gap:8px}
 .toast.show{transform:translateY(0);opacity:1}
@@ -529,13 +621,17 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
     </div>
     <div class="navsep"></div>
     <div class="navr">
-      <button class="btnout adminonly" id="btnNotif" onclick="openNotifCentre()" style="gap:6px">📬 Notifications</button>
+      <button class="btnout adminonly" id="btnNotif" onclick="openNotifCentre()" style="gap:6px">📬 Notifications<span id="notif-count" style="display:none;background:var(--accent);color:#fff;border-radius:10px;padding:0 6px;font-size:10px;font-weight:700;margin-left:2px">0</span></button>
       <button class="btnout adminonly" onclick="openUserMgmt()" title="Content Management" style="font-size:15px;padding:5px 10px">🛡</button>
       <div class="uchip">
         <div class="uav" id="nAv">?</div>
         <span id="nName">—</span>
         <span class="rbadge" id="nRole">—</span>
       </div>
+      <button class="dm-toggle" id="dmToggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+        <span class="dm-icon" id="dmIcon">🌙</span>
+        <span id="dmLabel">Dark</span>
+      </button>
       <button class="btnout" onclick="doLogout()">Sign out</button>
     </div>
   </nav>
@@ -544,6 +640,9 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
   <div class="tabbar">
     <button class="tabbtn active" id="tab-active" onclick="switchTab('active',this)">
       Active Work <span class="tcnt" id="cnt-active">0</span>
+    </button>
+    <button class="tabbtn" id="tab-focus" onclick="switchTab('focus',this)">
+      ⚡ Focus View
     </button>
     <button class="tabbtn" id="tab-archive" onclick="switchTab('archive',this)">
       Archive — Done &amp; Selected Dev <span class="tcnt" id="cnt-archive">0</span>
@@ -560,7 +659,6 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
       <div class="phead">
         <div>
           <div class="phtitle">Work Intake Tracker</div>
-          <div class="phsub">Click any cell to edit inline · click a title to open full details</div>
         </div>
         <button class="btnadd adminonly" id="btnAdd" onclick="openDrawer(null)">＋ Add Item</button>
       </div>
@@ -749,6 +847,55 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
       </div>
     </div><!-- /view-audit -->
 
+    <!-- ══ FOCUS VIEW TAB ══ -->
+    <div id="view-focus" style="display:none">
+      <div class="phead">
+        <div>
+          <div class="phtitle">⚡ Focus View</div>
+          <div class="phsub">Automatically scored — highest priority items to action today</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="focus-updated" style="font-size:11px;color:var(--text3)"></span>
+          <button onclick="renderFocusView()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;padding:8px 14px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">↻ Refresh</button>
+        </div>
+      </div>
+
+      <!-- Score legend -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+        <span style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">Scoring:</span>
+        <span class="focus-pill" style="background:#fff0ee;color:#c0392b;border-color:rgba(192,57,43,.2)">Overdue +40</span>
+        <span class="focus-pill" style="background:#fff5f0;color:#e8500a;border-color:rgba(232,80,10,.2)">Due in 3 days +25</span>
+        <span class="focus-pill" style="background:#fff8ec;color:#b07d10;border-color:rgba(176,125,16,.2)">High priority +20</span>
+        <span class="focus-pill" style="background:#f0f4ff;color:#3557d4;border-color:rgba(53,87,212,.2)">In Progress +15</span>
+        <span class="focus-pill" style="background:#f5f3f0;color:#6b6560;border-color:var(--border)">No Jira ticket +10</span>
+        <span class="focus-pill" style="background:#f5f3f0;color:#6b6560;border-color:var(--border)">Medium priority +8</span>
+      </div>
+
+      <!-- Top 5 -->
+      <div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:28px;height:28px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0">5</div>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--text)">Top 5 — Action Today</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:1px">Highest scored items requiring immediate attention</div>
+          </div>
+        </div>
+        <div id="focus-top5"></div>
+      </div>
+
+      <!-- At risk this week -->
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:28px;height:28px;background:#b07d10;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0">!</div>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--text)">At Risk This Week</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:1px">Items due within 7 days that need a progress check</div>
+          </div>
+        </div>
+        <div id="focus-atrisk"></div>
+      </div>
+    </div><!-- /view-focus -->
+
   </div><!-- /wrap -->
 </div><!-- /app -->
 
@@ -928,6 +1075,8 @@ function rowToItem(r){
     jira:         r.jira         ||'',
     estimate:     r.estimate     ||'',
     notes:        r.notes        ||'',
+    updatedAt:    r.updated_at   ||'',
+    createdAt:    r.created_at   ||'',
   };
 }
 
@@ -1015,13 +1164,15 @@ function prioH(p){return`<div class="prio p${p?p[0]:'L'}"><div class="pdot"></di
 ════════════════════════════════════════ */
 function switchTab(t,btn){
   currentTab=t;
-  document.getElementById('view-active').style.display   =t==='active'  ?'block':'none';
-  document.getElementById('view-archive').style.display  =t==='archive' ?'block':'none';
-  document.getElementById('view-audit').style.display    =t==='audit'   ?'block':'none';
+  document.getElementById('view-active').style.display  =t==='active'  ?'block':'none';
+  document.getElementById('view-archive').style.display =t==='archive' ?'block':'none';
+  document.getElementById('view-audit').style.display   =t==='audit'   ?'block':'none';
+  document.getElementById('view-focus').style.display   =t==='focus'   ?'block':'none';
   document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(t==='archive') renderArchive();
   if(t==='audit')   loadAuditLog();
+  if(t==='focus')   renderFocusView();
 }
 
 /* ════════════════════════════════════════
@@ -1409,10 +1560,19 @@ function ra(){
   renderStats();renderTable(items);renderKanban(items);
   if(currentTab==='archive')renderArchive();
   resyncOpenDrawer();
-  // Show/hide clear filters button
   const anyActive = Object.values(MF).some(s=>s.size>0) || document.getElementById('qInput').value.trim();
   const cb = document.getElementById('btnClearFilters');
   if(cb) cb.style.display = anyActive ? 'block' : 'none';
+  // Update notification badge
+  if(CU?.role==='admin') updateNotifBadge();
+}
+
+function updateNotifBadge(){
+  const emailCount = Object.keys(buildNotifications()).length;
+  const sysCount   = buildSystemAlerts().length;
+  const total = emailCount + sysCount;
+  const badge = document.getElementById('notif-count');
+  if(badge){ badge.textContent=total; badge.style.display=total>0?'inline':'none'; }
 }
 
 function clearAllFilters(){
@@ -2458,9 +2618,88 @@ function daysUntil(d){
 }
 
 /* Build all pending notifications, grouped by owner */
+/* ════════════════════════════════════════
+   SYSTEM ALERTS (in-app notifications)
+   Separate from email notifications
+════════════════════════════════════════ */
+function buildSystemAlerts(){
+  const active = D.filter(i => !isArchived(i) && i.status !== 'Parking Lot');
+  const alerts = [];
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Dismissed key — resets daily
+  const dimissedKey = `dismissed_alerts_${new Date().toISOString().slice(0,10)}`;
+  const dismissed = JSON.parse(localStorage.getItem(dimissedKey)||'[]');
+
+  function alertKey(type, itemId){ return `${type}::${itemId}`; }
+  function isDismissed(type, itemId){ return dismissed.includes(alertKey(type,itemId)); }
+
+  active.forEach(item => {
+    // 1. Overdue
+    const days = daysUntil(item.due);
+    if(days !== null && days < 0 && !isDismissed('overdue', item.id)){
+      alerts.push({
+        type:'overdue', severity:'critical',
+        key: alertKey('overdue', item.id),
+        title: item.title, itemId: item.id,
+        message: `Overdue by ${Math.abs(days)} day${Math.abs(days)!==1?'s':''}`,
+        owner: item.owner, status: item.status,
+        due: item.due,
+      });
+    }
+
+    // 2. Stuck in Scoping > 5 days
+    if(item.status === 'Scoping' && !isDismissed('stuck_scoping', item.id)){
+      // Use updated_at from Supabase if available, else fallback to created_at
+      const lastChange = item.updatedAt || item.createdAt;
+      if(lastChange){
+        const daysSince = Math.round((today - new Date(lastChange).setHours(0,0,0,0)) / 86400000);
+        if(daysSince > 5){
+          alerts.push({
+            type:'stuck_scoping', severity:'warning',
+            key: alertKey('stuck_scoping', item.id),
+            title: item.title, itemId: item.id,
+            message: `Stuck in Scoping for ${daysSince} days — no update recorded`,
+            owner: item.owner, status: item.status,
+          });
+        }
+      }
+    }
+
+    // 3. No update in 14 days (for In Progress items)
+    if(item.status === 'In Progress' && !isDismissed('no_update', item.id)){
+      const lastChange = item.updatedAt || item.createdAt;
+      if(lastChange){
+        const daysSince = Math.round((today - new Date(lastChange).setHours(0,0,0,0)) / 86400000);
+        if(daysSince > 14){
+          alerts.push({
+            type:'no_update', severity:'warning',
+            key: alertKey('no_update', item.id),
+            title: item.title, itemId: item.id,
+            message: `No update for ${daysSince} days while In Progress`,
+            owner: item.owner, status: item.status,
+          });
+        }
+      }
+    }
+  });
+
+  // Sort: critical first
+  alerts.sort((a,b) => a.severity==='critical' && b.severity!=='critical' ? -1 : 1);
+  return alerts;
+}
+
+function dismissAlert(key){
+  const dimissedKey = `dismissed_alerts_${new Date().toISOString().slice(0,10)}`;
+  const dismissed = JSON.parse(localStorage.getItem(dimissedKey)||'[]');
+  if(!dismissed.includes(key)) dismissed.push(key);
+  localStorage.setItem(dimissedKey, JSON.stringify(dismissed));
+}
+
+/* ── Build email notification groups (existing, unchanged) ── */
 function buildNotifications(){
   const active = D.filter(i => !isArchived(i));
-  const groups = {}; // keyed by email address
+  const groups = {};
 
   function addNote(email, ownerName, category, item){
     if(!groups[email]) groups[email] = { ownerName, cats:{} };
@@ -2475,19 +2714,250 @@ function buildNotifications(){
 
     ows.forEach(ownerName => {
       const email = getEmail(ownerName);
-      if(!email) return; // skip if no email mapped
+      if(!email) return;
 
       if(days !== null){
-        if(days < 0 && days >= -7) addNote(email, ownerName, 'overdue',    item);
-        else if(days < -7)         addNote(email, ownerName, 'overdue7',   item);
-        else if(days <= 2)         addNote(email, ownerName, 'due2',       item);
-        else if(days <= 7)         addNote(email, ownerName, 'due7',       item);
+        if(days < 0 && days >= -7) addNote(email, ownerName, 'overdue',  item);
+        else if(days < -7)         addNote(email, ownerName, 'overdue7', item);
+        else if(days <= 2)         addNote(email, ownerName, 'due2',     item);
+        else if(days <= 7)         addNote(email, ownerName, 'due7',     item);
       }
     });
   });
 
   return groups;
 }
+
+function formatItemLine(item, showDue=true){
+  const days = daysUntil(item.due);
+  const dueStr = showDue && item.due ? ` (due ${fd2(item.due)}${days!==null?`, ${Math.abs(days)}d ${days<0?'overdue':'remaining'}`:''})`:'';
+  return `  • ${item.title}${dueStr} — ${item.status}, ${item.priority} priority`;
+}
+
+function openNotificationEmail(email, ownerName, cats){
+  const catOrder = ['overdue7','overdue','due2','due7'];
+  const catConfig = {
+    overdue7: { label:'🔴 Overdue by more than 7 days' },
+    overdue:  { label:'🟠 Overdue' },
+    due2:     { label:'🟡 Due within 2 days' },
+    due7:     { label:'📅 Due within 7 days' },
+  };
+
+  const firstName = ownerName.split(' ')[0];
+  const totalItems = Object.values(cats).flat().length;
+
+  const bodyLines = [`Hi ${firstName},`,``,`Please see below a summary of your Risk Tracker items that need attention:`,``];
+  catOrder.forEach(cat => {
+    if(!cats[cat]) return;
+    bodyLines.push(catConfig[cat].label);
+    cats[cat].forEach(item => bodyLines.push(formatItemLine(item)));
+    bodyLines.push('');
+  });
+  bodyLines.push(`View and update your items here: ${TRACKER_URL}`);
+  bodyLines.push('');
+  bodyLines.push('Thanks,');
+  bodyLines.push('Angstrom Risk Tracker');
+
+  const urgentCats = cats.overdue7 || cats.overdue;
+  const subject = urgentCats
+    ? `⚠️ ACTION REQUIRED — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Need Your Attention`
+    : `📅 REMINDER — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Due Soon`;
+
+  const a = document.createElement('a');
+  a.href = buildMailto(email, subject, bodyLines.join('\n'));
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => a.remove(), 500);
+}
+
+/* ── Sent tracking ── */
+function getSentKey(email){ return `notif_sent_${email}_${new Date().toISOString().slice(0,10)}`; }
+function markSent(email){ localStorage.setItem(getSentKey(email), '1'); }
+function wasSentToday(email){ return !!localStorage.getItem(getSentKey(email)); }
+function clearSent(email){ localStorage.removeItem(getSentKey(email)); }
+
+const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`;
+
+/* ════════════════════════════════════════
+   NOTIFICATION CENTRE (unified)
+════════════════════════════════════════ */
+function openNotifCentre(){
+  const emailGroups = buildNotifications();
+  const emailKeys   = Object.keys(emailGroups);
+  const sysAlerts   = buildSystemAlerts();
+  const totalCount  = emailKeys.length + sysAlerts.length;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'notif-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:600;display:flex;align-items:flex-start;justify-content:flex-end;padding:60px 24px 0';
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+
+  if(totalCount === 0){
+    overlay.innerHTML = `
+      <div style="background:var(--bg2);border-radius:12px;width:420px;box-shadow:0 8px 40px rgba(0,0,0,.18);font-family:'Outfit',sans-serif;overflow:hidden">
+        <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:15px;font-weight:600;color:var(--text)">Notifications</div>
+          <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer">✕</button>
+        </div>
+        <div style="padding:48px 24px;text-align:center;color:var(--text3);font-size:13px">
+          <div style="font-size:28px;margin-bottom:10px">✅</div>
+          All clear — no notifications right now
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    return;
+  }
+
+  // ── System alert rows ──
+  const severityConfig = {
+    critical: { icon:'🔴', label:'Overdue',        bg:'rgba(192,57,43,.07)', border:'rgba(192,57,43,.2)', color:'#c0392b' },
+    warning:  { icon:'🟡', label:'Needs attention', bg:'rgba(176,125,16,.06)', border:'rgba(176,125,16,.18)', color:'#b07d10' },
+  };
+
+  const alertTypeLabels = {
+    overdue:       'Overdue',
+    stuck_scoping: 'Stuck in Scoping',
+    no_update:     'No Recent Update',
+  };
+
+  const sysHTML = sysAlerts.length ? `
+    <div style="padding:12px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);display:flex;align-items:center;gap:6px">
+      <span style="background:var(--bg3);border-radius:4px;padding:2px 7px;font-size:10px">🔔 System</span>
+      <span>${sysAlerts.length} alert${sysAlerts.length!==1?'s':''}</span>
+    </div>
+    ${sysAlerts.map(a => {
+      const cfg = severityConfig[a.severity];
+      return `<div class="nc-alert" data-key="${a.key}" style="margin:4px 10px;background:${cfg.bg};border:1px solid ${cfg.border};border-radius:8px;padding:12px 14px;position:relative">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="font-size:14px;flex-shrink:0;margin-top:1px">${cfg.icon}</span>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px" title="${a.title}">${a.title}</span>
+              <span style="font-size:10px;font-weight:600;background:${cfg.border};color:${cfg.color};padding:1px 6px;border-radius:3px;flex-shrink:0">${alertTypeLabels[a.type]}</span>
+            </div>
+            <div style="font-size:12px;color:var(--text2);margin-bottom:6px">${a.message}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button class="nc-view-btn" data-id="${a.itemId}" style="font-size:11px;background:none;border:1px solid var(--border2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text2)">View item</button>
+              <button class="nc-dismiss-btn" data-key="${a.key}" style="font-size:11px;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3);text-decoration:underline">Dismiss for today</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}` : '';
+
+  // ── Email notification rows ──
+  const catLabels  = { overdue7:'Overdue 7+ days', overdue:'Overdue', due2:'Due in 2 days', due7:'Due in 7 days' };
+  const catColours = { overdue7:'#c0392b', overdue:'#e8500a', due2:'#b07d10', due7:'#3557d4' };
+  const catOrder   = ['overdue7','overdue','due2','due7'];
+
+  const emailHTML = emailKeys.length ? `
+    <div style="padding:12px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:${sysAlerts.length?'4px':'0'}">
+      <span style="background:var(--bg3);border-radius:4px;padding:2px 7px;font-size:10px">✉ Email reminders</span>
+      <span>${emailKeys.length} recipient${emailKeys.length!==1?'s':''}</span>
+    </div>
+    ${emailKeys.map(email => {
+      const {ownerName, cats} = emailGroups[email];
+      const totalItems = Object.values(cats).flat().length;
+      const sent = wasSentToday(email);
+
+      const itemDots = catOrder.flatMap(cat => {
+        if(!cats[cat]) return [];
+        return cats[cat].map(item => `
+          <div style="display:flex;align-items:center;gap:7px;padding:3px 0;border-bottom:1px solid var(--border)">
+            <span style="width:6px;height:6px;border-radius:50%;background:${catColours[cat]};flex-shrink:0;display:inline-block"></span>
+            <span style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${item.title}</span>
+            <span style="font-size:10px;color:var(--text3);flex-shrink:0">${catLabels[cat]}</span>
+          </div>`);
+      }).join('');
+
+      return `<div class="nc-email-card" data-email="${email}" style="margin:4px 10px;background:var(--bg2);border:1px solid ${sent?'#b8e4c8':'var(--border)'};border-radius:8px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:13px;font-weight:600;color:var(--text)">${ownerName}</span>
+              ${sent?`<span style="font-size:10px;font-weight:700;background:#d4f0e0;color:#1a6b3a;border-radius:3px;padding:1px 6px">✓ Sent today</span>`:''}
+            </div>
+            <div style="font-size:11px;color:var(--text3);margin-top:1px">${totalItems} item${totalItems!==1?'s':''} needing attention</div>
+          </div>
+          <div style="display:flex;gap:5px;flex-shrink:0">
+            ${sent?`<button class="nc-resend-btn" data-email="${email}" style="font-size:11px;background:none;border:1px solid var(--border);border-radius:5px;padding:5px 10px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3)">Resend</button>`:''}
+            <button class="nc-send-btn" data-email="${email}" data-owner="${ownerName}" data-cats="${encodeURIComponent(JSON.stringify(cats))}"
+              style="font-size:11px;background:${sent?'#6b6560':'var(--accent)'};color:#fff;border:none;border-radius:5px;padding:5px 12px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;white-space:nowrap">
+              ✉ ${sent?'Send again':'Open in Outlook'}
+            </button>
+          </div>
+        </div>
+        <div>${itemDots}</div>
+        ${!sent?`<div style="margin-top:8px;text-align:right">
+          <button class="nc-marksent-btn" data-email="${email}" style="font-size:11px;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3);text-decoration:underline">Mark as sent</button>
+        </div>`:''}
+      </div>`;
+    }).join('')}` : '';
+
+  overlay.innerHTML = `
+    <div style="background:var(--bg2);border-radius:12px;width:440px;max-height:calc(100vh - 80px);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.18);font-family:'Outfit',sans-serif">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:15px;font-weight:600;color:var(--text)">Notifications</span>
+          <span style="font-size:11px;background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-weight:600">${totalCount}</span>
+        </div>
+        <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;line-height:1">✕</button>
+      </div>
+      <div style="overflow-y:auto;padding-bottom:12px">
+        ${sysHTML}
+        ${emailHTML}
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+
+  // Wire system alert buttons
+  overlay.querySelectorAll('.nc-dismiss-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      dismissAlert(btn.dataset.key);
+      btn.closest('.nc-alert').style.opacity='0.4';
+      btn.closest('.nc-alert').style.pointerEvents='none';
+      btn.textContent='Dismissed';
+    });
+  });
+  overlay.querySelectorAll('.nc-view-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const item = D.find(i=>i.id===btn.dataset.id);
+      if(item){ overlay.remove(); openDrawer(D.indexOf(item)); }
+    });
+  });
+
+  // Wire email buttons
+  overlay.querySelectorAll('.nc-send-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const cats = JSON.parse(decodeURIComponent(btn.dataset.cats));
+      openNotificationEmail(btn.dataset.email, btn.dataset.owner, cats);
+      markSent(btn.dataset.email);
+      overlay.remove(); openNotifCentre();
+    });
+  });
+  overlay.querySelectorAll('.nc-marksent-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      markSent(btn.dataset.email);
+      overlay.remove(); openNotifCentre();
+    });
+  });
+  overlay.querySelectorAll('.nc-resend-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      clearSent(btn.dataset.email);
+      overlay.remove(); openNotifCentre();
+    });
+  });
+}
+
+function refreshCard(overlay, email, group){ /* handled by reopen */ }
 
 function formatItemLine(item, showDue=true){
   const days = daysUntil(item.due);
@@ -2545,7 +3015,6 @@ function markSent(email){ localStorage.setItem(getSentKey(email), '1'); }
 function wasSentToday(email){ return !!localStorage.getItem(getSentKey(email)); }
 function clearSent(email){ localStorage.removeItem(getSentKey(email)); }
 
-const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`;
 
 /* ════════════════════════════════════════
    10AM DAILY AUTO-EMAIL SCHEDULER
@@ -2612,158 +3081,6 @@ function startDailyScheduler(){
 }
 
 /* ── Notification Centre UI ── */
-function openNotifCentre(){
-  const groups = buildNotifications();
-  const keys = Object.keys(groups);
-
-  const overlay = document.createElement('div');
-  overlay.id = 'notif-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:600;display:flex;align-items:center;justify-content:center';
-
-  if(!keys.length){
-    overlay.innerHTML = `
-      <div style="background:#fff;border-radius:12px;padding:40px 36px;max-width:440px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.15)">
-        <div style="font-size:32px;margin-bottom:12px">✅</div>
-        <div style="font-size:16px;font-weight:600;color:#1a1814;margin-bottom:6px">No notifications needed</div>
-        <div style="font-size:13px;color:#9e9890;margin-bottom:24px">No items are overdue or due soon for tracked users.</div>
-        <button onclick="document.getElementById('notif-overlay').remove()" style="background:#1a1814;color:#fff;border:none;border-radius:6px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif">Close</button>
-      </div>`;
-    document.body.appendChild(overlay);
-    overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
-    return;
-  }
-
-  // Ping Slack when admin opens notification centre — removed
-  // pingSlack(groups);
-
-  const catLabels  = { overdue7:'Overdue 7+ days', overdue:'Overdue', due2:'Due in 2 days', due7:'Due in 7 days' };
-  const catColours = { overdue7:'#c0392b', overdue:'#e8500a', due2:'#b07d10', due7:'#3557d4' };
-  const catOrder   = ['overdue7','overdue','due2','due7'];
-
-  const cards = keys.map(email => {
-    const {ownerName, cats} = groups[email];
-    const totalItems = Object.values(cats).flat().length;
-    const sent = wasSentToday(email);
-
-    const itemRows = catOrder.flatMap(cat => {
-      if(!cats[cat]) return [];
-      return cats[cat].map(item => `
-        <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0ede8">
-          <span style="width:7px;height:7px;border-radius:50%;background:${catColours[cat]};flex-shrink:0;margin-top:4px;display:inline-block"></span>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:500;color:#1a1814;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.title}</div>
-            <div style="font-size:11px;color:#9e9890">${catLabels[cat]}${item.due?' · '+fd2(item.due):''}</div>
-          </div>
-        </div>`);
-    }).join('');
-
-    return `
-      <div class="notif-card" data-email="${email}" style="background:#fff;border:1px solid ${sent?'#b8e4c8':'#ddd9d3'};border-radius:10px;padding:20px;margin-bottom:12px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <div style="font-size:14px;font-weight:600;color:#1a1814">${ownerName}</div>
-              ${sent?`<span class="sent-badge" style="font-size:10px;font-weight:700;background:#d4f0e0;color:#1a6b3a;border-radius:4px;padding:2px 8px">✓ Sent today</span>`:''}
-            </div>
-            <div style="font-size:12px;color:#9e9890;margin-top:2px">${email} · ${totalItems} item${totalItems!==1?'s':''}</div>
-          </div>
-          <div style="display:flex;gap:6px;flex-shrink:0">
-            ${sent?`<button class="notif-unsend-btn" data-email="${email}" style="background:none;border:1px solid #ddd9d3;border-radius:6px;padding:8px 10px;font-size:11px;color:#9e9890;cursor:pointer;font-family:'Outfit',sans-serif">Resend</button>`:''}
-            <button class="notif-send-btn"
-              data-email="${email}" data-owner="${ownerName}"
-              data-cats="${encodeURIComponent(JSON.stringify(cats))}"
-              style="background:${sent?'#6b6560':'#e8500a'};color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap">
-              ✉ ${sent?'Send again':'Open in Outlook'}
-            </button>
-          </div>
-        </div>
-        <div>${itemRows}</div>
-        ${sent?'':`<div style="margin-top:12px;padding-top:12px;border-top:1px solid #f0ede8;display:flex;align-items:center;justify-content:flex-end">
-          <button class="notif-marksent-btn" data-email="${email}" style="background:none;border:none;font-size:12px;color:#9e9890;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:underline">
-            Mark as sent without opening Outlook
-          </button>
-        </div>`}
-      </div>`;
-  }).join('');
-
-  overlay.innerHTML = `
-    <div style="background:#f5f3f0;border-radius:12px;width:90%;max-width:600px;max-height:82vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.18)">
-      <div style="padding:20px 24px;background:#fff;border-bottom:1px solid #ddd9d3;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:16px;font-weight:700;color:#1a1814">📬 Notifications</div>
-          <div style="font-size:12px;color:#9e9890;margin-top:2px">${keys.length} recipient${keys.length!==1?'s':''} · opens pre-filled in Outlook · sent status resets daily</div>
-        </div>
-        <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:20px;color:#9e9890;cursor:pointer;line-height:1">✕</button>
-      </div>
-      <div style="padding:20px 24px;overflow-y:auto">${cards}</div>
-    </div>`;
-
-  document.body.appendChild(overlay);
-  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
-
-  // Open in Outlook + auto mark sent
-  overlay.querySelectorAll('.notif-send-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const email = btn.dataset.email;
-      const cats  = JSON.parse(decodeURIComponent(btn.dataset.cats));
-      openNotificationEmail(email, btn.dataset.owner, cats);
-      markSent(email);
-      refreshCard(overlay, email, groups[email]);
-    });
-  });
-
-  // Mark as sent without opening Outlook
-  overlay.querySelectorAll('.notif-marksent-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      markSent(btn.dataset.email);
-      refreshCard(overlay, btn.dataset.email, groups[btn.dataset.email]);
-    });
-  });
-
-  // Resend — clear sent status and reopen
-  overlay.querySelectorAll('.notif-unsend-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      clearSent(btn.dataset.email);
-      overlay.remove();
-      openNotifCentre();
-    });
-  });
-}
-
-function refreshCard(overlay, email, group){
-  const card = overlay.querySelector(`.notif-card[data-email="${email}"]`);
-  if(!card) return;
-  card.style.borderColor = '#b8e4c8';
-  // Add sent badge
-  const nameRow = card.querySelector('div[style*="display:flex;align-items:center;gap:8px"]');
-  if(nameRow && !nameRow.querySelector('.sent-badge')){
-    const badge = document.createElement('span');
-    badge.className = 'sent-badge';
-    badge.style.cssText = 'font-size:10px;font-weight:700;background:#d4f0e0;color:#1a6b3a;border-radius:4px;padding:2px 8px';
-    badge.textContent = '✓ Sent today';
-    nameRow.appendChild(badge);
-  }
-  // Update button
-  const sendBtn = card.querySelector('.notif-send-btn');
-  if(sendBtn){ sendBtn.style.background='#6b6560'; sendBtn.textContent='✉ Send again'; }
-  // Remove "mark as sent" link row
-  const markRow = card.querySelector('.notif-marksent-btn');
-  if(markRow) markRow.closest('div[style*="margin-top:12px"]')?.remove();
-  // Add resend button if not there
-  const btnGroup = card.querySelector('.notif-send-btn')?.parentElement;
-  if(btnGroup && !card.querySelector('.notif-unsend-btn')){
-    const resend = document.createElement('button');
-    resend.className = 'notif-unsend-btn';
-    resend.dataset.email = email;
-    resend.style.cssText = 'background:none;border:1px solid #ddd9d3;border-radius:6px;padding:8px 10px;font-size:11px;color:#9e9890;cursor:pointer;font-family:\'Outfit\',sans-serif';
-    resend.textContent = 'Resend';
-    resend.addEventListener('click', ev => { ev.stopPropagation(); clearSent(email); overlay.remove(); openNotifCentre(); });
-    btnGroup.insertBefore(resend, card.querySelector('.notif-send-btn'));
-  }
-}
 
 /* ════════════════════════════════════════
    CUSTOM DATE PICKER
@@ -2935,8 +3252,117 @@ function getDatePickerISO(displayInputId){
 }
 
 /* ════════════════════════════════════════
-   KEYBOARD
+   FOCUS VIEW — SCORING ENGINE
 ════════════════════════════════════════ */
+function scoreItem(item){
+  let score = 0;
+  const reasons = [];
+  const days = item.due ? Math.round((new Date(item.due).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / 86400000) : null;
+
+  if(days !== null && days < 0){
+    score += 40 + Math.min(Math.abs(days) * 2, 30); // extra weight the longer overdue
+    reasons.push({tag:'ft-overdue', label:`Overdue ${Math.abs(days)}d`});
+  } else if(days !== null && days <= 3){
+    score += 25;
+    reasons.push({tag:'ft-due3', label:`Due in ${days===0?'today':days+'d'}`});
+  } else if(days !== null && days <= 7){
+    score += 12;
+    reasons.push({tag:'ft-due3', label:`Due in ${days}d`});
+  }
+
+  if(item.priority === 'High'){   score += 20; reasons.push({tag:'ft-high',   label:'High priority'}); }
+  if(item.priority === 'Medium'){ score += 8;  reasons.push({tag:'ft-med',    label:'Medium priority'}); }
+  if(item.status   === 'In Progress'){ score += 15; reasons.push({tag:'ft-inprog', label:'In Progress'}); }
+  if(!item.jira){  score += 10; reasons.push({tag:'ft-nojira', label:'No Jira ticket'}); }
+
+  return {score, reasons};
+}
+
+function renderFocusView(){
+  const active = D.filter(i => !isArchived(i) && i.status !== 'Parking Lot');
+
+  // Score all items
+  const scored = active.map(item => {
+    const {score, reasons} = scoreItem(item);
+    return {item, score, reasons};
+  }).filter(x => x.score > 0)
+    .sort((a,b) => b.score - a.score);
+
+  // Top 5
+  const top5 = scored.slice(0, 5);
+  // At risk this week — due within 7 days, not already in top 5
+  const top5ids = new Set(top5.map(x=>x.item.id));
+  const atRisk = scored.filter(x => {
+    if(top5ids.has(x.item.id)) return false;
+    const days = x.item.due ? Math.round((new Date(x.item.due).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / 86400000) : null;
+    return days !== null && days <= 7;
+  });
+
+  const rankClasses = ['focus-rank-1','focus-rank-2','focus-rank-3','focus-rank-4','focus-rank-5'];
+
+  function cardHTML(x, rank){
+    const {item, score, reasons} = x;
+    const ows = owners(item);
+    const owStr = ows.length ? ows.slice(0,2).join(', ')+(ows.length>2?` +${ows.length-2}`:'') : '—';
+    const daysVal = item.due ? Math.round((new Date(item.due).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / 86400000) : null;
+    const dueStr = item.due ? (daysVal < 0 ? `<span style="color:#c0392b;font-weight:600">${fd(item.due)}</span>` : `<span style="color:${daysVal<=3?'#e8500a':'var(--text3)'}">${fd(item.due)}</span>`) : '<span style="color:var(--text3)">No due date</span>';
+
+    return `<div class="focus-card" onclick="openDrawer(${D.indexOf(item)})">
+      ${rank!==null?`<div class="focus-rank ${rankClasses[rank]||'focus-rank-5'}">${rank+1}</div>`:'<div style="width:8px;height:8px;border-radius:50%;background:#b07d10;flex-shrink:0;margin-top:12px"></div>'}
+      <div class="focus-body">
+        <div class="focus-title" title="${item.title}">${item.title}</div>
+        <div class="focus-meta">
+          ${sbadge(item.status)}
+          <span style="font-size:12px;color:var(--text3)">${owStr}</span>
+          <span style="font-size:12px;color:var(--text3)">·</span>
+          <span style="font-size:12px">${dueStr}</span>
+          ${item.jira?`<span style="font-size:12px;color:var(--text3)">·</span><span class="jchip" style="font-size:10px">${parseJira(item.jira).key}</span>`:''}
+        </div>
+        <div class="focus-tags">${reasons.map(r=>`<span class="focus-tag ${r.tag}">${r.label}</span>`).join('')}</div>
+      </div>
+      <div class="focus-score">${score}<span>score</span></div>
+    </div>`;
+  }
+
+  const top5El = document.getElementById('focus-top5');
+  const atRiskEl = document.getElementById('focus-atrisk');
+
+  top5El.innerHTML = top5.length
+    ? top5.map((x,i) => cardHTML(x, i)).join('')
+    : `<div class="focus-empty">🎉 Nothing urgent to action today — all items are on track.</div>`;
+
+  atRiskEl.innerHTML = atRisk.length
+    ? atRisk.map(x => cardHTML(x, null)).join('')
+    : `<div class="focus-empty">✅ No items at risk this week.</div>`;
+
+  // Update timestamp
+  const now = new Date();
+  document.getElementById('focus-updated').textContent =
+    `Last updated ${now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
+}
+/* ════════════════════════════════════════
+   DARK MODE TOGGLE
+════════════════════════════════════════ */
+function toggleDarkMode(){
+  const isDark = document.body.classList.toggle('dark-mode');
+  document.getElementById('dmIcon').textContent  = isDark ? '☀️' : '🌙';
+  document.getElementById('dmLabel').textContent = isDark ? 'Light' : 'Dark';
+  localStorage.setItem('dm', isDark ? '1' : '0');
+}
+
+function initDarkMode(){
+  const saved = localStorage.getItem('dm');
+  if(saved === '1'){
+    document.body.classList.add('dark-mode');
+    const icon  = document.getElementById('dmIcon');
+    const label = document.getElementById('dmLabel');
+    if(icon)  icon.textContent  = '☀️';
+    if(label) label.textContent = 'Light';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initDarkMode);
+
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();closeDatePicker();}
 });
