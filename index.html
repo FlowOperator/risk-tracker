@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Angstrom · Risk Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -222,20 +222,47 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .cpill{margin-left:auto;font-size:12px;font-weight:500;color:var(--text2);white-space:nowrap}
 
 /* ═══ TABLE ═══ */
-.tbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:980px}
-thead{background:var(--bg2);position:sticky;top:0;z-index:2;border-bottom:2px solid var(--border)}
-th{padding:9px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--text3);font-family:'Outfit',sans-serif;border-bottom:none;white-space:nowrap;cursor:pointer;user-select:none;letter-spacing:.01em}
+.tbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:auto;position:relative}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:960px}
+thead{background:var(--bg2);position:sticky;top:0;z-index:4;border-bottom:1px solid var(--border)}
+th{padding:8px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--text3);font-family:'Outfit',sans-serif;border-bottom:none;white-space:nowrap;cursor:pointer;user-select:none;letter-spacing:.01em;transition:color .12s}
 th:hover{color:var(--text2)}
 th.sorted{color:var(--accent)}
-/* Owner column header */
 th.th-owner{position:relative}
 .ow-filter-wrap{display:inline-flex;align-items:center;gap:5px}
 .ow-filter-ico{font-size:10px;opacity:.5;cursor:pointer}
-tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+
+/* Sticky title column */
+th.th-sticky, td.td-sticky{
+  position:sticky;left:0;z-index:3;
+  background:inherit;
+}
+th.th-sticky{z-index:5;background:var(--bg2)}
+td.td-sticky::after{
+  content:'';position:absolute;right:0;top:0;bottom:0;width:1px;
+  background:var(--border);pointer-events:none;
+}
+
+/* Row — stronger hover, clear focus ring */
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s,box-shadow .1s}
 tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:var(--bg3)}
-td{padding:11px 16px;color:var(--text2);vertical-align:middle;font-size:13px}
+tbody tr:hover{background:var(--bg3)!important;box-shadow:inset 0 0 0 1px var(--border2)}
+tbody tr:hover td.td-sticky{background:var(--bg3)}
+td{padding:10px 14px;color:var(--text2);vertical-align:middle;font-size:13px}
+
+/* Editable cells — clearer affordance */
+td.qe{position:relative;transition:background .1s}
+td.qe:hover{background:rgba(232,80,10,.04);cursor:pointer}
+td.qe:hover::after{
+  content:'';position:absolute;right:5px;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%239e9890'%3E%3Cpath d='M11.5 1.5l3 3-9 9H2.5v-3l9-9z'/%3E%3C/svg%3E") center/10px no-repeat;
+  opacity:.5;pointer-events:none;
+}
+td.qe:hover::before{
+  content:'';position:absolute;inset:2px;border-radius:4px;
+  border:1px dashed var(--border2);pointer-events:none;
+}
 
 /* ═══ ROW STATUS COLOURS ═══ */
 tbody tr.rs-proposed   { background: #ffffff; }
@@ -285,7 +312,7 @@ td:hover .drag-handle, tr:hover .drag-handle { opacity: 1; }
 .ctit .sub{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ═══ BADGES — solid filled, matched to row tints ═══ */
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap;letter-spacing:.02em}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;letter-spacing:.01em}
 /* Proposed — neutral grey */
 .bp{ background:#6b6560; color:#fff; border:none }
 /* Scoping — blue (matches blue row tint) */
@@ -298,17 +325,20 @@ td:hover .drag-handle, tr:hover .drag-handle { opacity: 1; }
 .bd{ background:#2a7a48; color:#fff; border:none }
 /* Parking Lot — slate grey */
 .bk{ background:#7a7470; color:#fff; border:none }
-.prio{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500}
-.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.pH .pdot{background:#c0392b}.pH{color:#c0392b;font-weight:600}
-.pM .pdot{background:#b07d10}.pM{color:#b07d10;font-weight:600}
-.pL .pdot{background:#aaa8a4}.pL{color:#9e9890;font-weight:500}
+.prio{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.pdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.pH{color:#c0392b;font-weight:600;background:rgba(192,57,43,.07)}
+.pH .pdot{background:#c0392b}
+.pM{color:#b07d10;font-weight:500;background:rgba(176,125,16,.07)}
+.pM .pdot{background:#b07d10}
+.pL{color:#9e9890;font-weight:400}
+.pL .pdot{background:#aaa8a4}
 .jchip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;background:rgba(232,80,10,.08);color:#b83a06;border:1px solid rgba(232,80,10,.2);border-radius:4px;padding:2px 7px;font-family:monospace;text-decoration:none;cursor:pointer}
 .jchip:hover{background:rgba(232,80,10,.14)}
 .ntick{font-size:11px;color:#b07d10;font-weight:500;font-family:monospace}
 .dN{font-size:12px;color:var(--text3);font-family:monospace}
 .dS{font-size:12px;color:#b07d10;font-family:monospace;font-weight:600}
-.dO{font-size:12px;color:#c0392b;font-family:monospace;font-weight:700;background:#fff0ee;padding:1px 6px;border-radius:3px;border:1px solid rgba(192,57,43,.25)}
+.dO{font-size:11px;color:#c0392b;font-weight:600;background:#fff0ee;padding:2px 7px;border-radius:4px;border:1px solid rgba(192,57,43,.2);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .tchip{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
 
 /* ═══ INLINE QUICK-EDIT CELLS ═══ */
@@ -385,25 +415,31 @@ td.qe:hover::after{content:'✎';position:absolute;right:6px;top:50%;transform:t
 .emptyico{font-size:32px;margin-bottom:10px}
 
 /* ═══ KANBAN ═══ */
-.kboard{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;align-items:start}
-@media(max-width:1300px){.kboard{grid-template-columns:repeat(3,1fr)}}
-.kcol{}
-.kch{border-radius:8px 8px 0 0;padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:space-between;border:1px solid transparent;border-bottom:none}
-.kcb{border-radius:0 0 8px 8px;border:1px solid var(--border);border-top:none;background:var(--bg2);min-height:50px}
-.kh-p{background:rgba(232,80,10,.07);color:#b83a06;border-color:rgba(232,80,10,.18)!important}
-.kh-s{background:rgba(212,166,58,.1);color:#b8a0e8;border-color:rgba(212,166,58,.2)!important}
-.kh-sd{background:rgba(42,138,82,.07);color:#1a6b3a;border-color:rgba(42,138,82,.15)!important}
-.kh-i{background:rgba(212,166,58,.1);color:var(--amber);border-color:rgba(212,166,58,.2)!important}
-.kh-d{background:rgba(42,138,82,.07);color:#1a6b3a;border-color:rgba(42,138,82,.15)!important}
-.kh-k{background:rgba(138,130,120,.07);color:#524e4a;border-color:rgba(138,130,120,.18)!important}
-.kcount{background:rgba(255,255,255,.1);border-radius:10px;padding:1px 7px;font-size:10px}
-.kcard{padding:11px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
-.kcard:last-child{border-bottom:none}
-.kcard:hover{background:var(--bg3)}
-.kctit{font-size:12px;font-weight:500;color:var(--text);margin-bottom:6px;line-height:1.4}
+/* ═══ KANBAN ═══ */
+.kboard{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+@media(max-width:1300px){.kboard{grid-template-columns:repeat(2,1fr)}}
+.kcol{border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--bg3)}
+.kch{padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:.04em;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.kcb{background:var(--bg3);min-height:60px}
+.kh-p{background:rgba(107,101,96,.08);color:var(--text2)}
+.kh-s{background:rgba(53,87,212,.07);color:#2a44a8}
+.kh-sd{background:rgba(42,138,82,.07);color:#1a6b3a}
+.kh-i{background:rgba(53,87,212,.07);color:#2a44a8}
+.kh-d{background:rgba(42,138,82,.07);color:#1a6b3a}
+.kh-k{background:rgba(138,130,120,.07);color:#524e4a}
+.kcount{background:var(--bg4);border-radius:10px;padding:1px 8px;font-size:11px;font-weight:600;color:var(--text3)}
+.kcard{
+  margin:6px;border-radius:8px;padding:12px 13px;
+  background:var(--bg2);border:1px solid var(--border);
+  cursor:pointer;transition:box-shadow .12s,border-color .12s;
+}
+.kcard:hover{border-color:var(--border2);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.kctit{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.4}
 .kcmeta{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.kcown{font-size:10px;color:var(--text3);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.kempty{padding:18px;text-align:center;font-size:12px;color:var(--text3)}
+.kcown{font-size:11px;color:var(--text3);margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-top:6px;border-top:1px solid var(--border)}
+.kempty{padding:20px;text-align:center;font-size:12px;color:var(--text3)}
+.kcard-overdue{border-left:3px solid #c0392b!important}
+.kcard-due3{border-left:3px solid #b07d10!important}
 
 /* ═══ ARCHIVE SECTION ═══ */
 .arch-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:4px}
@@ -481,7 +517,264 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
 .audit-old{color:var(--red);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .audit-new{color:var(--green);font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ═══ CUSTOM DATE PICKER ═══ */
+/* ════════════════════════════════════════
+   MOBILE — RESPONSIVE
+════════════════════════════════════════ */
+@media(max-width:768px){
+
+  /* ── Nav ── */
+  .nav{ padding:0 16px; gap:8px; height:52px; }
+  .navlogo em{ display:none; } /* hide "Risk Tracker" — just show ANGSTROM + Å */
+  .navlogo{ font-size:13px; }
+  .navsep{ display:none; }
+  .uchip{ display:none; } /* hide user chip — too wide */
+  .rbadge{ display:none; }
+  .dm-toggle span:last-child{ display:none; } /* hide "Dark"/"Light" label, keep icon */
+  .dm-toggle{ padding:5px 8px; }
+  .btnout{ font-size:11px; padding:5px 8px; }
+
+  /* ── Tab bar — scrollable horizontal ── */
+  .tabbar{ padding:0 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .tabbar::-webkit-scrollbar{ display:none; }
+  .tabbtn{ padding:10px 12px; font-size:12px; white-space:nowrap; flex-shrink:0; }
+
+  /* ── Wrap ── */
+  .wrap{ padding:16px; }
+
+  /* ── Page header ── */
+  .phead{ margin-bottom:16px; }
+  .phtitle{ font-size:16px; }
+  .btnadd{ padding:8px 14px; font-size:12px; }
+
+  /* ── Stat cards — 3 per row on phone ── */
+  .scrow{ grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:16px; }
+  .sc{ padding:12px 10px; }
+  .scval{ font-size:22px; height:26px; }
+  .sclabel{ font-size:10px; margin-bottom:5px; }
+
+  /* ── Toolbar — vertical stack on small screens ── */
+  .toolbar{ gap:6px; }
+  .swrap{ max-width:100%; min-width:0; flex:1 1 100%; order:-1; }
+  .sinput{ font-size:14px; } /* prevent iOS zoom on focus */
+  .mf-btn{ font-size:11px; padding:7px 10px; }
+  .vtabs{ margin-left:0; }
+  .vtab{ padding:7px 11px; font-size:11px; }
+  .cpill{ display:none; } /* item count hidden — save space */
+
+  /* ── Table box — full bleed on mobile ── */
+  .tbox{ border-radius:0; border-left:none; border-right:none; margin:0 -16px; }
+
+  /* ── Drawer — full screen on mobile ── */
+  .drawer{ width:100%; border-left:none;
+    top:0; bottom:0;
+    border-radius:0;
+  }
+  .dbody{ padding:16px; }
+  .dhdr{ padding:14px 16px; }
+  .dftr{ padding:12px 16px; }
+  .dgrid{ grid-template-columns:1fr; gap:12px; }
+  .dfull{ grid-column:1; }
+
+  /* ── History panel ── */
+  .hpanel{ width:100%; border-left:none; }
+  .hpanel-body{ padding:12px 16px; }
+  .hpanel-hdr{ padding:14px 16px; }
+
+  /* ── Kanban — single column ── */
+  .kboard{ grid-template-columns:1fr; gap:10px; }
+
+  /* ── Legend panel ── */
+  .legpanel{ padding:14px 16px; }
+  .leggrid{ grid-template-columns:1fr; gap:14px; }
+
+  /* ── Focus view cards ── */
+  .focus-card{ padding:12px 14px; gap:10px; }
+  .focus-score{ min-width:36px; font-size:18px; }
+
+  /* ── Popups ── full width on mobile ── */
+  .mf-dropdown{ min-width:160px; max-width:calc(100vw - 32px); }
+  .qpop{ max-width:calc(100vw - 32px); }
+
+  /* ── Touch targets — minimum 44px ── */
+  .tabbtn{ min-height:44px; }
+  .btnadd{ min-height:40px; }
+  td.qe{ min-height:44px; }
+
+  /* ── Notification panel ── */
+  #notif-overlay{ padding:52px 0 0; align-items:stretch; }
+  #notif-overlay > div{ width:100%!important; border-radius:16px 16px 0 0; max-height:90vh; }
+}
+
+@media(max-width:480px){
+  /* ── Stat cards — 2 per row on very small phones ── */
+  .scrow{ grid-template-columns:repeat(2,1fr); }
+
+  /* ── Nav logo — just Å mark on tiny screens ── */
+  .navlogo span:not(.nav-ang-mark){ display:none; }
+
+  /* ── Audit table simplify ── */
+  .audit-old, .audit-new{ max-width:80px; }
+}
+
+/* ════════════════════════════════════════
+   END MOBILE
+════════════════════════════════════════ */
+
+/* ── Global interaction tokens ── */
+:root{
+  --ease-out: cubic-bezier(0,.8,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+  --ease-drawer: cubic-bezier(.32,0,.67,0);
+  --ease-drawer-in: cubic-bezier(.33,1,.68,1);
+  --t-fast: 100ms;
+  --t-base: 160ms;
+  --t-slow: 240ms;
+}
+
+/* ── Button press states — all interactive buttons ── */
+.btnadd:active{ transform:scale(.97); transition:transform 60ms ease,background var(--t-fast) }
+.btsave:active{ transform:scale(.97); opacity:.9; }
+.btcancel:active{ transform:scale(.97); }
+.btdel:active{ transform:scale(.97); }
+.btnout:active{ transform:scale(.97); }
+.mf-btn:active{ transform:scale(.97); }
+.bp_:active{ transform:scale(.98); }
+.sc:active{ transform:scale(.99)!important; box-shadow:0 1px 4px rgba(0,0,0,.06)!important; }
+.vtab:active{ transform:scale(.96); }
+.tabbtn:active{ opacity:.7; }
+
+/* ── Drawer — snappier spring entry ── */
+.drawer{
+  transform:translateX(100%);
+  transition:transform var(--t-slow) var(--ease-drawer);
+  will-change:transform;
+}
+.drawer.on{
+  transform:translateX(0);
+  transition:transform var(--t-slow) var(--ease-drawer-in);
+}
+.dov{
+  position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;
+  opacity:0;
+  transition:opacity var(--t-base) ease;
+  display:block!important;
+  pointer-events:none;
+}
+.dov.on{
+  opacity:1;
+  pointer-events:all;
+}
+
+/* ── History panel — same spring ── */
+.hpanel{
+  transition:transform var(--t-slow) var(--ease-drawer-in);
+  will-change:transform;
+}
+
+/* ── Table rows — crisp, not sluggish ── */
+tbody tr{
+  transition:background var(--t-fast) ease, box-shadow var(--t-fast) ease;
+}
+
+/* ── Inline edit cells — instant feel ── */
+td.qe{ transition:background var(--t-fast) ease; }
+td.qe:hover::before{ transition:opacity var(--t-fast) ease; }
+
+/* ── Stat cards — spring lift, no wobble ── */
+.sc{
+  transition:box-shadow var(--t-base) ease, border-color var(--t-base) ease, transform var(--t-base) var(--ease-spring);
+}
+
+/* ── Filter dropdown — fade + slide ── */
+.mf-dropdown{
+  animation:mfIn var(--t-base) var(--ease-drawer-in);
+  transform-origin:top left;
+}
+@keyframes mfIn{
+  from{ opacity:0; transform:scale(.97) translateY(-6px); }
+  to{   opacity:1; transform:scale(1)   translateY(0); }
+}
+
+/* ── Quick-edit popup — tighten ── */
+.qpop{ animation:popIn var(--t-fast) var(--ease-drawer-in); }
+@keyframes popIn{
+  from{ opacity:0; transform:scale(.96) translateY(-4px); }
+  to{   opacity:1; transform:scale(1)   translateY(0); }
+}
+
+/* ── Date picker ── */
+.dp-cal{ animation:popIn var(--t-fast) var(--ease-drawer-in); }
+
+/* ── Toast — slide up with spring ── */
+.toast{
+  transition:transform var(--t-base) var(--ease-spring), opacity var(--t-base) ease;
+  will-change:transform,opacity;
+}
+.toast.show{ transform:translateY(0); opacity:1; }
+
+/* ── Save state on button ── */
+.btsave.saving{
+  background:var(--text3);
+  pointer-events:none;
+}
+.btsave.saved{
+  background:var(--green);
+  transition:background var(--t-fast) ease;
+}
+
+/* ── Delete confirmation shake ── */
+@keyframes shake{
+  0%,100%{ transform:translateX(0); }
+  20%{ transform:translateX(-4px); }
+  40%{ transform:translateX(4px); }
+  60%{ transform:translateX(-3px); }
+  80%{ transform:translateX(3px); }
+}
+.shaking{ animation:shake 300ms ease; }
+
+/* ── Row flash on save (green) / delete (red) ── */
+@keyframes rowFlashGreen{
+  0%{ background:rgba(42,138,82,.18)!important; }
+  100%{ background:inherit; }
+}
+@keyframes rowFlashRed{
+  0%{ background:rgba(192,57,43,.18)!important; }
+  100%{ background:inherit; }
+}
+.row-saved{ animation:rowFlashGreen 800ms ease forwards; }
+.row-deleting{ animation:rowFlashRed 400ms ease forwards; }
+
+/* ── Kanban card micro ── */
+.kcard{
+  transition:box-shadow var(--t-base) ease, border-color var(--t-base) ease, transform var(--t-fast) ease;
+}
+.kcard:hover{ transform:translateY(-1px); }
+.kcard:active{ transform:scale(.98); }
+
+/* ── Focus ring for keyboard nav (accessibility) ── */
+button:focus-visible, input:focus-visible, select:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+/* ─── Mobile floating action button ─── */
+@media(max-width:768px){
+  .btnadd-fab{
+    display:flex;
+    position:fixed;bottom:20px;right:20px;
+    width:52px;height:52px;border-radius:50%;
+    background:var(--accent);color:#fff;border:none;
+    font-size:24px;align-items:center;justify-content:center;
+    box-shadow:0 4px 16px rgba(232,80,10,.45);
+    cursor:pointer;z-index:90;
+    transition:transform var(--t-base) var(--ease-spring),box-shadow var(--t-base) ease;
+  }
+  .btnadd-fab:active{ transform:scale(.92); }
+  .btnadd.adminonly{ display:none!important; } /* hide header button on mobile */
+  .btnadd-fab.adminonly.show{ display:flex!important; }
+  /* Table scroll hint */
+  .tbox{ -webkit-overflow-scrolling:touch; }
+}
 .dpick{cursor:pointer!important}
 .dpick:hover{border-color:var(--border2)}
 .dp-overlay{position:fixed;inset:0;z-index:800}
@@ -522,7 +815,7 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
 .dp-year.dp-sel-y{background:var(--accent);color:#fff;font-weight:600}
 
 /* ═══ DRAWER ═══ */
-.dov{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;display:none}
+.dov-old-removed{display:none}
 .dov.on{display:block}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);overflow:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
 .drawer.on{transform:translateX(0)}
@@ -753,8 +1046,8 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
           <table>
             <thead>
               <tr>
-                <th style="width:24px;padding:10px 8px"></th>
-                <th onclick="sb('title')">Title <span id="si-title">↕</span></th>
+                <th style="width:28px;padding:8px 6px;position:sticky;left:0;z-index:5;background:var(--bg2)"></th>
+                <th class="th-sticky" onclick="sb('title')" style="min-width:220px;max-width:300px">Title <span id="si-title">↕</span></th>
                 <th onclick="sb('owner')">Owner <span id="si-owner">↕</span></th>
                 <th onclick="sb('status')">Status <span id="si-status">↕</span></th>
                 <th onclick="sb('priority')">Priority <span id="si-priority">↕</span></th>
@@ -972,6 +1265,9 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
   </div>
 </div>
 
+  <!-- Mobile FAB -->
+  <button class="btnadd-fab adminonly" onclick="openDrawer(null)" aria-label="Add item">+</button>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -981,6 +1277,9 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
 ════════════════════════════════════════ */
 const SUPABASE_URL = 'https://qggaxsiqhrfmnjznkvbq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnZ2F4c2lxaHJmbW5qem5rdmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzQ2OTAsImV4cCI6MjA4OTUxMDY5MH0.pFxI9wFhEvgNqOkzfcMgBiGfGeLoVnyjyD72mlCynwo';
+
+// ⚠️ DEV ONLY — set to false before deploying to GitHub
+const DEV_BYPASS = true;
 
 const sbc = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -999,6 +1298,12 @@ const USERS={
   guest:{pass:'guest',role:'user',name:'Guest'},
 };
 let CU=null;
+
+function quickLogin(u, p){
+  document.getElementById('lU').value = u;
+  document.getElementById('lP').value = p;
+  doLogin();
+}
 
 async function doLogin(){
   const u=document.getElementById('lU').value.trim().toLowerCase();
@@ -1029,8 +1334,7 @@ async function doLogin(){
     rb.textContent=CU.role==='admin'?'Admin':'Member';
     rb.className='rbadge '+(CU.role==='admin'?'r-admin':'r-user');
     document.querySelectorAll('.adminonly').forEach(el=>el.classList.toggle('show',CU.role==='admin'));
-    document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.toggle('show',CU.role==='admin'));
-    subscribeRealtime();
+    document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.toggle('show',CU.role==='admin'));    subscribeRealtime();
     buildOwnerFilter();ra();
     loadUserEmails(); // pull emails from Supabase app_users
     // Start 9:55am daily auto-email scheduler for admins
@@ -1157,7 +1461,7 @@ function sbadge(s){
   const l={'Selected For Development':'Selected Dev'};
   return`<span class="badge ${m[s]||'bp'}">${l[s]||s}</span>`;
 }
-function prioH(p){return`<div class="prio p${p?p[0]:'L'}"><div class="pdot"></div>${p||'—'}</div>`}
+function prioH(p){return`<div class="prio p${p?p[0]:'L'}"><div class="pdot"></div><span>${p||'—'}</span></div>`}
 
 /* ════════════════════════════════════════
    TAB SWITCH
@@ -1457,10 +1761,10 @@ function renderTable(items){
     const teamHtml = item.team||`<span style="color:var(--text3)">—</span>`;
 
     tr.innerHTML=`
-      <td style="padding:9px 8px 9px 10px;width:24px">
+      <td style="padding:8px 6px;width:28px;position:sticky;left:0;z-index:2;background:inherit">
         <span class="drag-handle" title="Drag to reorder">⠿</span>
       </td>
-      <td class="ctit" style="cursor:pointer">
+      <td class="ctit td-sticky" style="cursor:pointer;min-width:220px;max-width:300px">
         <div style="display:flex;align-items:center;gap:6px">
           <div class="htip" style="flex:1;min-width:0;overflow:hidden" onclick="openDrawer(${idx})">
             <span title="${item.title}">${item.title}</span>
@@ -1478,7 +1782,7 @@ function renderTable(items){
       <td class="qe" data-qe="due" data-idx="${idx}" onclick="qeDue(event,${idx})">${dC}</td>
       <td class="qe" data-qe="jira" data-idx="${idx}" onclick="qeJira(event,${idx})">${jC}</td>
       <td class="qe" data-qe="type" data-idx="${idx}" onclick="qeType(event,${idx})">${typeHtml}</td>
-      <td class="qe" data-qe="dateReq" data-idx="${idx}" onclick="qeDateReq(event,${idx})"><span class="dN">${fd(item.dateReq)||'—'}</span></td>`;
+      <td class="qe" data-qe="dateReq" data-idx="${idx}" onclick="qeDateReq(event,${idx})" style="font-size:12px;color:var(--text3)">${fd(item.dateReq)||'<span style="color:var(--text3)">—</span>'}</td>`;
     tb.appendChild(tr);
   });
 }
@@ -1542,10 +1846,26 @@ function renderKanban(items){
     const body=div.querySelector('.kcb');
     ci.forEach(item=>{
       const idx=D.indexOf(item);const ov=isOv(item);
-      const card=document.createElement('div');card.className='kcard';
+      const card=document.createElement('div');
+      const kovDays = item.due ? Math.round((new Date(item.due).setHours(0,0,0,0) - new Date().setHours(0,0,0,0))/86400000) : null;
+      const kovClass = kovDays!==null && kovDays<0 ? 'kcard-overdue' : kovDays!==null && kovDays<=3 ? 'kcard-due3' : '';
+      card.className=`kcard ${kovClass}`;
       card.onclick=()=>openDrawer(idx);
-      const of=owners(item)[0]||'';
-      card.innerHTML=`<div class="kctit">${item.title}</div><div class="kcmeta">${prioH(item.priority)}${item.jira?`<span class="jchip" style="font-size:10px;padding:1px 5px">${parseJira(item.jira).key}</span>`:''}${ov?'<span style="font-size:10px;color:var(--red)">⚠ overdue</span>':''}</div>${of?`<div class="kcown">${of}</div>`:''}`;
+      const allOwners=owners(item);
+      const of=allOwners[0]||'';
+      const dueLabelK = kovDays!==null && kovDays<0
+        ? `<span style="font-size:10px;color:#c0392b;font-weight:600">⚠ ${Math.abs(kovDays)}d overdue</span>`
+        : kovDays!==null && kovDays<=3
+        ? `<span style="font-size:10px;color:#b07d10;font-weight:600">Due ${kovDays===0?'today':'in '+kovDays+'d'}</span>`
+        : item.due ? `<span style="font-size:10px;color:var(--text3)">${fd(item.due)}</span>` : '';
+      card.innerHTML=`
+        <div class="kctit">${item.title}</div>
+        <div class="kcmeta">
+          ${prioH(item.priority)}
+          ${dueLabelK}
+          ${item.jira?`<span class="jchip" style="font-size:10px;padding:1px 5px">${parseJira(item.jira).key}</span>`:''}
+        </div>
+        ${of?`<div class="kcown">${of}${allOwners.length>1?` <span style="color:var(--text3)">+${allOwners.length-1}</span>`:''}</div>`:''}`;
       body.appendChild(card);
     });
   });
@@ -1872,6 +2192,9 @@ async function setField(idxOrId, field, val){
     auditLog(item.id, item.title, 'UPDATE', field, oldVal||null, val||null);
   }
   showToast('Updated ✓','green');
+  // Brief green flash on the edited cell
+  const tr = document.querySelector(`tr[data-idx="${typeof idxOrId==='number'?idxOrId:D.indexOf(item)}"]`);
+  if(tr){ tr.classList.add('row-saved'); setTimeout(()=>tr.classList.remove('row-saved'),600); }
 }
 
 /* ════════════════════════════════════════
@@ -1923,7 +2246,18 @@ async function saveItem(){
   const storedId = document.getElementById('dItemId').value;
   const isNew = !storedId;
   const t=document.getElementById('d_title').value.trim();
-  if(!t){showToast('Title is required','red');return;}
+  if(!t){
+    // Shake the title field
+    const tf = document.getElementById('d_title');
+    tf.classList.add('shaking');
+    setTimeout(()=>tf.classList.remove('shaking'), 350);
+    showToast('Title is required','red');
+    return;
+  }
+  // Button loading state
+  const saveBtn = document.querySelector('.btsave');
+  if(saveBtn){ saveBtn.textContent='Saving…'; saveBtn.classList.add('saving'); }
+
   const obj={
     title:t,desc:document.getElementById('d_desc').value.trim(),
     owner:document.getElementById('d_owner').value.trim(),
@@ -1947,7 +2281,6 @@ async function saveItem(){
     error=res.error;
     if(!error){
       obj.id=res.data.id;
-      // Update the hidden id field so Delete works immediately without reopening
       document.getElementById('dItemId').value=obj.id;
       document.getElementById('btdel').style.display=CU?.role==='admin'?'block':'none';
       auditLog(obj.id, obj.title, 'CREATE', null, null, obj.title);
@@ -1964,15 +2297,22 @@ async function saveItem(){
       if(pos>=0) D[pos]=obj;
     }
   }
+  if(saveBtn){ saveBtn.textContent='Save Changes'; saveBtn.classList.remove('saving'); }
   if(error){showToast('Save failed: '+error.message,'red');return;}
+
+  // Flash the saved row green before closing
+  if(!isNew){
+    const savedRow = document.querySelector(`tr[data-idx="${D.findIndex(i=>i.id===storedId)}"]`);
+    if(savedRow){ savedRow.classList.add('row-saved'); setTimeout(()=>savedRow.classList.remove('row-saved'),800); }
+  }
   closeDrawer();buildOwnerFilter();ra();
   showToast(isNew?'Item added ✓':'Saved ✓','green');
 }
+
 async function deleteItem(){
   const storedId    = document.getElementById('dItemId').value.trim();
   const storedTitle = document.getElementById('d_title').value.trim();
 
-  // Find by id, fallback to title
   let item = storedId ? D.find(i=>i.id===storedId) : null;
   if(!item && storedTitle) item = D.find(i=>i.title===storedTitle);
 
@@ -1981,14 +2321,20 @@ async function deleteItem(){
     return;
   }
 
-  if(!item){
-    showToast('Could not find item — please close, reopen and try again','red');
-    return;
-  }
+  // Shake the delete button as confirmation cue
+  const delBtn = document.getElementById('btdel');
+  if(delBtn){ delBtn.classList.add('shaking'); setTimeout(()=>delBtn.classList.remove('shaking'),350); }
+
   if(!confirm(`Delete "${item.title}"? This cannot be undone.`)) return;
+
+  // Flash row red before deleting
+  const delRow = document.querySelector(`tr[data-idx="${D.indexOf(item)}"]`);
+  if(delRow){ delRow.classList.add('row-deleting'); }
+
+  await new Promise(r=>setTimeout(r,300)); // let flash play
+
   const {error}=await sbc.from('work_items').delete().eq('id',item.id);
   if(error){showToast('Delete failed: '+error.message,'red');return;}
-  // Store full item snapshot in old_value so it can be restored from audit log
   auditLog(item.id, item.title, 'DELETE', null, JSON.stringify(item), null);
   const pos=D.findIndex(i=>i.id===item.id);
   if(pos>=0) D.splice(pos,1);
@@ -3361,7 +3707,22 @@ function initDarkMode(){
   }
 }
 
-document.addEventListener('DOMContentLoaded', initDarkMode);
+document.addEventListener('DOMContentLoaded', ()=>{
+  initDarkMode();
+  if(DEV_BYPASS){
+    CU = { name:'Admin', role:'admin', username:'admin' };
+    document.getElementById('LS').classList.add('gone');
+    document.getElementById('app').classList.add('on');
+    document.getElementById('nAv').textContent = 'A';
+    document.getElementById('nName').textContent = 'Admin';
+    const rb = document.getElementById('nRole');
+    rb.textContent = 'Admin'; rb.className = 'rbadge r-admin';
+    document.querySelectorAll('.adminonly').forEach(el=>el.classList.add('show'));
+    document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.add('show'));
+    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); ra(); loadUserEmails(); startDailyScheduler(); })
+      .catch(err=>{ console.warn('DEV_BYPASS: Supabase unavailable, running with empty data.', err); ra(); });
+  }
+});
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();closeDatePicker();}
@@ -3369,3 +3730,4 @@ document.addEventListener('keydown',e=>{
 </script>
 </body>
 </html>
+
