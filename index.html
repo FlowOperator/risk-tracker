@@ -1432,16 +1432,19 @@ function subscribeRealtime(){
     .subscribe();
 }
 
-const TODAY=new Date(); TODAY.setHours(0,0,0,0);
+// TODAY as a function so it's always accurate — never stale from page load time
+function getToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+const TODAY=getToday(); // kept for legacy isOv/isSn calls — always re-evaluated via getToday() in daysUntil
 let sKey='',sDir=1,activeSF='',currentTab='active';
 
 /* ════════════════════════════════════════
    HELPERS
 ════════════════════════════════════════ */
 function isArchived(i){return ARCHIVE_STATUSES.includes(i.status)}
-function isOv(i){return i.due&&!isArchived(i)&&new Date(i.due)<TODAY}
-function isSn(i){if(!i.due||isArchived(i))return false;const d=(new Date(i.due)-TODAY)/86400000;return d>=0&&d<=7}
-function fd(d){if(!d)return'';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})}
+function parseLocalDate(d){ if(!d)return null; const p=d.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+function isOv(i){ return i.due&&!isArchived(i)&&parseLocalDate(i.due)<getToday(); }
+function isSn(i){ if(!i.due||isArchived(i))return false; const days=(parseLocalDate(i.due)-getToday())/86400000; return days>=0&&days<=7; }
+function fd(d){if(!d)return'';const dt=parseLocalDate(d);return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'})}
 function owners(i){return i.owner?i.owner.split(';').map(s=>s.trim()).filter(Boolean):[]}
 
 /* parse jira field — may be plain key "RW-123" or full URL */
@@ -2959,8 +2962,12 @@ function fd2(d){ // formatted date for emails
 
 function daysUntil(d){
   if(!d) return null;
-  const diff = new Date(d).setHours(0,0,0,0) - new Date().setHours(0,0,0,0);
-  return Math.round(diff / 86400000);
+  // Parse yyyy-mm-dd as LOCAL midnight (not UTC) by splitting manually
+  // new Date('2026-03-30') is UTC midnight which = 11pm previous day in BST
+  const parts = d.split('-');
+  const due = new Date(+parts[0], +parts[1]-1, +parts[2]); // local midnight
+  const today = getToday(); // always fresh — never stale from page load
+  return Math.round((due - today) / 86400000);
 }
 
 /* Build all pending notifications, grouped by owner */
@@ -3193,9 +3200,16 @@ function openNotifCentre(){
     }).join('')}` : '';
 
   // ── Email notification rows ──
-  const catLabels  = { overdue7:'Overdue 7+ days', overdue:'Overdue', due2:'Due in 2 days', due7:'Due in 7 days' };
   const catColours = { overdue7:'#c0392b', overdue:'#e8500a', due2:'#b07d10', due7:'#3557d4' };
   const catOrder   = ['overdue7','overdue','due2','due7'];
+
+  function itemDueLabel(item, cat){
+    const d = daysUntil(item.due);
+    if(d === null) return cat === 'overdue7' || cat === 'overdue' ? 'Overdue' : '';
+    if(d < 0)  return `${Math.abs(d)}d overdue`;
+    if(d === 0) return 'Due today';
+    return `Due in ${d}d`;
+  }
 
   const emailHTML = emailKeys.length ? `
     <div style="padding:12px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:${sysAlerts.length?'4px':'0'}">
@@ -3213,7 +3227,7 @@ function openNotifCentre(){
           <div style="display:flex;align-items:center;gap:7px;padding:3px 0;border-bottom:1px solid var(--border)">
             <span style="width:6px;height:6px;border-radius:50%;background:${catColours[cat]};flex-shrink:0;display:inline-block"></span>
             <span style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${item.title}</span>
-            <span style="font-size:10px;color:var(--text3);flex-shrink:0">${catLabels[cat]}</span>
+            <span style="font-size:10px;color:${catColours[cat]};font-weight:600;flex-shrink:0">${itemDueLabel(item, cat)}</span>
           </div>`);
       }).join('');
 
@@ -3730,4 +3744,5 @@ document.addEventListener('keydown',e=>{
 </script>
 </body>
 </html>
+
 
