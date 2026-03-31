@@ -886,6 +886,49 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 .t-green{border-left:3px solid var(--green)}
 .t-red{border-left:3px solid var(--red)}
 .t-amber{border-left:3px solid var(--amber)}
+
+/* ═══ SAVED VIEWS ═══ */
+.sv-wrap{position:relative}
+.sv-btn{
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  color:var(--text2);padding:8px 12px;font-size:12px;font-family:'Outfit',sans-serif;
+  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;
+  transition:border-color .15s,color .15s;
+}
+.sv-btn:hover{border-color:var(--border2);color:var(--text)}
+.sv-btn.has-view{border-color:var(--accent);color:var(--accent)}
+.sv-dropdown{
+  position:fixed;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:500;min-width:240px;padding:6px;
+  animation:popIn .12s ease;
+}
+.sv-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;
+  cursor:pointer;font-size:13px;color:var(--text2);transition:background .1s;
+}
+.sv-item:hover{background:var(--bg3)}
+.sv-item.active{background:rgba(232,80,10,.08);color:var(--text)}
+.sv-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sv-item-default{font-size:9px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.sv-item-actions{display:flex;gap:2px;opacity:0;transition:opacity .1s}
+.sv-item:hover .sv-item-actions{opacity:1}
+.sv-act{background:none;border:none;cursor:pointer;font-size:11px;padding:2px 4px;border-radius:4px;color:var(--text3);transition:color .1s,background .1s}
+.sv-act:hover{color:var(--text);background:var(--bg4)}
+.sv-act.del:hover{color:var(--red)}
+.sv-sep{height:1px;background:var(--border);margin:4px 0}
+.sv-save{
+  display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:7px;
+  cursor:pointer;font-size:12px;color:var(--accent);font-weight:500;transition:background .1s;
+}
+.sv-save:hover{background:rgba(232,80,10,.06)}
+.sv-input-row{padding:6px 8px;display:flex;gap:6px}
+.sv-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;
+  color:var(--text);padding:7px 10px;font-size:12px;font-family:'Outfit',sans-serif;outline:none;
+}
+.sv-input:focus{border-color:var(--accent)}
+.sv-input-btn{background:var(--accent);border:none;border-radius:5px;color:#fff;padding:7px 12px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
+.sv-input-btn:hover{background:var(--ag)}
 </style>
 </head>
 <body>
@@ -1017,6 +1060,9 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 
       <!-- TOOLBAR -->
       <div class="toolbar">
+        <div class="sv-wrap">
+          <button class="sv-btn" id="svBtn" onclick="toggleSavedViews(this)">⊞ Views <span class="mf-arrow">▾</span></button>
+        </div>
         <div class="swrap">
           <span class="sico">⌕</span>
           <input class="sinput" id="qInput" type="text" placeholder="Search title, owner, description, jira…" oninput="ra()">
@@ -1281,7 +1327,14 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // ⚠️ DEV ONLY — set to false before deploying to GitHub
 const DEV_BYPASS = true;
 
-const sbc = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sbc = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  global: { headers: {} }
+});
+
+/* ── Set username header for RLS after login ── */
+function setSbcUserHeader(username){
+  sbc.rest.headers['x-app-username'] = username || '';
+}
 
 /* ════════════════════════════════════════
    AUTH
@@ -1324,6 +1377,7 @@ async function doLogin(){
   if(!matched){e.textContent='Incorrect username or password.';btn.textContent='Sign In →';btn.disabled=false;return;}
   e.textContent='Loading data…';
   CU=matched;
+  setSbcUserHeader(CU.username);
   loadFromSupabase().then(()=>{
     e.textContent='';btn.textContent='Sign In →';btn.disabled=false;
     document.getElementById('LS').classList.add('gone');
@@ -1337,6 +1391,7 @@ async function doLogin(){
     document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.toggle('show',CU.role==='admin'));    subscribeRealtime();
     buildOwnerFilter();ra();
     loadUserEmails(); // pull emails from Supabase app_users
+    loadSavedViews().then(applyDefaultView); // load & apply default saved view
     // Start 9:55am daily auto-email scheduler for admins
     if(CU.role==='admin') startDailyScheduler();
   }).catch(err=>{
@@ -2932,10 +2987,18 @@ let USER_EMAILS = {
   'Nick Haynes':     'nicholas.haynes@angstromsports.com',
 };
 
+// Stores { email -> { username, password } } loaded from app_users
+const USER_CREDS = {};
+
 async function loadUserEmails(){
   try{
-    const {data} = await sbc.from('app_users').select('full_name,email').eq('active',true);
-    if(data) data.forEach(u=>{ if(u.email&&u.full_name) USER_EMAILS[u.full_name]=u.email; });
+    const {data} = await sbc.from('app_users').select('full_name,email,username,password').eq('active',true);
+    if(data) data.forEach(u=>{
+      if(u.email && u.full_name){
+        USER_EMAILS[u.full_name] = u.email;
+        USER_CREDS[u.email] = { username: u.username, password: u.password };
+      }
+    });
   }catch(e){ console.warn('Could not load user emails:',e); }
 }
 
@@ -2988,6 +3051,9 @@ function buildSystemAlerts(){
   function isDismissed(type, itemId){ return dismissed.includes(alertKey(type,itemId)); }
 
   active.forEach(item => {
+    // Skip if marked done today
+    if(isDoneToday(item.id)) return;
+
     // 1. Overdue
     const days = daysUntil(item.due);
     if(days !== null && days < 0 && !isDismissed('overdue', item.id)){
@@ -3108,6 +3174,13 @@ function openNotificationEmail(email, ownerName, cats){
   });
   bodyLines.push(`View and update your items here: ${TRACKER_URL}`);
   bodyLines.push('');
+  const creds = USER_CREDS[email];
+  if(creds && creds.username){
+    bodyLines.push('Your login details:');
+    bodyLines.push(`  Username: ${creds.username}`);
+    bodyLines.push(`  Password: ${creds.password}`);
+    bodyLines.push('');
+  }
   bodyLines.push('Thanks,');
   bodyLines.push('Angstrom Risk Tracker');
 
@@ -3129,6 +3202,11 @@ function getSentKey(email){ return `notif_sent_${email}_${new Date().toISOString
 function markSent(email){ localStorage.setItem(getSentKey(email), '1'); }
 function wasSentToday(email){ return !!localStorage.getItem(getSentKey(email)); }
 function clearSent(email){ localStorage.removeItem(getSentKey(email)); }
+
+/* ── Done tracking — marks a specific item's alert as resolved for the day ── */
+function getDoneKey(itemId){ return `notif_done_${itemId}_${new Date().toISOString().slice(0,10)}`; }
+function markDone(itemId){ localStorage.setItem(getDoneKey(itemId), '1'); }
+function isDoneToday(itemId){ return !!localStorage.getItem(getDoneKey(itemId)); }
 
 const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`;
 
@@ -3192,7 +3270,8 @@ function openNotifCentre(){
             <div style="font-size:12px;color:var(--text2);margin-bottom:6px">${a.message}</div>
             <div style="display:flex;align-items:center;gap:8px">
               <button class="nc-view-btn" data-id="${a.itemId}" style="font-size:11px;background:none;border:1px solid var(--border2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text2)">View item</button>
-              <button class="nc-dismiss-btn" data-key="${a.key}" style="font-size:11px;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3);text-decoration:underline">Dismiss for today</button>
+              <button class="nc-done-btn" data-id="${a.itemId}" data-key="${a.key}" style="font-size:11px;background:rgba(42,138,82,.1);border:1px solid rgba(42,138,82,.2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:#1a6b3a;font-weight:600">✓ Mark complete</button>
+              <button class="nc-dismiss-btn" data-key="${a.key}" style="font-size:11px;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3);text-decoration:underline">Dismiss</button>
             </div>
           </div>
         </div>
@@ -3278,9 +3357,26 @@ function openNotifCentre(){
     btn.addEventListener('click', e => {
       e.stopPropagation();
       dismissAlert(btn.dataset.key);
-      btn.closest('.nc-alert').style.opacity='0.4';
-      btn.closest('.nc-alert').style.pointerEvents='none';
-      btn.textContent='Dismissed';
+      const card = btn.closest('.nc-alert');
+      card.style.transition='opacity .2s,transform .2s';
+      card.style.opacity='0'; card.style.transform='translateX(8px)';
+      setTimeout(()=>card.remove(), 200);
+    });
+  });
+  overlay.querySelectorAll('.nc-done-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      markDone(btn.dataset.id);
+      dismissAlert(btn.dataset.key);
+      const card = btn.closest('.nc-alert');
+      card.style.transition='opacity .25s,transform .25s';
+      card.style.background='rgba(42,138,82,.08)';
+      // Show brief done state before removing
+      btn.textContent='✓ Done'; btn.style.pointerEvents='none';
+      setTimeout(()=>{
+        card.style.opacity='0'; card.style.transform='translateX(8px)';
+        setTimeout(()=>{ card.remove(); updateNotifBadge(); }, 250);
+      }, 400);
     });
   });
   overlay.querySelectorAll('.nc-view-btn').forEach(btn => {
@@ -3352,6 +3448,13 @@ function openNotificationEmail(email, ownerName, cats){
   });
 
   bodyLines.push(`View and update your items here: ${TRACKER_URL}`);
+  const creds = USER_CREDS[email];
+  if(creds && creds.username){
+    bodyLines.push('Your login details:');
+    bodyLines.push(`  Username: ${creds.username}`);
+    bodyLines.push(`  Password: ${creds.password}`);
+    bodyLines.push('');
+  }
   bodyLines.push('');
   bodyLines.push('Thanks,');
   bodyLines.push('Angstrom Risk Tracker');
@@ -3414,16 +3517,12 @@ function startDailyScheduler(){
     return target - nowUK; // ms until 9:55am UK
   }
 
-  // ── TEST TIMER — fires in 30 seconds ──────────────────────────
-  const TEST_MODE = true; // ← set to false for production
-  const ms = TEST_MODE ? 30000 : msUntil955amUK();
-  // ──────────────────────────────────────────────────────────────
-
-  if(ms === null) return;
+  const ms = msUntil955amUK();
+  if(ms === null) return; // already past 9:55am today — wait until tomorrow
 
   setTimeout(()=>{
-    if(!TEST_MODE && localStorage.getItem(AUTO_FIRED_KEY)) return;
-    if(!TEST_MODE) localStorage.setItem(AUTO_FIRED_KEY, '1');
+    if(localStorage.getItem(AUTO_FIRED_KEY)) return;
+    localStorage.setItem(AUTO_FIRED_KEY, '1');
 
     const groups = buildNotifications();
     const keys = Object.keys(groups);
@@ -3434,7 +3533,7 @@ function startDailyScheduler(){
       setTimeout(()=>{
         openNotificationEmail(email, ownerName, cats);
         markSent(email);
-      }, i * 2500); // 2.5s gap so Outlook opens each separately
+      }, i * 2500);
     });
 
   }, ms);
@@ -3725,6 +3824,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initDarkMode();
   if(DEV_BYPASS){
     CU = { name:'Admin', role:'admin', username:'admin' };
+    setSbcUserHeader(CU.username);
     document.getElementById('LS').classList.add('gone');
     document.getElementById('app').classList.add('on');
     document.getElementById('nAv').textContent = 'A';
@@ -3733,16 +3833,254 @@ document.addEventListener('DOMContentLoaded', ()=>{
     rb.textContent = 'Admin'; rb.className = 'rbadge r-admin';
     document.querySelectorAll('.adminonly').forEach(el=>el.classList.add('show'));
     document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.add('show'));
-    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); ra(); loadUserEmails(); startDailyScheduler(); })
+    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); ra(); loadUserEmails(); startDailyScheduler(); loadSavedViews().then(applyDefaultView); })
       .catch(err=>{ console.warn('DEV_BYPASS: Supabase unavailable, running with empty data.', err); ra(); });
   }
 });
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();closeDatePicker();}
+  if(e.key==='Escape'){closeDrawer();closePopup();closeHistory();closeMF();closeDatePicker();closeSavedViews();}
 });
+
+/* ════════════════════════════════════════
+   SAVED VIEWS
+════════════════════════════════════════ */
+let savedViews = [];       // array of {id, name, is_default, payload}
+let activeViewId = null;   // currently applied view id
+let svDropOpen = false;
+
+/* ── Capture current UI state as a view payload ── */
+function captureViewPayload(){
+  return {
+    search:   document.getElementById('qInput').value,
+    filters:  {
+      status:   [...MF.status],
+      priority: [...MF.priority],
+      team:     [...MF.team],
+      type:     [...MF.type],
+      owner:    [...MF.owner],
+      source:   [...MF.source],
+    },
+    statCard: activeSF,
+    sortKey:  sKey,
+    sortDir:  sDir,
+    viewMode: document.getElementById('vTable').style.display!=='none' ? 'table' : 'kanban',
+    tab:      currentTab,
+  };
+}
+
+/* ── Apply a payload to the UI ── */
+function applyViewPayload(p){
+  if(!p) return;
+  // Search
+  document.getElementById('qInput').value = p.search || '';
+  // Multi-filters
+  if(p.filters){
+    Object.keys(MF).forEach(k=>{
+      MF[k].clear();
+      (p.filters[k]||[]).forEach(v=>MF[k].add(v));
+      updateMFBtn(k);
+    });
+  }
+  // Stat card
+  activeSF = p.statCard || '';
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('active'));
+  const scMap = {'':'sc0','Proposed':'sc1','Scoping':'sc2','In Progress':'sc3','__ov__':'sc4','__nt__':'sc5'};
+  if(scMap[activeSF]) document.getElementById(scMap[activeSF])?.classList.add('active');
+  // Sort
+  sKey = p.sortKey || '';
+  sDir = p.sortDir ?? 1;
+  // View mode
+  const vm = p.viewMode || 'table';
+  document.getElementById('vTable').style.display  = vm==='table'  ? 'block' : 'none';
+  document.getElementById('vKanban').style.display = vm==='kanban' ? 'block' : 'none';
+  document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.vtab')[vm==='kanban'?1:0]?.classList.add('active');
+  // Tab
+  if(p.tab && p.tab !== currentTab){
+    const tabBtn = [...document.querySelectorAll('.tabbtn')].find(b=>b.textContent.toLowerCase().includes(p.tab));
+    if(tabBtn) switchTab(p.tab, tabBtn);
+  }
+  ra();
+}
+
+/* ── Load views from Supabase ── */
+async function loadSavedViews(){
+  try{
+    const {data,error} = await sbc.from('saved_views').select('*').order('created_at',{ascending:true});
+    if(error) throw error;
+    savedViews = data || [];
+  }catch(ex){
+    console.warn('Could not load saved views:', ex);
+    savedViews = [];
+  }
+}
+
+/* ── Apply default view on login ── */
+function applyDefaultView(){
+  const def = savedViews.find(v=>v.is_default);
+  if(def){
+    activeViewId = def.id;
+    applyViewPayload(def.payload);
+    updateSvBtn();
+  }
+}
+
+/* ── Update the button label ── */
+function updateSvBtn(){
+  const btn = document.getElementById('svBtn');
+  const active = savedViews.find(v=>v.id===activeViewId);
+  if(active){
+    btn.innerHTML = `⊞ ${active.name} <span class="mf-arrow">▾</span>`;
+    btn.classList.add('has-view');
+  } else {
+    btn.innerHTML = '⊞ Views <span class="mf-arrow">▾</span>';
+    btn.classList.remove('has-view');
+  }
+}
+
+/* ── Toggle dropdown ── */
+function toggleSavedViews(btnEl){
+  if(svDropOpen){ closeSavedViews(); return; }
+  closeMF(); closePopup();
+  svDropOpen = true;
+
+  const drop = document.createElement('div');
+  drop.className = 'sv-dropdown';
+  drop.id = 'sv-drop';
+
+  let html = '<div style="padding:4px 8px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-family:Outfit,sans-serif">Saved Views</div>';
+
+  if(savedViews.length === 0){
+    html += '<div style="padding:8px 10px;font-size:12px;color:var(--text3)">No saved views yet</div>';
+  } else {
+    savedViews.forEach(v=>{
+      const isCurrent = v.id === activeViewId;
+      html += `<div class="sv-item${isCurrent?' active':''}" onclick="applySavedView('${v.id}')">
+        <span class="sv-item-name">${v.name}</span>
+        ${v.is_default?'<span class="sv-item-default">default</span>':''}
+        <span class="sv-item-actions">
+          ${!v.is_default?`<button class="sv-act" onclick="event.stopPropagation();setDefaultView('${v.id}')" title="Set as default">★</button>`:`<button class="sv-act" style="color:var(--accent)" title="Default view">★</button>`}
+          <button class="sv-act del" onclick="event.stopPropagation();deleteSavedView('${v.id}')" title="Delete">✕</button>
+        </span>
+      </div>`;
+    });
+  }
+
+  html += '<div class="sv-sep"></div>';
+  html += `<div class="sv-save" onclick="showSaveViewInput()">+ Save current view</div>`;
+  html += `<div class="sv-input-row" id="svInputRow" style="display:none">
+    <input class="sv-input" id="svNameInput" placeholder="View name…" onkeydown="if(event.key==='Enter')doSaveView()">
+    <button class="sv-input-btn" onclick="doSaveView()">Save</button>
+  </div>`;
+
+  drop.innerHTML = html;
+  document.body.appendChild(drop);
+
+  const r = btnEl.getBoundingClientRect();
+  let top = r.bottom + 5, left = r.left;
+  if(left + 260 > window.innerWidth) left = window.innerWidth - 270;
+  drop.style.top = top+'px'; drop.style.left = left+'px';
+
+  setTimeout(()=>{
+    document.addEventListener('click', outsideSV, {once:true, capture:true});
+  }, 0);
+}
+
+function outsideSV(e){
+  const drop = document.getElementById('sv-drop');
+  if(drop && !drop.contains(e.target) && e.target.id !== 'svBtn'){
+    closeSavedViews();
+  } else if(drop){
+    setTimeout(()=>document.addEventListener('click', outsideSV, {once:true, capture:true}), 0);
+  }
+}
+
+function closeSavedViews(){
+  const drop = document.getElementById('sv-drop');
+  if(drop) drop.remove();
+  svDropOpen = false;
+}
+
+function showSaveViewInput(){
+  const row = document.getElementById('svInputRow');
+  if(row){ row.style.display = 'flex'; document.getElementById('svNameInput').focus(); }
+}
+
+/* ── Save new view ── */
+async function doSaveView(){
+  const name = document.getElementById('svNameInput').value.trim();
+  if(!name){ showToast('Enter a view name','red'); return; }
+  const payload = captureViewPayload();
+  const isFirst = savedViews.length === 0;
+  try{
+    const {data,error} = await sbc.from('saved_views').insert([{
+      username: CU.username,
+      name,
+      is_default: isFirst,
+      payload,
+    }]).select().single();
+    if(error) throw error;
+    savedViews.push(data);
+    activeViewId = data.id;
+    updateSvBtn();
+    closeSavedViews();
+    showToast(`View "${name}" saved`,'green');
+  }catch(ex){
+    showToast('Save failed: '+(ex.message||ex),'red');
+  }
+}
+
+/* ── Apply a view ── */
+function applySavedView(id){
+  const v = savedViews.find(sv=>sv.id===id);
+  if(!v) return;
+  activeViewId = id;
+  applyViewPayload(v.payload);
+  updateSvBtn();
+  closeSavedViews();
+}
+
+/* ── Set default ── */
+async function setDefaultView(id){
+  try{
+    // Clear existing default
+    const prev = savedViews.find(v=>v.is_default);
+    if(prev){
+      await sbc.from('saved_views').update({is_default:false}).eq('id',prev.id);
+      prev.is_default = false;
+    }
+    // Set new default
+    const {error} = await sbc.from('saved_views').update({is_default:true}).eq('id',id);
+    if(error) throw error;
+    const v = savedViews.find(sv=>sv.id===id);
+    if(v) v.is_default = true;
+    closeSavedViews();
+    showToast(`"${v?.name}" set as default`,'green');
+  }catch(ex){
+    showToast('Failed: '+(ex.message||ex),'red');
+  }
+}
+
+/* ── Delete view ── */
+async function deleteSavedView(id){
+  const v = savedViews.find(sv=>sv.id===id);
+  if(!v) return;
+  if(!confirm(`Delete view "${v.name}"?`)) return;
+  try{
+    const {error} = await sbc.from('saved_views').delete().eq('id',id);
+    if(error) throw error;
+    savedViews = savedViews.filter(sv=>sv.id!==id);
+    if(activeViewId === id){ activeViewId = null; updateSvBtn(); }
+    closeSavedViews();
+    showToast(`View deleted`,'amber');
+  }catch(ex){
+    showToast('Delete failed: '+(ex.message||ex),'red');
+  }
+}
 </script>
 </body>
 </html>
+
 
 
