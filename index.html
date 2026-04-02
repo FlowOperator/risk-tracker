@@ -246,7 +246,7 @@ td.td-sticky::after{
 /* Row — stronger hover, clear focus ring */
 tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s,box-shadow .1s}
 tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:var(--bg3)!important;box-shadow:inset 0 0 0 1px var(--border2)}
+tbody tr:hover{background:var(--bg3)!important;box-shadow:inset 0 0 0 1px var(--border2);z-index:6;position:relative}
 tbody tr:hover td.td-sticky{background:var(--bg3)}
 td{padding:10px 14px;color:var(--text2);vertical-align:middle;font-size:13px}
 
@@ -403,7 +403,7 @@ td.qe:hover::after{content:'✎';position:absolute;right:6px;top:50%;transform:t
   white-space:normal;
   word-break:break-word;
 }
-.htip:hover .htip-box{visibility:visible;opacity:1}
+.htip:hover .htip-box{visibility:visible;opacity:1;z-index:900}
 .htip-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:5px;font-family:'Outfit',sans-serif}
 /* owner pill list inside tooltip */
 .htip-owners{display:flex;flex-direction:column;gap:4px}
@@ -929,6 +929,122 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 .sv-input:focus{border-color:var(--accent)}
 .sv-input-btn{background:var(--accent);border:none;border-radius:5px;color:#fff;padding:7px 12px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
 .sv-input-btn:hover{background:var(--ag)}
+
+/* ═══ DRAWER TABS (Comments / Edit) ═══ */
+.dtabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg3)}
+.dtab{flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:12px;font-weight:500;font-family:'Outfit',sans-serif;color:var(--text3);cursor:pointer;transition:color .12s,border-color .12s;text-align:center}
+.dtab:hover{color:var(--text2)}
+.dtab.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+.dtab-count{font-size:10px;color:var(--text3);margin-left:4px}
+.dtab.active .dtab-count{color:var(--accent)}
+.dpane{display:none;flex:1;overflow-y:auto}
+.dpane.on{display:flex;flex-direction:column}
+
+/* ═══ COMMENT THREAD ═══ */
+.cthread-summary{
+  margin:0 0 4px;padding:14px 20px;
+  background:var(--bg3);border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;gap:8px;flex-shrink:0;
+}
+.csum-desc{font-size:12px;color:var(--text2);line-height:1.5;max-height:60px;overflow:hidden;text-overflow:ellipsis}
+.csum-desc:empty{display:none}
+.csum-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.csum-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:3px 8px}
+.csum-pill-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3)}
+.cthread{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.cthread-empty{text-align:center;color:var(--text3);font-size:13px;padding:40px 20px}
+.cthread-empty-ico{font-size:28px;margin-bottom:8px;opacity:.5}
+.cmsg{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;position:relative}
+.cmsg.mine{background:rgba(232,80,10,.04);border-color:rgba(232,80,10,.15)}
+.cmsg-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.cmsg-av{width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.cmsg-name{font-size:12px;font-weight:600;color:var(--text)}
+.cmsg-time{font-size:10px;color:var(--text3);margin-left:auto;white-space:nowrap}
+.cmsg-edited{font-size:9px;color:var(--text3);font-style:italic}
+.cmsg-body{font-size:13px;color:var(--text2);line-height:1.6;word-break:break-word}
+.cmsg-body .mention{color:var(--accent);font-weight:600;cursor:default}
+.cmsg-actions{display:flex;gap:4px;margin-top:6px;opacity:0;transition:opacity .12s}
+.cmsg:hover .cmsg-actions{opacity:1}
+.cmsg-act{background:none;border:none;font-size:11px;color:var(--text3);cursor:pointer;padding:2px 6px;border-radius:4px;font-family:'Outfit',sans-serif}
+.cmsg-act:hover{color:var(--text);background:var(--bg4)}
+.cmsg-act.del:hover{color:var(--red)}
+
+/* ═══ COMMENT INPUT ═══ */
+.cinput-wrap{padding:12px 20px;border-top:1px solid var(--border);background:var(--bg2)}
+.cinput-box{position:relative}
+.cinput{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 44px 10px 12px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;resize:none;min-height:40px;max-height:120px;transition:border-color .15s;line-height:1.5}
+.cinput:focus{border-color:var(--accent)}
+.cinput::placeholder{color:var(--text3)}
+.cinput-send{position:absolute;right:6px;bottom:6px;background:var(--accent);border:none;border-radius:6px;color:#fff;width:30px;height:30px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.cinput-send:hover{background:var(--ag)}
+.cinput-send:disabled{background:var(--bg4);color:var(--text3);cursor:default}
+.cinput-hint{font-size:10px;color:var(--text3);margin-top:4px}
+
+/* ═══ @MENTION AUTOCOMPLETE ═══ */
+.mention-popup{position:absolute;bottom:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;box-shadow:0 -4px 16px rgba(0,0,0,.1);max-height:180px;overflow-y:auto;z-index:600;margin-bottom:4px}
+.mention-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text2);transition:background .1s}
+.mention-item:hover,.mention-item.active{background:var(--bg3);color:var(--text)}
+.mention-item-av{width:22px;height:22px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* ═══ NOTIFICATION DOT (for non-admin users) ═══ */
+.notif-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:3px;vertical-align:middle}
+
+/* ═══ BULK SELECT ═══ */
+.bulk-cb{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;margin:0}
+.bulk-bar{
+  display:none;align-items:center;gap:10px;
+  background:var(--bg2);border:1px solid var(--accent);border-radius:8px;
+  padding:8px 16px;margin-bottom:12px;
+  box-shadow:0 2px 12px rgba(232,80,10,.1);
+  animation:popIn .15s ease;
+}
+.bulk-bar.on{display:flex}
+.bulk-count{font-size:13px;font-weight:600;color:var(--text)}
+.bulk-action{
+  background:var(--accent);border:none;border-radius:6px;color:#fff;
+  padding:7px 14px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;
+  cursor:pointer;transition:background .12s;
+}
+.bulk-action:hover{background:var(--ag)}
+.bulk-cancel{
+  background:none;border:1px solid var(--border);border-radius:6px;color:var(--text3);
+  padding:7px 12px;font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;
+}
+.bulk-cancel:hover{color:var(--text);border-color:var(--border2)}
+
+/* ═══ CLONE BUTTON ═══ */
+.btclone{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  color:var(--text2);padding:10px 16px;font-size:13px;font-weight:500;
+  font-family:'Outfit',sans-serif;cursor:pointer;transition:all .15s;
+}
+.btclone:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ═══ CALENDAR ═══ */
+.cal-nav{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:6px 10px;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .12s}
+.cal-nav:hover{border-color:var(--border2);color:var(--text)}
+.cal-label{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:var(--text);min-width:160px;text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.cal-hdr{background:var(--bg3);padding:8px;text-align:center;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.cal-cell{background:var(--bg2);min-height:100px;padding:6px 8px;vertical-align:top;position:relative}
+.cal-cell.other{background:var(--bg3);opacity:.5}
+.cal-cell.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.cal-day{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px}
+.cal-cell.today .cal-day{color:var(--accent);font-weight:700}
+.cal-item{
+  display:block;padding:3px 6px;margin-bottom:2px;border-radius:4px;
+  font-size:10px;font-weight:500;color:#fff;cursor:pointer;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  transition:opacity .12s;text-decoration:none;
+}
+.cal-item:hover{opacity:.85}
+.cal-item.pH{background:#c0392b}
+.cal-item.pM{background:#b07d10}
+.cal-item.pL{background:#8a8278}
+.cal-more{font-size:10px;color:var(--text3);cursor:pointer;padding:2px 0}
+.cal-more:hover{color:var(--accent)}
+/* Week view cells are taller */
+.cal-grid.week-view .cal-cell{min-height:160px}
 </style>
 </head>
 <body>
@@ -985,6 +1101,9 @@ button:focus-visible, input:focus-visible, select:focus-visible{
     </button>
     <button class="tabbtn adminonly" id="tab-audit" onclick="switchTab('audit',this)">
       🕓 Audit Log <span class="tcnt" id="cnt-audit">0</span>
+    </button>
+    <button class="tabbtn" id="tab-calendar" onclick="switchTab('calendar',this)">
+      📅 Calendar
     </button>
   </div>
 
@@ -1074,6 +1193,7 @@ button:focus-visible, input:focus-visible, select:focus-visible{
         <div class="mf-wrap" id="mf-type"><button class="mf-btn" onclick="toggleMF('type',this)">All Types <span class="mf-arrow">▾</span></button></div>
         <div class="mf-wrap" id="mf-owner"><button class="mf-btn" onclick="toggleMF('owner',this)">All Owners <span class="mf-arrow">▾</span></button></div>
         <div class="mf-wrap" id="mf-source"><button class="mf-btn" onclick="toggleMF('source',this)">All Sources <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-jira"><button class="mf-btn" onclick="toggleMF('jira',this)">All Jira <span class="mf-arrow">▾</span></button></div>
         <!-- Hidden selects kept for syncSF compatibility -->
         <select id="fSt" style="display:none"></select>
         <select id="fOw" style="display:none"></select>
@@ -1088,11 +1208,34 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 
       <!-- TABLE VIEW -->
       <div id="vTable">
+        <div class="bulk-bar" id="bulkBar">
+          <span class="bulk-count" id="bulkCount">0 selected</span>
+          <span style="width:1px;height:20px;background:var(--border);flex-shrink:0"></span>
+          <select class="fsel" id="bulkStatusSel" style="font-size:12px">
+            <option value="">Status…</option>
+            <option>Proposed</option><option>Scoping</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Selected For Development">Selected Dev</option>
+            <option>Done</option><option value="Parking Lot">Parking Lot</option>
+          </select>
+          <select class="fsel" id="bulkPrioritySel" style="font-size:12px">
+            <option value="">Priority…</option>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+          <input class="sinput" id="bulkOwnerInput" type="text" placeholder="Owner…" style="max-width:140px;padding:7px 10px;font-size:12px" list="bulk-owner-list">
+          <datalist id="bulk-owner-list"></datalist>
+          <input class="sinput" id="bulkDueInput" type="date" style="max-width:140px;padding:7px 10px;font-size:12px">
+          <button class="bulk-action" onclick="applyBulkUpdate()">Apply</button>
+          <span style="width:1px;height:20px;background:var(--border);flex-shrink:0"></span>
+          <button class="bulk-action" onclick="bulkArchive()" style="background:var(--green)">Archive</button>
+          <button class="bulk-action" onclick="bulkDelete()" style="background:var(--red)">Delete</button>
+          <button class="bulk-cancel" onclick="clearBulkSelect()">✕</button>
+        </div>
         <div class="tbox">
           <table>
             <thead>
               <tr>
-                <th style="width:28px;padding:8px 6px;position:sticky;left:0;z-index:5;background:var(--bg2)"></th>
+                <th style="width:28px;padding:8px 6px;position:sticky;left:0;z-index:5;background:var(--bg2)"><input type="checkbox" class="bulk-cb" id="bulkAll" onchange="toggleBulkAll(this.checked)" title="Select all"></th>
                 <th class="th-sticky" onclick="sb('title')" style="min-width:220px;max-width:300px">Title <span id="si-title">↕</span></th>
                 <th onclick="sb('owner')">Owner <span id="si-owner">↕</span></th>
                 <th onclick="sb('status')">Status <span id="si-status">↕</span></th>
@@ -1235,6 +1378,24 @@ button:focus-visible, input:focus-visible, select:focus-visible{
       </div>
     </div><!-- /view-focus -->
 
+    <!-- ══ CALENDAR TAB ══ -->
+    <div id="view-calendar" style="display:none">
+      <div class="phead">
+        <div class="phtitle">📅 Calendar</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="vtabs">
+            <button class="vtab active" id="calMonthBtn" onclick="setCalView('month',this)">Month</button>
+            <button class="vtab" id="calWeekBtn" onclick="setCalView('week',this)">Week</button>
+          </div>
+          <button class="cal-nav" onclick="calPrev()">◀</button>
+          <span class="cal-label" id="calLabel"></span>
+          <button class="cal-nav" onclick="calNext()">▶</button>
+          <button class="cal-nav" onclick="calToday()" style="font-size:11px;padding:6px 12px">Today</button>
+        </div>
+      </div>
+      <div id="calGrid"></div>
+    </div>
+
   </div><!-- /wrap -->
 </div><!-- /app -->
 
@@ -1260,6 +1421,27 @@ button:focus-visible, input:focus-visible, select:focus-visible{
     <span class="dmode" id="dmode"></span>
     <button class="dclose" onclick="closeDrawer()">✕</button>
   </div>
+  <div class="dtabs" id="drawerTabs">
+    <button class="dtab active" onclick="switchDrawerTab('comments',this)">💬 Comments <span class="dtab-count" id="dtab-ccnt"></span></button>
+    <button class="dtab" onclick="switchDrawerTab('edit',this)">✎ Edit Fields</button>
+  </div>
+  <!-- COMMENTS PANE -->
+  <div class="dpane on" id="dpane-comments">
+    <div class="cthread-summary" id="cthread-summary"></div>
+    <div class="cthread" id="cthread">
+      <div class="cthread-empty" id="cthread-empty"><div class="cthread-empty-ico">💬</div>No comments yet. Start the conversation.</div>
+    </div>
+    <div class="cinput-wrap">
+      <div class="cinput-box">
+        <div class="mention-popup" id="mentionPopup" style="display:none"></div>
+        <textarea class="cinput" id="cinput" placeholder="Add a comment… Use @ to mention someone" rows="1" oninput="autoGrowTextarea(this);handleMentionInput(event)" onkeydown="handleMentionKeydown(event)"></textarea>
+        <button class="cinput-send" id="cinputSend" onclick="postComment()" title="Send">↑</button>
+      </div>
+      <div class="cinput-hint">Press Enter to send · Shift+Enter for new line · @ to mention</div>
+    </div>
+  </div>
+  <!-- EDIT PANE -->
+  <div class="dpane" id="dpane-edit">
   <div class="dbody">
     <input type="hidden" id="dIdx">
     <input type="hidden" id="dItemId">
@@ -1304,11 +1486,13 @@ button:focus-visible, input:focus-visible, select:focus-visible{
       <div class="dfull"><label class="dlabel">Notes / Links</label><textarea class="dtarea" id="d_notes" placeholder="Extra notes, links, context…"></textarea></div>
     </div>
   </div>
-  <div class="dftr">
+  <div class="dftr" id="dftr">
     <button class="btsave" onclick="saveItem()">Save Changes</button>
+    <button class="btclone" id="btclone" onclick="cloneItem()" style="display:none">⧉ Clone</button>
     <button class="btcancel" onclick="closeDrawer()">Cancel</button>
     <button class="btdel" id="btdel" onclick="deleteItem()">Delete</button>
   </div>
+  </div><!-- /dpane-edit -->
 </div>
 
   <!-- Mobile FAB -->
@@ -1323,6 +1507,12 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 ════════════════════════════════════════ */
 const SUPABASE_URL = 'https://qggaxsiqhrfmnjznkvbq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnZ2F4c2lxaHJmbW5qem5rdmJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MzQ2OTAsImV4cCI6MjA4OTUxMDY5MH0.pFxI9wFhEvgNqOkzfcMgBiGfGeLoVnyjyD72mlCynwo';
+
+// ⚙️ JIRA BASE URL — used to construct ticket links
+const JIRA_BASE_URL = 'https://angstrom.atlassian.net/browse/';
+
+// ⚙️ SLACK WEBHOOK — set your incoming webhook URL here (leave empty to disable)
+const SLACK_WEBHOOK_URL = '';
 
 // ⚠️ DEV ONLY — set to false before deploying to GitHub
 const DEV_BYPASS = true;
@@ -1389,11 +1579,14 @@ async function doLogin(){
     rb.className='rbadge '+(CU.role==='admin'?'r-admin':'r-user');
     document.querySelectorAll('.adminonly').forEach(el=>el.classList.toggle('show',CU.role==='admin'));
     document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.toggle('show',CU.role==='admin'));    subscribeRealtime();
-    buildOwnerFilter();ra();
+    buildOwnerFilter();restoreFilterState();ra();
     loadUserEmails(); // pull emails from Supabase app_users
     loadSavedViews().then(applyDefaultView); // load & apply default saved view
     // Start 9:55am daily auto-email scheduler for admins
     if(CU.role==='admin') startDailyScheduler();
+    // Check for overdue items → Slack (once on login, not on every render)
+    checkOverdueSlack();
+    updateSlackToggleUI();
   }).catch(err=>{
     e.textContent='Failed to load data: '+err.message;
     btn.textContent='Sign In →';btn.disabled=false;
@@ -1507,11 +1700,11 @@ function parseJira(v){
   if(!v)return{key:'',url:''};
   v=v.trim();
   if(v.startsWith('http')){
-    // extract key from URL e.g. .../browse/RW-123
     const m=v.match(/([A-Z]+-\d+)/);
     return{key:m?m[1]:v.split('/').pop(),url:v};
   }
-  return{key:v,url:''};
+  // Plain key like "RW-123" — construct URL from base
+  return{key:v,url:JIRA_BASE_URL+v};
 }
 
 function sbadge(s){
@@ -1526,26 +1719,44 @@ function prioH(p){return`<div class="prio p${p?p[0]:'L'}"><div class="pdot"></di
 ════════════════════════════════════════ */
 function switchTab(t,btn){
   currentTab=t;
-  document.getElementById('view-active').style.display  =t==='active'  ?'block':'none';
-  document.getElementById('view-archive').style.display =t==='archive' ?'block':'none';
-  document.getElementById('view-audit').style.display   =t==='audit'   ?'block':'none';
-  document.getElementById('view-focus').style.display   =t==='focus'   ?'block':'none';
+  document.getElementById('view-active').style.display   =t==='active'   ?'block':'none';
+  document.getElementById('view-archive').style.display  =t==='archive'  ?'block':'none';
+  document.getElementById('view-audit').style.display    =t==='audit'    ?'block':'none';
+  document.getElementById('view-focus').style.display    =t==='focus'    ?'block':'none';
+  document.getElementById('view-calendar').style.display =t==='calendar' ?'block':'none';
   document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(t==='archive') renderArchive();
-  if(t==='audit')   loadAuditLog();
-  if(t==='focus')   renderFocusView();
+  if(t==='archive')  renderArchive();
+  if(t==='audit')    loadAuditLog();
+  if(t==='focus')    renderFocusView();
+  if(t==='calendar') renderCalendar();
 }
 
 /* ════════════════════════════════════════
    OWNER FILTER
 ════════════════════════════════════════ */
 function buildOwnerFilter(){
-  // Update the dynamic owner options for multi-filter
-  MF_OPTIONS.owner = [...new Set(D.filter(i=>!isArchived(i)).flatMap(i=>owners(i)))].sort();
-  // Remove any selected owners that no longer exist
+  const active = D.filter(i=>!isArchived(i));
+  // All filters built purely from data — no hardcoded values
+  MF_OPTIONS.owner = [...new Set(active.flatMap(i=>owners(i)))].sort();
   MF.owner.forEach(o=>{ if(!MF_OPTIONS.owner.includes(o)) MF.owner.delete(o); });
   updateMFBtn('owner');
+
+  MF_OPTIONS.source = [...new Set(active.map(i=>i.source).filter(Boolean))].sort();
+  MF.source.forEach(s=>{ if(!MF_OPTIONS.source.includes(s)) MF.source.delete(s); });
+  updateMFBtn('source');
+
+  MF_OPTIONS.team = [...new Set(active.map(i=>i.team).filter(Boolean))].sort();
+  MF.team.forEach(t=>{ if(!MF_OPTIONS.team.includes(t)) MF.team.delete(t); });
+  updateMFBtn('team');
+
+  MF_OPTIONS.type = [...new Set(active.map(i=>i.type).filter(Boolean))].sort();
+  MF.type.forEach(t=>{ if(!MF_OPTIONS.type.includes(t)) MF.type.delete(t); });
+  updateMFBtn('type');
+
+  MF_OPTIONS.jira = [...new Set(active.map(i=>parseJira(i.jira).key).filter(Boolean))].sort();
+  MF.jira.forEach(j=>{ if(!MF_OPTIONS.jira.includes(j)) MF.jira.delete(j); });
+  updateMFBtn('jira');
 }
 
 /* ════════════════════════════════════════
@@ -1559,20 +1770,22 @@ const MF = {
   type:     new Set(),
   owner:    new Set(),
   source:   new Set(),
+  jira:     new Set(),
 };
 
 const MF_OPTIONS = {
   status:   ['Proposed','Scoping','In Progress','Parking Lot','Selected For Development'],
   priority: ['High','Medium','Low'],
-  team:     ['Risk','Trading','Sports Product'],
-  type:     ['Request','Task'],
-  owner:    [], // built dynamically
-  source:   ['Email','RiskTeam','Workshop','Slack','Meeting','Other'],
+  team:     [],  // built dynamically from data
+  type:     [],  // built dynamically from data
+  owner:    [],  // built dynamically from data
+  source:   [],  // built dynamically from data
+  jira:     [],  // built dynamically from data
 };
 
 const MF_LABELS = {
   status:'Statuses', priority:'Priorities', team:'Teams',
-  type:'Types', owner:'Owners', source:'Sources',
+  type:'Types', owner:'Owners', source:'Sources', jira:'Jira Tickets',
 };
 
 let activeMFKey = null;
@@ -1700,6 +1913,7 @@ function getF(){
     if(MF.type.size     && !MF.type.has(i.type))        return false;
     if(MF.source.size   && !MF.source.has(i.source))    return false;
     if(MF.owner.size    && !owners(i).some(o=>MF.owner.has(o))) return false;
+    if(MF.jira.size     && !MF.jira.has(parseJira(i.jira).key)) return false;
     if(activeSF==='__ov__')return isOv(i);
     if(activeSF==='__nt__')return!i.jira;
     if(activeSF)return i.status===activeSF;
@@ -1707,11 +1921,32 @@ function getF(){
   });
 }
 function getS(items){
-  if(!sKey)return items;
+  if(!sKey){
+    // Default smart sort: urgency score = priority weight + due date proximity
+    return[...items].sort((a,b)=>{
+      return urgencyScore(a) - urgencyScore(b);
+    });
+  }
   return[...items].sort((a,b)=>{
     if(sKey==='priority'){const o={High:0,Medium:1,Low:2,'':3};return(o[a.priority]-o[b.priority])*sDir;}
     return(a[sKey]||'').localeCompare(b[sKey]||'')*sDir;
   });
+}
+
+/* ── Urgency score: lower = more urgent, floats to top ── */
+function urgencyScore(item){
+  const prioW = {High:0, Medium:20, Low:40, '':60};
+  const pw = prioW[item.priority] ?? 60;
+  let dw = 30; // no due date = neutral
+  if(item.due){
+    const days = Math.round((parseLocalDate(item.due) - getToday()) / 86400000);
+    if(days < 0)       dw = -10 + days;  // overdue: more negative = more urgent
+    else if(days <= 3)  dw = 0;           // due within 3 days
+    else if(days <= 7)  dw = 5;           // due within a week
+    else if(days <= 14) dw = 10;          // due within 2 weeks
+    else                dw = 15;          // due later
+  }
+  return pw + dw;
 }
 function sb(k){
   if(sKey===k)sDir*=-1;else{sKey=k;sDir=1;}
@@ -1806,8 +2041,7 @@ function renderTable(items){
     // jira cell
     const j=parseJira(item.jira);
     const jC=j.key
-      ?(j.url?`<a class="jchip" href="${j.url}" target="_blank" onclick="event.stopPropagation()">⎗ ${j.key}</a>`
-             :`<span class="jchip">⎗ ${j.key}</span>`)
+      ?`<a class="jchip" href="${j.url}" target="_blank" onclick="event.stopPropagation()">⎗ ${j.key}</a>`
       :`<span class="ntick">— no ticket</span>`;
 
     const dC=!item.due?'<span class="dN">—</span>'
@@ -1820,7 +2054,7 @@ function renderTable(items){
 
     tr.innerHTML=`
       <td style="padding:8px 6px;width:28px;position:sticky;left:0;z-index:2;background:inherit">
-        <span class="drag-handle" title="Drag to reorder">⠿</span>
+        <input type="checkbox" class="bulk-cb" data-id="${item.id}" onchange="toggleBulkItem(this)" onclick="event.stopPropagation()" ${bulkSelected.has(item.id)?'checked':''}>
       </td>
       <td class="ctit td-sticky" style="cursor:pointer;min-width:220px;max-width:300px">
         <div style="display:flex;align-items:center;gap:6px">
@@ -1857,8 +2091,7 @@ function renderArchive(){
     const idx=D.indexOf(item);
     const j=parseJira(item.jira);
     const jC=j.key
-      ?(j.url?`<a class="jchip" href="${j.url}" target="_blank">⎗ ${j.key}</a>`
-             :`<span class="jchip">⎗ ${j.key}</span>`)
+      ?`<a class="jchip" href="${j.url}" target="_blank" onclick="event.stopPropagation()">⎗ ${j.key}</a>`
       :`<span class="ntick" style="opacity:.4">—</span>`;
     const tr=document.createElement('tr');
     tr.className='arch-row';
@@ -1921,7 +2154,7 @@ function renderKanban(items){
         <div class="kcmeta">
           ${prioH(item.priority)}
           ${dueLabelK}
-          ${item.jira?`<span class="jchip" style="font-size:10px;padding:1px 5px">${parseJira(item.jira).key}</span>`:''}
+          ${item.jira?`<a class="jchip" href="${parseJira(item.jira).url}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;padding:1px 5px">${parseJira(item.jira).key}</a>`:''}
         </div>
         ${of?`<div class="kcown">${of}${allOwners.length>1?` <span style="color:var(--text3)">+${allOwners.length-1}</span>`:''}</div>`:''}`;
       body.appendChild(card);
@@ -1943,6 +2176,10 @@ function ra(){
   if(cb) cb.style.display = anyActive ? 'block' : 'none';
   // Update notification badge
   if(CU?.role==='admin') updateNotifBadge();
+  // Persist filter state to sessionStorage
+  saveFilterState();
+  // Update bulk action bar
+  updateBulkBar();
 }
 
 function updateNotifBadge(){
@@ -2248,6 +2485,10 @@ async function setField(idxOrId, field, val){
   if(error){showToast('Save failed: '+error.message,'red');return;}
   if(String(oldVal||'') !== String(val||'')){
     auditLog(item.id, item.title, 'UPDATE', field, oldVal||null, val||null);
+    // Slack: notify on owner assignment
+    if(field==='owner' && val){
+      slackNotify('assigned', item, val);
+    }
   }
   showToast('Updated ✓','green');
   // Brief green flash on the edited cell
@@ -2264,6 +2505,7 @@ function openDrawer(idx){
   document.getElementById('dIdx').value    = idx??-1;
   document.getElementById('dItemId').value = isNew ? '' : (item.id||'');
   document.getElementById('btdel').style.display = CU?.role==='admin'&&!isNew ? 'block' : 'none';
+  document.getElementById('btclone').style.display = !isNew ? 'inline-block' : 'none';
   document.getElementById('dtitle').textContent = isNew?'New Item':item.title;
   document.getElementById('dmode').textContent  = isNew?'Adding new item':CU?.role==='admin'?'Admin edit':'Edit item';
   const map={title:'title',desc:'desc',owner:'owner',status:'status',priority:'priority',
@@ -2289,6 +2531,31 @@ function openDrawer(idx){
   }
   // Render quick-pick owner pills
   refreshOwnerPills(item[map['owner']]||'');
+  // Show drawer tabs: new items go straight to edit, existing items show comments
+  const tabsEl = document.getElementById('drawerTabs');
+  if(isNew){
+    tabsEl.style.display = 'none';
+    document.getElementById('cthread-summary').style.display = 'none';
+    switchDrawerTab('edit');
+  } else {
+    tabsEl.style.display = 'flex';
+    // Populate summary card
+    const sum = document.getElementById('cthread-summary');
+    sum.style.display = 'flex';
+    const descHtml = item.desc ? `<div class="csum-desc">${esc(item.desc)}</div>` : '';
+    const ownerList = owners(item);
+    const ownerPills = ownerList.length
+      ? ownerList.map(o=>`<span class="csum-pill">${esc(o)}</span>`).join('')
+      : '<span style="font-size:11px;color:var(--text3)">Unassigned</span>';
+    sum.innerHTML = `${descHtml}
+      <div class="csum-meta">
+        <span class="csum-pill-label">Owners</span>${ownerPills}
+        <span style="margin-left:auto">${prioH(item.priority)}</span>
+        ${sbadge(item.status)}
+      </div>`;
+    switchDrawerTab('comments');
+    loadComments(item.id);
+  }
   document.getElementById('dov').classList.add('on');
   document.getElementById('drawer').classList.add('on');
 }
@@ -3002,7 +3269,7 @@ async function loadUserEmails(){
   }catch(e){ console.warn('Could not load user emails:',e); }
 }
 
-const TRACKER_URL = 'https://flowoperator.github.io/risk-tracker';
+const TRACKER_URL = 'https://nicholashaynes2angstrom.github.io/risk-tracker';
 
 function getEmail(ownerName){
   // Try exact match first, then partial
@@ -3051,8 +3318,9 @@ function buildSystemAlerts(){
   function isDismissed(type, itemId){ return dismissed.includes(alertKey(type,itemId)); }
 
   active.forEach(item => {
-    // Skip if marked done today
+    // Skip if marked done or dismissed for today
     if(isDoneToday(item.id)) return;
+    if(isItemDismissedToday(item.id)) return;
 
     // 1. Overdue
     const days = daysUntil(item.due);
@@ -3127,6 +3395,9 @@ function buildNotifications(){
   }
 
   active.forEach(item => {
+    // Skip items dismissed for today
+    if(isItemDismissedToday(item.id)) return;
+    if(isDoneToday(item.id)) return;
     const ows = owners(item);
     if(!ows.length) return;
     const days = daysUntil(item.due);
@@ -3208,6 +3479,11 @@ function getDoneKey(itemId){ return `notif_done_${itemId}_${new Date().toISOStri
 function markDone(itemId){ localStorage.setItem(getDoneKey(itemId), '1'); }
 function isDoneToday(itemId){ return !!localStorage.getItem(getDoneKey(itemId)); }
 
+/* ── Dismiss for today — suppresses an item from ALL notifications (system + email) for the day ── */
+function getDismissItemKey(itemId){ return `notif_dismiss_item_${itemId}_${new Date().toISOString().slice(0,10)}`; }
+function dismissItemForToday(itemId){ localStorage.setItem(getDismissItemKey(itemId), '1'); }
+function isItemDismissedToday(itemId){ return !!localStorage.getItem(getDismissItemKey(itemId)); }
+
 const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`;
 
 /* ════════════════════════════════════════
@@ -3229,7 +3505,10 @@ function openNotifCentre(){
       <div style="background:var(--bg2);border-radius:12px;width:420px;box-shadow:0 8px 40px rgba(0,0,0,.18);font-family:'Outfit',sans-serif;overflow:hidden">
         <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
           <div style="font-size:15px;font-weight:600;color:var(--text)">Notifications</div>
-          <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer">✕</button>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onclick="toggleSlack();this.querySelector('span').textContent=isSlackEnabled()?'ON':'OFF';this.style.borderColor=isSlackEnabled()?'rgba(42,138,82,.4)':'';this.style.color=isSlackEnabled()?'#3aaf6a':''" style="font-size:11px;background:none;border:1px solid ${isSlackEnabled()?'rgba(42,138,82,.4)':'var(--border)'};border-radius:5px;padding:4px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:${isSlackEnabled()?'#3aaf6a':'var(--text3)'};display:flex;align-items:center;gap:4px">🔔 Slack: <span>${isSlackEnabled()?'ON':'OFF'}</span></button>
+            <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer">✕</button>
+          </div>
         </div>
         <div style="padding:48px 24px;text-align:center;color:var(--text3);font-size:13px">
           <div style="font-size:28px;margin-bottom:10px">✅</div>
@@ -3271,7 +3550,7 @@ function openNotifCentre(){
             <div style="display:flex;align-items:center;gap:8px">
               <button class="nc-view-btn" data-id="${a.itemId}" style="font-size:11px;background:none;border:1px solid var(--border2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text2)">View item</button>
               <button class="nc-done-btn" data-id="${a.itemId}" data-key="${a.key}" style="font-size:11px;background:rgba(42,138,82,.1);border:1px solid rgba(42,138,82,.2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:#1a6b3a;font-weight:600">✓ Mark complete</button>
-              <button class="nc-dismiss-btn" data-key="${a.key}" style="font-size:11px;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3);text-decoration:underline">Dismiss</button>
+              <button class="nc-dismiss-item-btn" data-id="${a.itemId}" data-key="${a.key}" style="font-size:11px;background:rgba(176,125,16,.08);border:1px solid rgba(176,125,16,.18);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:#8a5f08">🔕 Dismiss today</button>
             </div>
           </div>
         </div>
@@ -3307,6 +3586,7 @@ function openNotifCentre(){
             <span style="width:6px;height:6px;border-radius:50%;background:${catColours[cat]};flex-shrink:0;display:inline-block"></span>
             <span style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${item.title}</span>
             <span style="font-size:10px;color:${catColours[cat]};font-weight:600;flex-shrink:0">${itemDueLabel(item, cat)}</span>
+            <button class="nc-dismiss-item-btn" data-id="${item.id}" style="font-size:9px;background:none;border:1px solid var(--border);border-radius:3px;padding:1px 5px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text3);flex-shrink:0" title="Dismiss for today">🔕</button>
           </div>`);
       }).join('');
 
@@ -3341,7 +3621,10 @@ function openNotifCentre(){
           <span style="font-size:15px;font-weight:600;color:var(--text)">Notifications</span>
           <span style="font-size:11px;background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-weight:600">${totalCount}</span>
         </div>
-        <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;line-height:1">✕</button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button onclick="toggleSlack();this.querySelector('span').textContent=isSlackEnabled()?'ON':'OFF';this.style.borderColor=isSlackEnabled()?'rgba(42,138,82,.4)':'';this.style.color=isSlackEnabled()?'#3aaf6a':''" style="font-size:11px;background:none;border:1px solid ${isSlackEnabled()?'rgba(42,138,82,.4)':'var(--border)'};border-radius:5px;padding:4px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:${isSlackEnabled()?'#3aaf6a':'var(--text3)'};display:flex;align-items:center;gap:4px">🔔 Slack: <span>${isSlackEnabled()?'ON':'OFF'}</span></button>
+          <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;line-height:1">✕</button>
+        </div>
       </div>
       <div style="overflow-y:auto;padding-bottom:12px">
         ${sysHTML}
@@ -3353,14 +3636,18 @@ function openNotifCentre(){
   overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
 
   // Wire system alert buttons
-  overlay.querySelectorAll('.nc-dismiss-btn').forEach(btn => {
+  overlay.querySelectorAll('.nc-dismiss-item-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      dismissAlert(btn.dataset.key);
-      const card = btn.closest('.nc-alert');
-      card.style.transition='opacity .2s,transform .2s';
-      card.style.opacity='0'; card.style.transform='translateX(8px)';
-      setTimeout(()=>card.remove(), 200);
+      dismissItemForToday(btn.dataset.id);
+      if(btn.dataset.key) dismissAlert(btn.dataset.key);
+      // Animate out the closest card or row
+      const card = btn.closest('.nc-alert') || btn.closest('div[style*="border-bottom"]');
+      if(card){
+        card.style.transition='opacity .2s,transform .2s';
+        card.style.opacity='0'; card.style.transform='translateX(8px)';
+        setTimeout(()=>{ card.remove(); updateNotifBadge(); }, 200);
+      }
     });
   });
   overlay.querySelectorAll('.nc-done-btn').forEach(btn => {
@@ -3775,7 +4062,7 @@ function renderFocusView(){
           <span style="font-size:12px;color:var(--text3)">${owStr}</span>
           <span style="font-size:12px;color:var(--text3)">·</span>
           <span style="font-size:12px">${dueStr}</span>
-          ${item.jira?`<span style="font-size:12px;color:var(--text3)">·</span><span class="jchip" style="font-size:10px">${parseJira(item.jira).key}</span>`:''}
+          ${item.jira?`<span style="font-size:12px;color:var(--text3)">·</span><a class="jchip" href="${parseJira(item.jira).url}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px">${parseJira(item.jira).key}</a>`:''}
         </div>
         <div class="focus-tags">${reasons.map(r=>`<span class="focus-tag ${r.tag}">${r.label}</span>`).join('')}</div>
       </div>
@@ -3833,7 +4120,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     rb.textContent = 'Admin'; rb.className = 'rbadge r-admin';
     document.querySelectorAll('.adminonly').forEach(el=>el.classList.add('show'));
     document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.add('show'));
-    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); ra(); loadUserEmails(); startDailyScheduler(); loadSavedViews().then(applyDefaultView); })
+    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); restoreFilterState(); ra(); loadUserEmails(); startDailyScheduler(); loadSavedViews().then(applyDefaultView); checkOverdueSlack(); updateSlackToggleUI(); })
       .catch(err=>{ console.warn('DEV_BYPASS: Supabase unavailable, running with empty data.', err); ra(); });
   }
 });
@@ -3860,6 +4147,7 @@ function captureViewPayload(){
       type:     [...MF.type],
       owner:    [...MF.owner],
       source:   [...MF.source],
+      jira:     [...MF.jira],
     },
     statCard: activeSF,
     sortKey:  sKey,
@@ -4078,9 +4366,790 @@ async function deleteSavedView(id){
     showToast('Delete failed: '+(ex.message||ex),'red');
   }
 }
+
+/* ════════════════════════════════════════
+   DRAWER TABS
+════════════════════════════════════════ */
+function switchDrawerTab(tab, btnEl){
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('dpane-comments').classList.remove('on');
+  document.getElementById('dpane-edit').classList.remove('on');
+  if(tab==='comments'){
+    document.getElementById('dpane-comments').classList.add('on');
+    document.querySelectorAll('.dtab')[0]?.classList.add('active');
+  } else {
+    document.getElementById('dpane-edit').classList.add('on');
+    document.querySelectorAll('.dtab')[1]?.classList.add('active');
+  }
+  if(btnEl) btnEl.classList.add('active');
+}
+
+/* ════════════════════════════════════════
+   COMMENTS
+════════════════════════════════════════ */
+let itemComments = [];  // comments for currently open item
+let editingCommentId = null;
+
+/* ── HTML-escape to prevent XSS ── */
+function esc(s){
+  const d=document.createElement('div');
+  d.textContent=s;
+  return d.innerHTML;
+}
+
+/* ── Render @mentions as styled spans ── */
+function renderBody(raw){
+  const safe = esc(raw);
+  return safe.replace(/@([\w\s]+?)(?=\s@|\s*$|[.,;:!?)])/g, '<span class="mention">@$1</span>');
+}
+
+/* ── Format timestamp ── */
+function fmtTime(iso){
+  if(!iso) return '';
+  const d=new Date(iso);
+  const now=new Date();
+  const diff=now-d;
+  if(diff<60000) return 'just now';
+  if(diff<3600000) return Math.floor(diff/60000)+'m ago';
+  if(diff<86400000) return Math.floor(diff/3600000)+'h ago';
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ── Load comments for an item ── */
+async function loadComments(itemId){
+  const thread = document.getElementById('cthread');
+  thread.innerHTML = '<div class="cthread-empty"><div class="cthread-empty-ico">💬</div>Loading…</div>';
+  try{
+    const {data,error} = await sbc.from('comments').select('*').eq('item_id',itemId).order('created_at',{ascending:true});
+    if(error) throw error;
+    itemComments = data||[];
+  }catch(ex){
+    console.warn('Failed to load comments:', ex);
+    itemComments = [];
+  }
+  renderComments();
+}
+
+/* ── Render comment thread ── */
+function renderComments(){
+  const thread = document.getElementById('cthread');
+  thread.innerHTML = '';
+  document.getElementById('dtab-ccnt').textContent = itemComments.length||'';
+  if(itemComments.length===0){
+    thread.innerHTML = '<div class="cthread-empty"><div class="cthread-empty-ico">💬</div>No comments yet. Start the conversation.</div>';
+    return;
+  }
+  itemComments.forEach(c=>{
+    const isMine = c.author === CU.username;
+    const div = document.createElement('div');
+    div.className = 'cmsg'+(isMine?' mine':'');
+    div.dataset.id = c.id;
+    const editedLabel = c.edited_at ? `<span class="cmsg-edited">(edited ${fmtTime(c.edited_at)})</span>` : '';
+    const actions = isMine ? `<div class="cmsg-actions">
+      <button class="cmsg-act" onclick="startEditComment('${c.id}')">Edit</button>
+      <button class="cmsg-act del" onclick="deleteComment('${c.id}')">Delete</button>
+    </div>` : '';
+    div.innerHTML = `<div class="cmsg-hdr">
+      <div class="cmsg-av">${esc(c.author_name[0])}</div>
+      <span class="cmsg-name">${esc(c.author_name)}</span>
+      ${editedLabel}
+      <span class="cmsg-time">${fmtTime(c.created_at)}</span>
+    </div>
+    <div class="cmsg-body">${renderBody(c.body)}</div>
+    ${actions}`;
+    thread.appendChild(div);
+  });
+  thread.scrollTop = thread.scrollHeight;
+}
+
+/* ── Post a new comment ── */
+async function postComment(){
+  const input = document.getElementById('cinput');
+  const body = input.value.trim();
+  if(!body) return;
+  const itemId = document.getElementById('dItemId').value;
+  if(!itemId){ showToast('Save the item first before commenting','amber'); return; }
+
+  if(editingCommentId){
+    await saveEditComment(editingCommentId, body);
+    return;
+  }
+
+  try{
+    const {data,error} = await sbc.from('comments').insert([{
+      item_id: itemId,
+      author: CU.username,
+      author_name: CU.name,
+      body: body,
+    }]).select().single();
+    if(error) throw error;
+    itemComments.push(data);
+    input.value = '';
+    autoGrowTextarea(input);
+    renderComments();
+    // Create notifications for @mentions
+    createMentionNotifications(itemId, data.id, body);
+  }catch(ex){
+    showToast('Comment failed: '+(ex.message||ex),'red');
+  }
+}
+
+/* ── Edit comment ── */
+function startEditComment(commentId){
+  const c = itemComments.find(x=>x.id===commentId);
+  if(!c) return;
+  editingCommentId = commentId;
+  const input = document.getElementById('cinput');
+  input.value = c.body;
+  input.focus();
+  autoGrowTextarea(input);
+  document.querySelector('.cinput-hint').textContent = 'Editing comment · Press Escape to cancel';
+}
+
+async function saveEditComment(commentId, newBody){
+  try{
+    const {error} = await sbc.from('comments').update({body:newBody, edited_at:new Date().toISOString()}).eq('id',commentId);
+    if(error) throw error;
+    const c = itemComments.find(x=>x.id===commentId);
+    if(c){ c.body = newBody; c.edited_at = new Date().toISOString(); }
+    cancelEditComment();
+    renderComments();
+    showToast('Comment updated','green');
+    // Check for new @mentions in edited text
+    const itemId = document.getElementById('dItemId').value;
+    createMentionNotifications(itemId, commentId, newBody);
+  }catch(ex){
+    showToast('Edit failed: '+(ex.message||ex),'red');
+  }
+}
+
+function cancelEditComment(){
+  editingCommentId = null;
+  const input = document.getElementById('cinput');
+  input.value = '';
+  autoGrowTextarea(input);
+  document.querySelector('.cinput-hint').textContent = 'Press Enter to send · Shift+Enter for new line · @ to mention';
+}
+
+/* ── Delete comment ── */
+async function deleteComment(commentId){
+  if(!confirm('Delete this comment?')) return;
+  try{
+    const {error} = await sbc.from('comments').delete().eq('id',commentId);
+    if(error) throw error;
+    itemComments = itemComments.filter(c=>c.id!==commentId);
+    renderComments();
+    showToast('Comment deleted','amber');
+  }catch(ex){
+    showToast('Delete failed: '+(ex.message||ex),'red');
+  }
+}
+
+/* ── Auto-grow textarea ── */
+function autoGrowTextarea(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120)+'px';
+}
+
+/* ════════════════════════════════════════
+   @MENTION AUTOCOMPLETE
+════════════════════════════════════════ */
+let mentionActive = false;
+let mentionQuery = '';
+let mentionStart = -1;
+let mentionIdx = 0;
+let mentionMatches = [];
+
+function getAllUserNames(){
+  // Combine owner names from data + USER_EMAILS keys for a full directory
+  const fromData = [...new Set(D.flatMap(i=>owners(i)))];
+  const fromEmails = Object.keys(USER_EMAILS);
+  return [...new Set([...fromData, ...fromEmails])].sort();
+}
+
+function handleMentionInput(e){
+  const input = document.getElementById('cinput');
+  const val = input.value;
+  const pos = input.selectionStart;
+
+  // Find @ before cursor
+  const before = val.substring(0, pos);
+  const atIdx = before.lastIndexOf('@');
+
+  if(atIdx >= 0 && (atIdx === 0 || /\s/.test(before[atIdx-1]))){
+    const query = before.substring(atIdx+1).toLowerCase();
+    if(query.length >= 0 && !/\n/.test(query)){
+      mentionActive = true;
+      mentionStart = atIdx;
+      mentionQuery = query;
+      mentionIdx = 0;
+      const allNames = getAllUserNames();
+      mentionMatches = query ? allNames.filter(n=>n.toLowerCase().includes(query)) : allNames;
+      renderMentionPopup();
+      return;
+    }
+  }
+  closeMentionPopup();
+}
+
+function handleMentionKeydown(e){
+  if(e.key === 'Escape' && editingCommentId){
+    cancelEditComment();
+    e.preventDefault();
+    return;
+  }
+  if(mentionActive && mentionMatches.length > 0){
+    if(e.key === 'ArrowDown'){ e.preventDefault(); mentionIdx = (mentionIdx+1)%mentionMatches.length; renderMentionPopup(); return; }
+    if(e.key === 'ArrowUp'){ e.preventDefault(); mentionIdx = (mentionIdx-1+mentionMatches.length)%mentionMatches.length; renderMentionPopup(); return; }
+    if(e.key === 'Enter' || e.key === 'Tab'){ e.preventDefault(); selectMention(mentionMatches[mentionIdx]); return; }
+    if(e.key === 'Escape'){ closeMentionPopup(); return; }
+  }
+  // Enter to send (without shift)
+  if(e.key === 'Enter' && !e.shiftKey && !mentionActive){
+    e.preventDefault();
+    postComment();
+  }
+}
+
+function renderMentionPopup(){
+  const popup = document.getElementById('mentionPopup');
+  if(mentionMatches.length === 0){ popup.style.display='none'; return; }
+  popup.style.display = 'block';
+  popup.innerHTML = mentionMatches.slice(0,8).map((name,i)=>{
+    const initials = name.split(' ').map(w=>w[0]).join('').substring(0,2);
+    return `<div class="mention-item${i===mentionIdx?' active':''}" onmousedown="selectMention('${esc(name.replace(/'/g,"\\'"))}')">
+      <div class="mention-item-av">${esc(initials)}</div>
+      <span>${esc(name)}</span>
+    </div>`;
+  }).join('');
+}
+
+function closeMentionPopup(){
+  mentionActive = false;
+  mentionMatches = [];
+  document.getElementById('mentionPopup').style.display = 'none';
+}
+
+function selectMention(name){
+  const input = document.getElementById('cinput');
+  const val = input.value;
+  const before = val.substring(0, mentionStart);
+  const after = val.substring(input.selectionStart);
+  input.value = before + '@' + name + ' ' + after;
+  input.selectionStart = input.selectionEnd = mentionStart + name.length + 2;
+  input.focus();
+  closeMentionPopup();
+}
+
+/* ════════════════════════════════════════
+   @MENTION NOTIFICATIONS
+════════════════════════════════════════ */
+async function createMentionNotifications(itemId, commentId, body){
+  // Extract @mentions from body
+  const mentions = [];
+  const re = /@([\w\s]+?)(?=\s@|\s*$|[.,;:!?)])/g;
+  let m;
+  while((m=re.exec(body))!==null){
+    mentions.push(m[1].trim());
+  }
+  if(mentions.length===0) return;
+
+  // Resolve mentioned names to usernames via USER_EMAILS / app_users
+  const allNames = getAllUserNames();
+  const item = D.find(i=>i.id===itemId);
+  const itemTitle = item ? item.title : 'Unknown item';
+  const preview = body.length > 100 ? body.substring(0,100)+'…' : body;
+
+  for(const name of mentions){
+    // Find matching user — try exact, then case-insensitive
+    const matched = allNames.find(n=>n.toLowerCase()===name.toLowerCase());
+    if(!matched) continue;
+
+    // Look up username from app_users data (best effort)
+    let recipientUsername = '';
+    try{
+      const {data} = await sbc.from('app_users').select('username').ilike('full_name',matched).eq('active',true).single();
+      if(data) recipientUsername = data.username;
+    }catch(ex){}
+
+    if(!recipientUsername) continue;
+    if(recipientUsername === CU.username) continue; // don't notify yourself
+
+    try{
+      await sbc.from('notifications').insert([{
+        recipient: recipientUsername,
+        item_id: itemId,
+        comment_id: commentId,
+        author: CU.username,
+        author_name: CU.name,
+        body: `Mentioned you on "${itemTitle}": ${preview}`,
+      }]);
+    }catch(ex){
+      console.warn('Failed to create notification for', matched, ex);
+    }
+  }
+}
+
+/* ════════════════════════════════════════
+   STICKY FILTER STATE (sessionStorage)
+════════════════════════════════════════ */
+function saveFilterState(){
+  if(!CU) return;
+  const state = {
+    search: document.getElementById('qInput').value,
+    filters: {},
+    statCard: activeSF,
+    sortKey: sKey,
+    sortDir: sDir,
+  };
+  Object.keys(MF).forEach(k=>{ state.filters[k] = [...MF[k]]; });
+  try{ sessionStorage.setItem('rt_filters_'+CU.username, JSON.stringify(state)); }catch(e){}
+}
+
+function restoreFilterState(){
+  if(!CU) return;
+  try{
+    const raw = sessionStorage.getItem('rt_filters_'+CU.username);
+    if(!raw) return;
+    const state = JSON.parse(raw);
+    if(state.search) document.getElementById('qInput').value = state.search;
+    if(state.filters){
+      Object.keys(MF).forEach(k=>{
+        MF[k].clear();
+        (state.filters[k]||[]).forEach(v=>MF[k].add(v));
+        updateMFBtn(k);
+      });
+    }
+    if(state.statCard){
+      activeSF = state.statCard;
+      const scMap = {'':'sc0','Proposed':'sc1','Scoping':'sc2','In Progress':'sc3','__ov__':'sc4','__nt__':'sc5'};
+      if(scMap[activeSF]) document.getElementById(scMap[activeSF])?.classList.add('active');
+    }
+    if(state.sortKey) sKey = state.sortKey;
+    if(state.sortDir != null) sDir = state.sortDir;
+  }catch(e){}
+}
+
+/* ════════════════════════════════════════
+   BULK SELECT & ACTIONS
+════════════════════════════════════════ */
+const bulkSelected = new Set();
+
+function toggleBulkAll(checked){
+  const cbs = document.querySelectorAll('#tbody .bulk-cb');
+  cbs.forEach(cb=>{
+    cb.checked = checked;
+    const id = cb.dataset.id;
+    if(checked) bulkSelected.add(id); else bulkSelected.delete(id);
+  });
+  updateBulkBar();
+}
+
+function toggleBulkItem(cb){
+  const id = cb.dataset.id;
+  if(cb.checked) bulkSelected.add(id); else bulkSelected.delete(id);
+  const allCbs = document.querySelectorAll('#tbody .bulk-cb');
+  const allChecked = [...allCbs].every(c=>c.checked);
+  document.getElementById('bulkAll').checked = allCbs.length>0 && allChecked;
+  updateBulkBar();
+}
+
+function updateBulkBar(){
+  const bar = document.getElementById('bulkBar');
+  if(bulkSelected.size > 0){
+    bar.classList.add('on');
+    document.getElementById('bulkCount').textContent = `${bulkSelected.size} selected`;
+    // Populate owner datalist
+    const dl = document.getElementById('bulk-owner-list');
+    if(dl){
+      const known = [...new Set(D.flatMap(i=>owners(i)))].sort();
+      dl.innerHTML = known.map(n=>`<option value="${n}">`).join('');
+    }
+  } else {
+    bar.classList.remove('on');
+  }
+}
+
+function clearBulkSelect(){
+  bulkSelected.clear();
+  document.querySelectorAll('#tbody .bulk-cb').forEach(cb=>cb.checked=false);
+  document.getElementById('bulkAll').checked = false;
+  document.getElementById('bulkStatusSel').value = '';
+  document.getElementById('bulkPrioritySel').value = '';
+  document.getElementById('bulkOwnerInput').value = '';
+  document.getElementById('bulkDueInput').value = '';
+  updateBulkBar();
+}
+
+/* ── Apply bulk field updates (status, priority, owner, due) ── */
+async function applyBulkUpdate(){
+  const newStatus   = document.getElementById('bulkStatusSel').value;
+  const newPriority = document.getElementById('bulkPrioritySel').value;
+  const newOwner    = document.getElementById('bulkOwnerInput').value.trim();
+  const newDue      = document.getElementById('bulkDueInput').value;
+
+  if(!newStatus && !newPriority && !newOwner && !newDue){
+    showToast('Pick at least one field to update','amber'); return;
+  }
+  if(bulkSelected.size===0) return;
+
+  // Build the update payload
+  const updates = {};
+  if(newStatus)   updates.status = newStatus;
+  if(newPriority) updates.priority = newPriority;
+  if(newOwner)    updates.owner = newOwner;
+  if(newDue)      updates.due_date = newDue;
+
+  const ids = [...bulkSelected];
+  let ok = 0, fail = 0;
+
+  for(const id of ids){
+    const item = D.find(i=>i.id===id);
+    if(!item) continue;
+    const {error} = await sbc.from('work_items').update(updates).eq('id',id);
+    if(error){ fail++; continue; }
+    // Audit + update local cache
+    if(newStatus && item.status !== newStatus){
+      auditLog(id, item.title, 'UPDATE', 'status', item.status, newStatus);
+      item.status = newStatus;
+    }
+    if(newPriority && item.priority !== newPriority){
+      auditLog(id, item.title, 'UPDATE', 'priority', item.priority, newPriority);
+      item.priority = newPriority;
+    }
+    if(newOwner && item.owner !== newOwner){
+      auditLog(id, item.title, 'UPDATE', 'owner', item.owner, newOwner);
+      item.owner = newOwner;
+    }
+    if(newDue && item.due !== newDue){
+      auditLog(id, item.title, 'UPDATE', 'due', item.due, newDue);
+      item.due = newDue;
+    }
+    ok++;
+  }
+
+  const fields = [newStatus&&'status',newPriority&&'priority',newOwner&&'owner',newDue&&'due'].filter(Boolean).join(', ');
+  clearBulkSelect();
+  buildOwnerFilter(); ra();
+  if(fail) showToast(`Updated ${ok}, failed ${fail}`,'amber');
+  else showToast(`${ok} item${ok!==1?'s':''} updated (${fields})`,'green');
+}
+
+/* ── Bulk archive (set status to Done) ── */
+async function bulkArchive(){
+  if(bulkSelected.size===0) return;
+  if(!confirm(`Archive ${bulkSelected.size} item${bulkSelected.size!==1?'s':''}? They'll move to Done.`)) return;
+  const ids = [...bulkSelected];
+  let ok = 0, fail = 0;
+  for(const id of ids){
+    const item = D.find(i=>i.id===id);
+    if(!item) continue;
+    const old = item.status;
+    const {error} = await sbc.from('work_items').update({status:'Done'}).eq('id',id);
+    if(error){ fail++; continue; }
+    if(old !== 'Done') auditLog(id, item.title, 'UPDATE', 'status', old, 'Done');
+    item.status = 'Done';
+    ok++;
+  }
+  clearBulkSelect();
+  buildOwnerFilter(); ra();
+  if(fail) showToast(`Archived ${ok}, failed ${fail}`,'amber');
+  else showToast(`${ok} item${ok!==1?'s':''} archived`,'green');
+}
+
+/* ── Bulk delete ── */
+async function bulkDelete(){
+  if(bulkSelected.size===0) return;
+  if(!confirm(`Permanently delete ${bulkSelected.size} item${bulkSelected.size!==1?'s':''}? This cannot be undone.`)) return;
+  const ids = [...bulkSelected];
+  let ok = 0, fail = 0;
+  for(const id of ids){
+    const item = D.find(i=>i.id===id);
+    if(!item) continue;
+    const {error} = await sbc.from('work_items').delete().eq('id',id);
+    if(error){ fail++; continue; }
+    auditLog(id, item.title, 'DELETE', null, JSON.stringify(item), null);
+    const pos = D.findIndex(i=>i.id===id);
+    if(pos>=0) D.splice(pos,1);
+    ok++;
+  }
+  clearBulkSelect();
+  buildOwnerFilter(); ra();
+  if(fail) showToast(`Deleted ${ok}, failed ${fail}`,'amber');
+  else showToast(`${ok} item${ok!==1?'s':''} deleted`,'red');
+}
+
+/* ════════════════════════════════════════
+   CLONE ITEM
+════════════════════════════════════════ */
+function cloneItem(){
+  const itemId = document.getElementById('dItemId').value;
+  const item = D.find(i=>i.id===itemId);
+  if(!item){ showToast('Nothing to clone','red'); return; }
+  // Pre-fill the drawer as a new item with copied fields
+  closeDrawer();
+  setTimeout(()=>{
+    openDrawer(null);
+    // Copy all fields from the original
+    document.getElementById('d_title').value = item.title + ' (copy)';
+    document.getElementById('d_desc').value = item.desc||'';
+    document.getElementById('d_owner').value = item.owner||'';
+    document.getElementById('d_status').value = 'Proposed';
+    document.getElementById('d_priority').value = item.priority||'Medium';
+    document.getElementById('d_riskPriority').value = item.riskPriority||'Medium';
+    document.getElementById('d_type').value = item.type||'';
+    document.getElementById('d_team').value = item.team||'';
+    document.getElementById('d_reqBy').value = item.requestedBy||'';
+    document.getElementById('d_source').value = item.source||'';
+    document.getElementById('d_jira').value = '';
+    document.getElementById('d_estimate').value = item.estimate||'';
+    document.getElementById('d_notes').value = item.notes||'';
+    // Clear dates — cloned item gets fresh dates
+    document.getElementById('d_dateReq_val').value = '';
+    document.getElementById('d_dateReq').value = '';
+    document.getElementById('d_due_val').value = '';
+    document.getElementById('d_due').value = '';
+    document.getElementById('dtitle').textContent = 'Clone: ' + item.title;
+    refreshOwnerPills(item.owner||'');
+  }, 150);
+}
+
+/* ════════════════════════════════════════
+   CALENDAR VIEW
+════════════════════════════════════════ */
+let calDate = new Date();  // current viewing month/week anchor
+let calMode = 'month';     // 'month' or 'week'
+
+const CAL_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function setCalView(mode, btn){
+  calMode = mode;
+  document.querySelectorAll('#view-calendar .vtab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderCalendar();
+}
+
+function calPrev(){
+  if(calMode==='month') calDate.setMonth(calDate.getMonth()-1);
+  else calDate.setDate(calDate.getDate()-7);
+  renderCalendar();
+}
+function calNext(){
+  if(calMode==='month') calDate.setMonth(calDate.getMonth()+1);
+  else calDate.setDate(calDate.getDate()+7);
+  renderCalendar();
+}
+function calToday(){
+  calDate = new Date();
+  renderCalendar();
+}
+
+function renderCalendar(){
+  if(calMode==='month') renderCalMonth();
+  else renderCalWeek();
+}
+
+function getItemsByDate(){
+  const map = {};
+  D.forEach((item,idx)=>{
+    if(!item.due) return;
+    const key = item.due; // YYYY-MM-DD
+    if(!map[key]) map[key] = [];
+    map[key].push({item, idx: D.indexOf(item)});
+  });
+  return map;
+}
+
+function calItemHtml(entry, max){
+  const p = (entry.item.priority||'L')[0];
+  const title = entry.item.title.length > 22 ? entry.item.title.substring(0,20)+'…' : entry.item.title;
+  return `<div class="cal-item p${p}" onclick="openDrawer(${entry.idx})" title="${entry.item.title}">${title}</div>`;
+}
+
+function todayStr(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function renderCalMonth(){
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  document.getElementById('calLabel').textContent = `${CAL_MONTHS[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month+1, 0);
+  // Monday-based: 0=Mon, 6=Sun
+  let startDow = (firstDay.getDay()+6)%7;
+  const daysInMonth = lastDay.getDate();
+  const byDate = getItemsByDate();
+  const today = todayStr();
+
+  let html = '<div class="cal-grid">';
+  CAL_DAYS.forEach(d=>{ html += `<div class="cal-hdr">${d}</div>`; });
+
+  // Previous month padding
+  const prevMonth = new Date(year, month, 0);
+  for(let i = startDow-1; i >= 0; i--){
+    const day = prevMonth.getDate() - i;
+    html += `<div class="cal-cell other"><div class="cal-day">${day}</div></div>`;
+  }
+
+  // Current month days
+  for(let d = 1; d <= daysInMonth; d++){
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = dateStr === today;
+    const items = byDate[dateStr] || [];
+    const show = items.slice(0,3);
+    const more = items.length > 3 ? `<div class="cal-more" onclick="event.stopPropagation()">+${items.length-3} more</div>` : '';
+    html += `<div class="cal-cell${isToday?' today':''}">
+      <div class="cal-day">${d}</div>
+      ${show.map(e=>calItemHtml(e)).join('')}
+      ${more}
+    </div>`;
+  }
+
+  // Next month padding to fill grid
+  const totalCells = startDow + daysInMonth;
+  const remaining = (7 - (totalCells % 7)) % 7;
+  for(let i = 1; i <= remaining; i++){
+    html += `<div class="cal-cell other"><div class="cal-day">${i}</div></div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function renderCalWeek(){
+  // Find Monday of the current week
+  const d = new Date(calDate);
+  const dow = (d.getDay()+6)%7; // 0=Mon
+  d.setDate(d.getDate() - dow);
+  const weekStart = new Date(d);
+
+  const endD = new Date(weekStart);
+  endD.setDate(endD.getDate()+6);
+  document.getElementById('calLabel').textContent =
+    `${weekStart.getDate()} ${CAL_MONTHS[weekStart.getMonth()].substring(0,3)} – ${endD.getDate()} ${CAL_MONTHS[endD.getMonth()].substring(0,3)} ${endD.getFullYear()}`;
+
+  const byDate = getItemsByDate();
+  const today = todayStr();
+
+  let html = '<div class="cal-grid week-view">';
+  CAL_DAYS.forEach(d=>{ html += `<div class="cal-hdr">${d}</div>`; });
+
+  for(let i = 0; i < 7; i++){
+    const day = new Date(weekStart);
+    day.setDate(day.getDate()+i);
+    const dateStr = `${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,'0')}-${String(day.getDate()).padStart(2,'0')}`;
+    const isToday = dateStr === today;
+    const items = byDate[dateStr] || [];
+    html += `<div class="cal-cell${isToday?' today':''}">
+      <div class="cal-day">${day.getDate()} ${CAL_MONTHS[day.getMonth()].substring(0,3)}</div>
+      ${items.map(e=>calItemHtml(e)).join('')}
+    </div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+/* ════════════════════════════════════════
+   SLACK NOTIFICATIONS (incoming webhook)
+════════════════════════════════════════ */
+
+/* ── Dedup key: prevents duplicate Slack messages for the same event on the same day ── */
+function slackSentKey(type, itemId){ return `slack_${type}_${itemId}_${new Date().toISOString().slice(0,10)}`; }
+function wasSlackSent(type, itemId){ return !!localStorage.getItem(slackSentKey(type, itemId)); }
+function markSlackSent(type, itemId){ localStorage.setItem(slackSentKey(type, itemId), '1'); }
+
+/* ── Send a Slack message via incoming webhook ── */
+async function sendSlack(blocks){
+  if(!SLACK_WEBHOOK_URL) return;
+  if(!isSlackEnabled()) return;
+  try{
+    await fetch(SLACK_WEBHOOK_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ blocks }),
+    });
+  }catch(ex){
+    console.warn('Slack webhook failed:', ex);
+  }
+}
+
+/* ── Slack toggle (persisted in localStorage) ── */
+function isSlackEnabled(){ return localStorage.getItem('slack_enabled') === '1'; }
+
+function toggleSlack(){
+  const on = !isSlackEnabled();
+  localStorage.setItem('slack_enabled', on ? '1' : '0');
+  updateSlackToggleUI();
+  showToast(on ? 'Slack notifications ON' : 'Slack notifications OFF', on ? 'green' : 'amber');
+}
+
+function updateSlackToggleUI(){
+  // Slack toggle is now rendered inline in the notification panel — no persistent DOM element needed
+}
+
+/* ── Trigger Slack notification by event type ── */
+function slackNotify(type, item, extra){
+  if(!SLACK_WEBHOOK_URL) return;
+  if(wasSlackSent(type, item.id)) return;
+
+  const dueStr = item.due ? fd(item.due) : 'No due date';
+  const link = TRACKER_URL;
+
+  let blocks = [];
+
+  if(type === 'assigned'){
+    blocks = [
+      { type:'section', text:{ type:'mrkdwn', text:`*📋 Item Assigned*\n*${item.title}*` }},
+      { type:'section', fields:[
+        { type:'mrkdwn', text:`*Assigned to:*\n${extra}` },
+        { type:'mrkdwn', text:`*Priority:*\n${item.priority||'—'}` },
+        { type:'mrkdwn', text:`*Due:*\n${dueStr}` },
+        { type:'mrkdwn', text:`*Status:*\n${item.status}` },
+      ]},
+      { type:'actions', elements:[
+        { type:'button', text:{ type:'plain_text', text:'Open Tracker' }, url: link },
+      ]},
+    ];
+  }
+
+  if(type === 'overdue'){
+    const days = Math.abs(Math.round((getToday() - parseLocalDate(item.due)) / 86400000));
+    blocks = [
+      { type:'section', text:{ type:'mrkdwn', text:`*🔴 Item Overdue*\n*${item.title}* is ${days} day${days!==1?'s':''} overdue` }},
+      { type:'section', fields:[
+        { type:'mrkdwn', text:`*Owner:*\n${item.owner||'Unassigned'}` },
+        { type:'mrkdwn', text:`*Priority:*\n${item.priority||'—'}` },
+        { type:'mrkdwn', text:`*Due:*\n${dueStr}` },
+        { type:'mrkdwn', text:`*Status:*\n${item.status}` },
+      ]},
+      { type:'actions', elements:[
+        { type:'button', text:{ type:'plain_text', text:'Open Tracker' }, url: link },
+      ]},
+    ];
+  }
+
+  if(blocks.length){
+    markSlackSent(type, item.id);
+    sendSlack(blocks);
+  }
+}
+
+/* ── Check for newly overdue items (called after data load, not on every render) ── */
+function checkOverdueSlack(){
+  if(!SLACK_WEBHOOK_URL) return;
+  D.filter(i => !isArchived(i) && isOv(i)).forEach(item => {
+    slackNotify('overdue', item);
+  });
+}
 </script>
 </body>
 </html>
+
 
 
 
