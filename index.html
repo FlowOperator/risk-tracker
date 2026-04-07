@@ -3491,6 +3491,7 @@ function buildNotifications(){
       if(days !== null){
         if(days < 0 && days >= -7) addNote(email, ownerName, 'overdue',  item);
         else if(days < -7)         addNote(email, ownerName, 'overdue7', item);
+        else if(days === 0)        addNote(email, ownerName, 'duetoday', item);
         else if(days <= 2)         addNote(email, ownerName, 'due2',     item);
         else if(days <= 7)         addNote(email, ownerName, 'due7',     item);
       }
@@ -3601,8 +3602,8 @@ function openNotifCentre(){
   }
 
   // ── Email notification rows ──
-  const catColours = { overdue7:'#c0392b', overdue:'#e8500a', due2:'#b07d10', due7:'#3557d4' };
-  const catOrder   = ['overdue7','overdue','due2','due7'];
+  const catColours = { overdue7:'#c0392b', overdue:'#e8500a', duetoday:'#d95040', due2:'#b07d10', due7:'#3557d4' };
+  const catOrder   = ['overdue7','overdue','duetoday','due2','due7'];
 
   function itemDueLabel(item, cat){
     const d = daysUntil(item.due);
@@ -3735,10 +3736,11 @@ function formatItemLine(item, showDue=true){
 }
 
 function openNotificationEmail(email, ownerName, cats){
-  const catOrder = ['overdue7','overdue','due2','due7'];
+  const catOrder = ['overdue7','overdue','duetoday','due2','due7'];
   const catConfig = {
     overdue7: { label:'🔴 Overdue by more than 7 days' },
     overdue:  { label:'🟠 Overdue' },
+    duetoday: { label:'🔥 Due today' },
     due2:     { label:'🟡 Due within 2 days' },
     due7:     { label:'📅 Due within 7 days' },
   };
@@ -3772,7 +3774,7 @@ function openNotificationEmail(email, ownerName, cats){
   bodyLines.push('Thanks,');
   bodyLines.push('Angstrom Risk Tracker');
 
-  const urgentCats = cats.overdue7 || cats.overdue;
+  const urgentCats = cats.overdue7 || cats.overdue || cats.duetoday;
   const subject = urgentCats
     ? `⚠️ ACTION REQUIRED — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Need Your Attention`
     : `📅 REMINDER — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Due Soon`;
@@ -5236,8 +5238,3 @@ function checkOverdueSlack(){
 </script>
 </body>
 </html>
-
-
-
-
-
