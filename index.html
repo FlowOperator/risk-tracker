@@ -246,7 +246,7 @@ td.td-sticky::after{
 /* Row — stronger hover, clear focus ring */
 tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s,box-shadow .1s}
 tbody tr:last-child{border-bottom:none}
-tbody tr:hover{background:var(--bg3)!important;box-shadow:inset 0 0 0 1px var(--border2);z-index:6;position:relative}
+tbody tr:hover{background:var(--bg3)!important;box-shadow:0 2px 8px rgba(0,0,0,.06),inset 0 0 0 1px var(--border2);z-index:6;position:relative;transform:translateY(-1px)}
 tbody tr:hover td.td-sticky{background:var(--bg3)}
 td{padding:10px 14px;color:var(--text2);vertical-align:middle;font-size:13px}
 
@@ -654,7 +654,7 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
   transition:transform var(--t-slow) var(--ease-drawer-in);
 }
 .dov{
-  position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:100;
+  position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100;
   opacity:0;
   transition:opacity var(--t-base) ease;
   display:block!important;
@@ -817,7 +817,7 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 /* ═══ DRAWER ═══ */
 .dov-old-removed{display:none}
 .dov.on{display:block}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);overflow:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.32,0,.15,1);overflow:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
 .drawer.on{transform:translateX(0)}
 .dhdr{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
 .dtitle{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -881,11 +881,16 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 .focus-empty{padding:32px;text-align:center;color:var(--text3);font-size:13px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)}
 
 /* ═══ TOAST ═══ */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--text);border:none;border-radius:8px;padding:12px 18px;font-size:13px;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:600;transform:translateY(20px);opacity:0;transition:transform .2s,opacity .2s;display:flex;align-items:center;gap:8px}
-.toast.show{transform:translateY(0);opacity:1}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);border:none;border-radius:10px;padding:12px 18px;font-size:13px;color:#fff;box-shadow:0 8px 30px rgba(0,0,0,.25);z-index:600;transform:translateX(120%);opacity:0;transition:transform .3s cubic-bezier(.32,0,.15,1),opacity .3s;display:flex;align-items:center;gap:8px;overflow:hidden;min-width:200px}
+.toast.show{transform:translateX(0);opacity:1}
+.toast::after{content:'';position:absolute;bottom:0;left:0;height:3px;background:rgba(255,255,255,.3);animation:toastProgress 2.6s linear forwards}
+@keyframes toastProgress{from{width:100%}to{width:0%}}
 .t-green{border-left:3px solid var(--green)}
+.t-green::after{background:var(--green)}
 .t-red{border-left:3px solid var(--red)}
+.t-red::after{background:var(--red)}
 .t-amber{border-left:3px solid var(--amber)}
+.t-amber::after{background:var(--amber)}
 
 /* ═══ SAVED VIEWS ═══ */
 .sv-wrap{position:relative}
@@ -1041,10 +1046,55 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 .cal-item.pH{background:#c0392b}
 .cal-item.pM{background:#b07d10}
 .cal-item.pL{background:#8a8278}
-.cal-more{font-size:10px;color:var(--text3);cursor:pointer;padding:2px 0}
-.cal-more:hover{color:var(--accent)}
+.cal-more{font-size:10px;color:var(--accent);cursor:pointer;padding:2px 0;font-weight:600}
+.cal-more:hover{text-decoration:underline}
 /* Week view cells are taller */
 .cal-grid.week-view .cal-cell{min-height:160px}
+
+/* ═══ CALENDAR DAY POPUP ═══ */
+.cal-day-popup{
+  position:fixed;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:500;min-width:280px;max-width:360px;
+  max-height:400px;overflow-y:auto;padding:12px;animation:popIn .15s ease;
+}
+.cal-day-popup-hdr{font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.cal-day-popup-close{background:none;border:none;font-size:16px;color:var(--text3);cursor:pointer;padding:0 2px}
+.cal-day-popup-close:hover{color:var(--text)}
+.cal-day-item{
+  display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;
+  cursor:pointer;transition:background .1s;font-size:12px;color:var(--text2);
+}
+.cal-day-item:hover{background:var(--bg3)}
+.cal-day-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cal-day-dot.pH{background:#c0392b}.cal-day-dot.pM{background:#b07d10}.cal-day-dot.pL{background:#8a8278}
+.cal-day-item-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:var(--text)}
+.cal-day-item-meta{font-size:10px;color:var(--text3);white-space:nowrap}
+
+/* ═══ LOADING SKELETON ═══ */
+.skel-row{display:flex;gap:14px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.skel-bar{background:var(--bg3);border-radius:4px;height:14px;animation:skelPulse 1.2s ease-in-out infinite}
+@keyframes skelPulse{0%,100%{opacity:.4}50%{opacity:.8}}
+.skel-bar.w1{width:200px}.skel-bar.w2{width:100px}.skel-bar.w3{width:70px}.skel-bar.w4{width:50px}
+
+/* ═══ FILTER PILLS (active filters shown as removable chips) ═══ */
+.fpills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.fpill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(232,80,10,.08);border:1px solid rgba(232,80,10,.18);
+  border-radius:16px;padding:3px 10px 3px 8px;
+  font-size:11px;font-weight:500;color:var(--accent);
+  cursor:default;animation:popIn .15s ease;
+}
+.fpill-x{
+  background:none;border:none;color:var(--accent);font-size:13px;
+  cursor:pointer;padding:0 0 0 2px;line-height:1;opacity:.6;transition:opacity .1s;
+}
+.fpill-x:hover{opacity:1}
+.fpill-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:rgba(232,80,10,.6)}
+
+/* ═══ BULK SELECTION HIGHLIGHT ═══ */
+tbody tr.bulk-checked{background:rgba(232,80,10,.05)!important;box-shadow:inset 3px 0 0 var(--accent)}
+tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
 </style>
 </head>
 <body>
@@ -1120,12 +1170,12 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 
       <!-- STATS -->
       <div class="scrow">
-      <div class="sc" id="sc0" style="--c:#1a1814" onclick="sF('')"><div class="sclabel">Active items</div><div class="scval" id="sv0">0</div><div class="scdesc">in tracker</div></div>
-      <div class="sc" id="sc1" style="--c:#6b6560" onclick="sF('Proposed')"><div class="sclabel">Proposed</div><div class="scval" id="sv1">0</div><div class="scdesc">awaiting review</div></div>
-      <div class="sc" id="sc2" style="--c:#3557d4" onclick="sF('Scoping')"><div class="sclabel">In scoping</div><div class="scval" id="sv2">0</div><div class="scdesc">being scoped</div></div>
-      <div class="sc" id="sc3" style="--c:#3557d4" onclick="sF('In Progress')"><div class="sclabel">In progress</div><div class="scval" id="sv3">0</div><div class="scdesc">work started</div></div>
-      <div class="sc" id="sc4" style="--c:#c0392b" onclick="sF('__ov__')"><div class="sclabel">Overdue</div><div class="scval" id="sv4">0</div><div class="scdesc">past due date</div></div>
-      <div class="sc" id="sc5" style="--c:#b07d10" onclick="sF('__nt__')"><div class="sclabel">No ticket</div><div class="scval" id="sv5">0</div><div class="scdesc">no jira link</div></div>
+      <div class="sc" id="sc0" style="--c:#1a1814" onclick="sF('')"><div class="sclabel">📊 Active items</div><div class="scval" id="sv0">0</div></div>
+      <div class="sc" id="sc1" style="--c:#6b6560" onclick="sF('Proposed')"><div class="sclabel">💡 Proposed</div><div class="scval" id="sv1">0</div></div>
+      <div class="sc" id="sc2" style="--c:#3557d4" onclick="sF('Scoping')"><div class="sclabel">🔍 In scoping</div><div class="scval" id="sv2">0</div></div>
+      <div class="sc" id="sc3" style="--c:#3557d4" onclick="sF('In Progress')"><div class="sclabel">⚙️ In progress</div><div class="scval" id="sv3">0</div></div>
+      <div class="sc" id="sc4" style="--c:#c0392b" onclick="sF('__ov__')"><div class="sclabel">⚠️ Overdue</div><div class="scval" id="sv4">0</div></div>
+      <div class="sc" id="sc5" style="--c:#b07d10" onclick="sF('__nt__')"><div class="sclabel">🎫 No ticket</div><div class="scval" id="sv5">0</div></div>
       </div>
 
       <!-- LEGEND -->
@@ -1205,6 +1255,7 @@ button:focus-visible, input:focus-visible, select:focus-visible{
         <button onclick="clearAllFilters()" id="btnClearFilters" style="display:none;background:rgba(232,80,10,.1);border:1px solid rgba(232,80,10,.2);border-radius:6px;color:var(--accent);padding:9px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:all .15s">✕ Clear filters</button>
         <button onclick="exportCSV()" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:8px 14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s;white-space:nowrap" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">⬇ Export CSV</button>
       </div>
+      <div class="fpills" id="filterPills"></div>
 
       <!-- TABLE VIEW -->
       <div id="vTable">
@@ -1250,7 +1301,7 @@ button:focus-visible, input:focus-visible, select:focus-visible{
             </thead>
             <tbody id="tbody"></tbody>
           </table>
-          <div id="emptyMsg" class="empty" style="display:none"><div class="emptyico">◌</div><div>No items match your filters</div></div>
+          <div id="emptyMsg" class="empty" style="display:none"><div class="emptyico">🔍</div><div style="font-size:15px;font-weight:600;margin-bottom:4px">No items match your filters</div><div style="font-size:12px;color:var(--text3)">Try adjusting your search or clearing some filters</div></div>
         </div>
       </div>
 
@@ -1568,6 +1619,7 @@ async function doLogin(){
   e.textContent='Loading data…';
   CU=matched;
   setSbcUserHeader(CU.username);
+  showLoadingSkeleton();
   loadFromSupabase().then(()=>{
     e.textContent='';btn.textContent='Sign In →';btn.disabled=false;
     document.getElementById('LS').classList.add('gone');
@@ -2180,12 +2232,13 @@ function ra(){
   saveFilterState();
   // Update bulk action bar
   updateBulkBar();
+  // Render active filter pills
+  renderFilterPills();
 }
 
 function updateNotifBadge(){
   const emailCount = Object.keys(buildNotifications()).length;
-  const sysCount   = buildSystemAlerts().length;
-  const total = emailCount + sysCount;
+  const total = emailCount;
   const badge = document.getElementById('notif-count');
   if(badge){ badge.textContent=total; badge.style.display=total>0?'inline':'none'; }
 }
@@ -2196,6 +2249,35 @@ function clearAllFilters(){
   activeSF='';
   document.querySelectorAll('.sc').forEach(c=>c.classList.remove('active'));
   ra();
+}
+
+/* ── Active filter pills ── */
+function renderFilterPills(){
+  const container = document.getElementById('filterPills');
+  if(!container) return;
+  let pills = '';
+  const q = document.getElementById('qInput').value.trim();
+  if(q){
+    pills += `<span class="fpill"><span class="fpill-label">Search</span> "${q.length>20?q.substring(0,18)+'…':q}" <button class="fpill-x" onclick="document.getElementById('qInput').value='';ra()">✕</button></span>`;
+  }
+  Object.keys(MF).forEach(k=>{
+    MF[k].forEach(v=>{
+      const label = v==='Selected For Development'?'Selected Dev':v;
+      pills += `<span class="fpill"><span class="fpill-label">${MF_LABELS[k]?.replace(/s$/,'')||k}</span> ${label} <button class="fpill-x" onclick="MF['${k}'].delete('${v.replace(/'/g,"\\'")}');updateMFBtn('${k}');ra()">✕</button></span>`;
+    });
+  });
+  container.innerHTML = pills;
+}
+
+/* ── Loading skeleton (shown while Supabase loads) ── */
+function showLoadingSkeleton(){
+  const tb = document.getElementById('tbody');
+  if(!tb) return;
+  let html = '';
+  for(let i=0;i<8;i++){
+    html += `<tr class="skel-row"><td colspan="11" style="padding:0"><div class="skel-row"><div class="skel-bar w1"></div><div class="skel-bar w2"></div><div class="skel-bar w3"></div><div class="skel-bar w2"></div><div class="skel-bar w4"></div><div class="skel-bar w3"></div></div></td></tr>`;
+  }
+  tb.innerHTML = html;
 }
 
 /* Re-sync the open drawer's item id by matching on title */
@@ -3269,7 +3351,7 @@ async function loadUserEmails(){
   }catch(e){ console.warn('Could not load user emails:',e); }
 }
 
-const TRACKER_URL = 'https://nicholashaynes2angstrom.github.io/risk-tracker';
+const TRACKER_URL = 'https://flowoperator.github.io/risk-tracker';
 
 function getEmail(ownerName){
   // Try exact match first, then partial
@@ -3492,8 +3574,7 @@ const AUTO_FIRED_KEY = `notif_autofired_${new Date().toISOString().slice(0,10)}`
 function openNotifCentre(){
   const emailGroups = buildNotifications();
   const emailKeys   = Object.keys(emailGroups);
-  const sysAlerts   = buildSystemAlerts();
-  const totalCount  = emailKeys.length + sysAlerts.length;
+  const totalCount  = emailKeys.length;
 
   const overlay = document.createElement('div');
   overlay.id = 'notif-overlay';
@@ -3519,44 +3600,6 @@ function openNotifCentre(){
     return;
   }
 
-  // ── System alert rows ──
-  const severityConfig = {
-    critical: { icon:'🔴', label:'Overdue',        bg:'rgba(192,57,43,.07)', border:'rgba(192,57,43,.2)', color:'#c0392b' },
-    warning:  { icon:'🟡', label:'Needs attention', bg:'rgba(176,125,16,.06)', border:'rgba(176,125,16,.18)', color:'#b07d10' },
-  };
-
-  const alertTypeLabels = {
-    overdue:       'Overdue',
-    stuck_scoping: 'Stuck in Scoping',
-    no_update:     'No Recent Update',
-  };
-
-  const sysHTML = sysAlerts.length ? `
-    <div style="padding:12px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);display:flex;align-items:center;gap:6px">
-      <span style="background:var(--bg3);border-radius:4px;padding:2px 7px;font-size:10px">🔔 System</span>
-      <span>${sysAlerts.length} alert${sysAlerts.length!==1?'s':''}</span>
-    </div>
-    ${sysAlerts.map(a => {
-      const cfg = severityConfig[a.severity];
-      return `<div class="nc-alert" data-key="${a.key}" style="margin:4px 10px;background:${cfg.bg};border:1px solid ${cfg.border};border-radius:8px;padding:12px 14px;position:relative">
-        <div style="display:flex;align-items:flex-start;gap:10px">
-          <span style="font-size:14px;flex-shrink:0;margin-top:1px">${cfg.icon}</span>
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">
-              <span style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px" title="${a.title}">${a.title}</span>
-              <span style="font-size:10px;font-weight:600;background:${cfg.border};color:${cfg.color};padding:1px 6px;border-radius:3px;flex-shrink:0">${alertTypeLabels[a.type]}</span>
-            </div>
-            <div style="font-size:12px;color:var(--text2);margin-bottom:6px">${a.message}</div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <button class="nc-view-btn" data-id="${a.itemId}" style="font-size:11px;background:none;border:1px solid var(--border2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--text2)">View item</button>
-              <button class="nc-done-btn" data-id="${a.itemId}" data-key="${a.key}" style="font-size:11px;background:rgba(42,138,82,.1);border:1px solid rgba(42,138,82,.2);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:#1a6b3a;font-weight:600">✓ Mark complete</button>
-              <button class="nc-dismiss-item-btn" data-id="${a.itemId}" data-key="${a.key}" style="font-size:11px;background:rgba(176,125,16,.08);border:1px solid rgba(176,125,16,.18);border-radius:5px;padding:3px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:#8a5f08">🔕 Dismiss today</button>
-            </div>
-          </div>
-        </div>
-      </div>`;
-    }).join('')}` : '';
-
   // ── Email notification rows ──
   const catColours = { overdue7:'#c0392b', overdue:'#e8500a', due2:'#b07d10', due7:'#3557d4' };
   const catOrder   = ['overdue7','overdue','due2','due7'];
@@ -3570,7 +3613,7 @@ function openNotifCentre(){
   }
 
   const emailHTML = emailKeys.length ? `
-    <div style="padding:12px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:${sysAlerts.length?'4px':'0'}">
+    <div style="padding:12px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);display:flex;align-items:center;gap:6px;margin-top:0">
       <span style="background:var(--bg3);border-radius:4px;padding:2px 7px;font-size:10px">✉ Email reminders</span>
       <span>${emailKeys.length} recipient${emailKeys.length!==1?'s':''}</span>
     </div>
@@ -3627,7 +3670,6 @@ function openNotifCentre(){
         </div>
       </div>
       <div style="overflow-y:auto;padding-bottom:12px">
-        ${sysHTML}
         ${emailHTML}
       </div>
     </div>`;
@@ -3648,22 +3690,6 @@ function openNotifCentre(){
         card.style.opacity='0'; card.style.transform='translateX(8px)';
         setTimeout(()=>{ card.remove(); updateNotifBadge(); }, 200);
       }
-    });
-  });
-  overlay.querySelectorAll('.nc-done-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      markDone(btn.dataset.id);
-      dismissAlert(btn.dataset.key);
-      const card = btn.closest('.nc-alert');
-      card.style.transition='opacity .25s,transform .25s';
-      card.style.background='rgba(42,138,82,.08)';
-      // Show brief done state before removing
-      btn.textContent='✓ Done'; btn.style.pointerEvents='none';
-      setTimeout(()=>{
-        card.style.opacity='0'; card.style.transform='translateX(8px)';
-        setTimeout(()=>{ card.remove(); updateNotifBadge(); }, 250);
-      }, 400);
     });
   });
   overlay.querySelectorAll('.nc-view-btn').forEach(btn => {
@@ -4741,6 +4767,7 @@ function toggleBulkAll(checked){
     cb.checked = checked;
     const id = cb.dataset.id;
     if(checked) bulkSelected.add(id); else bulkSelected.delete(id);
+    cb.closest('tr')?.classList.toggle('bulk-checked', checked);
   });
   updateBulkBar();
 }
@@ -4748,6 +4775,7 @@ function toggleBulkAll(checked){
 function toggleBulkItem(cb){
   const id = cb.dataset.id;
   if(cb.checked) bulkSelected.add(id); else bulkSelected.delete(id);
+  cb.closest('tr')?.classList.toggle('bulk-checked', cb.checked);
   const allCbs = document.querySelectorAll('#tbody .bulk-cb');
   const allChecked = [...allCbs].every(c=>c.checked);
   document.getElementById('bulkAll').checked = allCbs.length>0 && allChecked;
@@ -4961,10 +4989,12 @@ function getItemsByDate(){
   return map;
 }
 
-function calItemHtml(entry, max){
+function calItemHtml(entry){
   const p = (entry.item.priority||'L')[0];
-  const title = entry.item.title.length > 22 ? entry.item.title.substring(0,20)+'…' : entry.item.title;
-  return `<div class="cal-item p${p}" onclick="openDrawer(${entry.idx})" title="${entry.item.title}">${title}</div>`;
+  const title = entry.item.title.length > 28 ? entry.item.title.substring(0,26)+'…' : entry.item.title;
+  const ownerShort = owners(entry.item)[0] || '';
+  const ownerLabel = ownerShort ? ` · ${ownerShort.split(' ')[0]}` : '';
+  return `<div class="cal-item p${p}" onclick="event.stopPropagation();openDrawer(${entry.idx})" title="${entry.item.title}${ownerShort?' — '+ownerShort:''}">${title}<span style="opacity:.7;font-size:9px">${ownerLabel}</span></div>`;
 }
 
 function todayStr(){
@@ -5000,9 +5030,9 @@ function renderCalMonth(){
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isToday = dateStr === today;
     const items = byDate[dateStr] || [];
-    const show = items.slice(0,3);
-    const more = items.length > 3 ? `<div class="cal-more" onclick="event.stopPropagation()">+${items.length-3} more</div>` : '';
-    html += `<div class="cal-cell${isToday?' today':''}">
+    const show = items.slice(0,5);
+    const more = items.length > 5 ? `<div class="cal-more" onclick="event.stopPropagation();openCalDayPopup('${dateStr}',this)">+${items.length-5} more</div>` : '';
+    html += `<div class="cal-cell${isToday?' today':''}" onclick="openCalDayPopup('${dateStr}',this)">
       <div class="cal-day">${d}</div>
       ${show.map(e=>calItemHtml(e)).join('')}
       ${more}
@@ -5052,6 +5082,63 @@ function renderCalWeek(){
 
   html += '</div>';
   document.getElementById('calGrid').innerHTML = html;
+}
+
+/* ── Calendar day popup — shows all items for a date ── */
+function openCalDayPopup(dateStr, triggerEl){
+  closeCalDayPopup();
+  const byDate = getItemsByDate();
+  const items = byDate[dateStr] || [];
+  if(items.length === 0) return;
+
+  const d = parseLocalDate(dateStr);
+  const label = d ? `${d.getDate()} ${CAL_MONTHS[d.getMonth()]} ${d.getFullYear()}` : dateStr;
+
+  const popup = document.createElement('div');
+  popup.className = 'cal-day-popup';
+  popup.id = 'calDayPopup';
+  popup.innerHTML = `
+    <div class="cal-day-popup-hdr">
+      <span>📅 ${label} — ${items.length} item${items.length!==1?'s':''}</span>
+      <button class="cal-day-popup-close" onclick="closeCalDayPopup()">✕</button>
+    </div>
+    ${items.map(e=>{
+      const p = (e.item.priority||'L')[0];
+      const ow = owners(e.item)[0] || 'Unassigned';
+      return `<div class="cal-day-item" onclick="closeCalDayPopup();openDrawer(${e.idx})">
+        <div class="cal-day-dot p${p}"></div>
+        <span class="cal-day-item-title">${esc(e.item.title)}</span>
+        <span class="cal-day-item-meta">${ow} · ${e.item.priority||'—'}</span>
+      </div>`;
+    }).join('')}`;
+
+  document.body.appendChild(popup);
+
+  // Position near the trigger
+  const r = triggerEl.getBoundingClientRect();
+  let top = r.bottom + 6;
+  let left = r.left;
+  if(left + 300 > window.innerWidth) left = window.innerWidth - 310;
+  if(top + 300 > window.innerHeight) top = r.top - 310;
+  popup.style.top = Math.max(10, top) + 'px';
+  popup.style.left = Math.max(10, left) + 'px';
+
+  setTimeout(()=>{
+    document.addEventListener('click', outsideCalPopup, {once:true, capture:true});
+  }, 0);
+}
+
+function outsideCalPopup(e){
+  const popup = document.getElementById('calDayPopup');
+  if(popup && !popup.contains(e.target)){
+    closeCalDayPopup();
+  } else if(popup){
+    setTimeout(()=>document.addEventListener('click', outsideCalPopup, {once:true, capture:true}), 0);
+  }
+}
+
+function closeCalDayPopup(){
+  document.getElementById('calDayPopup')?.remove();
 }
 
 /* ════════════════════════════════════════
@@ -5149,6 +5236,7 @@ function checkOverdueSlack(){
 </script>
 </body>
 </html>
+
 
 
 
