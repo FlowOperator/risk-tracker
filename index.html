@@ -64,12 +64,12 @@ body.dark-mode .dO{ background:rgba(217,80,64,.15);border-color:rgba(217,80,64,.
 
 /* ── Dark mode toggle button ── */
 .dm-toggle{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
-  border-radius:20px;padding:5px 10px;cursor:pointer;
-  font-family:'Outfit',sans-serif;font-size:12px;color:rgba(255,255,255,.7);
-  display:flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap;
+  background:none;border:none;
+  padding:6px 4px;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-size:13px;color:rgba(255,255,255,.6);
+  display:flex;align-items:center;gap:5px;transition:color .15s;white-space:nowrap;font-weight:400;
 }
-.dm-toggle:hover{background:rgba(255,255,255,.18);color:#fff}
+.dm-toggle:hover{color:#fff}
 .dm-icon{font-size:14px;line-height:1}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
@@ -109,10 +109,14 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .nav-ang-mark{width:28px;height:28px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
 .navdot{display:none}
 .navsep{width:1px;height:22px;background:rgba(255,255,255,.2)}
-.navr{display:flex;align-items:center;gap:10px;margin-left:auto}
-.uchip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px 4px 6px;font-size:12px;color:rgba(255,255,255,.8)}
-.uav{width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
-.rbadge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
+.navr{display:flex;align-items:center;gap:12px;margin-left:auto}
+.uchip{display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;font-size:13px;color:rgba(255,255,255,.85);font-weight:500}
+.uav{width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.rbadge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;letter-spacing:.03em}
+.r-admin{background:rgba(232,80,10,.25);color:#ff7a3d;border:1px solid rgba(232,80,10,.3)}
+.r-user{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15)}
+.btnout{background:none;border:none;color:rgba(255,255,255,.6);font-size:13px;padding:6px 4px;cursor:pointer;font-family:'Outfit',sans-serif;transition:color .15s;font-weight:400;display:flex;align-items:center;gap:5px}
+.btnout:hover{color:#fff}
 .r-admin{background:rgba(212,166,58,.25);color:#f0c040;border:1px solid rgba(212,166,58,.3)}
 .r-user{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.2)}
 .btnout{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:rgba(255,255,255,.7);font-size:12px;padding:5px 10px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
@@ -120,11 +124,11 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 
 /* ═══ TAB BAR ═══ */
 .tabbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 28px;display:flex;gap:0}
-.tabbtn{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-size:13px;font-weight:400;font-family:'Outfit',sans-serif;padding:12px 16px;cursor:pointer;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tabbtn{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-size:13px;font-weight:400;font-family:'Outfit',sans-serif;padding:12px 18px;cursor:pointer;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .tabbtn:hover{color:var(--text2)}
-.tabbtn.active{color:var(--text);font-weight:500;border-bottom-color:var(--accent)}
-.tabbtn .tcnt{font-size:11px;color:var(--text3);padding:0 4px}
-.tabbtn.active .tcnt{color:var(--accent)}
+.tabbtn.active{color:var(--text);font-weight:600;border-bottom-color:var(--accent)}
+.tabbtn .tcnt{font-size:10px;color:var(--text3);background:var(--bg3);border-radius:10px;padding:1px 7px;font-weight:600}
+.tabbtn.active .tcnt{color:var(--accent);background:rgba(232,80,10,.08)}
 
 /* ═══ WRAP ═══ */
 .wrap{flex:1;padding:32px 36px;max-width:1680px;margin:0 auto;width:100%}
@@ -144,14 +148,13 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .scrow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:24px}
 @media(max-width:1100px){.scrow{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.scrow{grid-template-columns:repeat(2,1fr)}}
-.sc{background:var(--bg2);border:1px solid transparent;border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;user-select:none;min-width:0;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--c,transparent);border-radius:0 0 10px 10px}
-.sc:hover{border-color:transparent;box-shadow:0 3px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
-.sc.active::after{background:var(--c,var(--accent))}
-.sc.active{border-color:var(--c,var(--accent));box-shadow:0 0 0 2px rgba(var(--c-rgb,232,80,10),.12)}
-.sclabel{font-size:11px;font-weight:400;color:var(--text3);margin-bottom:8px;white-space:nowrap}
-.scval{font-family:'Outfit',sans-serif;font-size:28px;font-weight:700;color:var(--c,var(--text));line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;height:32px;display:flex;align-items:center}
-.scdesc{display:none}
+.sc{border:none;border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;user-select:none;min-width:0;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.sc::after{content:'';position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:16px}
+.sc:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.sc.active{box-shadow:0 0 0 3px rgba(255,255,255,.4),0 6px 20px rgba(0,0,0,.15);transform:translateY(-2px)}
+.sclabel{font-size:11px;font-weight:500;color:rgba(255,255,255,.8);margin-bottom:8px;white-space:nowrap}
+.scval{font-family:'Outfit',sans-serif;font-size:30px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;height:34px;display:flex;align-items:center}
+.scdesc{font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;display:block}
 
 /* ═══ LEGEND ═══ */
 .legbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
@@ -392,10 +395,10 @@ td.qe:hover::after{content:'✎';position:absolute;right:6px;top:50%;transform:t
   background:var(--bg3);
   border:1px solid var(--border2);
   border-radius:9px;
-  padding:10px 13px;
+  padding:12px 15px;
   font-size:12px;color:var(--text2);
   line-height:1.6;
-  max-width:300px;
+  max-width:380px;
   box-shadow:var(--shadow);
   z-index:800;
   pointer-events:none;
@@ -549,7 +552,7 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
   /* ── Stat cards — 3 per row on phone ── */
   .scrow{ grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:16px; }
   .sc{ padding:12px 10px; }
-  .scval{ font-size:22px; height:26px; }
+  .scval{ font-size:24px; height:28px; }
   .sclabel{ font-size:10px; margin-bottom:5px; }
 
   /* ── Toolbar — vertical stack on small screens ── */
@@ -565,10 +568,7 @@ tbody tr:hover .hist-btn { opacity: 1 !important; }
   .tbox{ border-radius:0; border-left:none; border-right:none; margin:0 -16px; }
 
   /* ── Drawer — full screen on mobile ── */
-  .drawer{ width:100%; border-left:none;
-    top:0; bottom:0;
-    border-radius:0;
-  }
+  .drawer-inner{ width:100%; max-width:100%; max-height:100%; border-radius:0; }
   .dbody{ padding:16px; }
   .dhdr{ padding:14px 16px; }
   .dftr{ padding:12px 16px; }
@@ -817,10 +817,12 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 /* ═══ DRAWER ═══ */
 .dov-old-removed{display:none}
 .dov.on{display:block}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:560px;max-width:100%;background:var(--bg2);border-left:1px solid var(--border);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.32,0,.15,1);overflow:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.1)}
-.drawer.on{transform:translateX(0)}
+.drawer{position:fixed;inset:0;z-index:101;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer.on{opacity:1;pointer-events:all}
+.drawer-inner{background:var(--bg2);border-radius:14px;width:900px;max-width:calc(100vw - 40px);max-height:calc(100vh - 60px);display:flex;flex-direction:column;box-shadow:0 16px 60px rgba(0,0,0,.2);overflow:hidden;transform:scale(.96) translateY(10px);transition:transform .25s cubic-bezier(.32,0,.15,1);position:relative}
+.drawer.on .drawer-inner{transform:scale(1) translateY(0)}
 .dhdr{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.dtitle{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dtitle{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dmode{font-size:11px;color:var(--text3)}
 .dclose{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .12s}
 .dclose:hover{color:var(--text)}
@@ -839,6 +841,16 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 .btcancel:hover{border-color:var(--border2)}
 .btdel{margin-left:auto;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.18);border-radius:6px;color:var(--red);padding:10px 16px;font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:background .15s;display:none;pointer-events:all;position:relative;z-index:10}
 .btdel:hover{background:rgba(192,57,43,.15);border-color:var(--red)}
+
+/* ── Rich text toolbar ── */
+.rt-toolbar{display:flex;gap:2px;margin-bottom:6px;padding:4px;background:var(--bg3);border:1px solid var(--border);border-radius:6px 6px 0 0;border-bottom:none}
+.rt-btn{background:none;border:none;width:28px;height:26px;border-radius:4px;cursor:pointer;font-size:13px;color:var(--text3);display:flex;align-items:center;justify-content:center;transition:all .1s;font-family:serif}
+.rt-btn:hover{background:var(--bg4);color:var(--text)}
+.rt-btn.active{background:var(--bg4);color:var(--accent)}
+.rt-editor{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:0 0 6px 6px;color:var(--text);padding:10px 12px;font-size:13px;font-family:'Outfit',sans-serif;outline:none;min-height:80px;line-height:1.6;overflow-y:auto;transition:border-color .15s}
+.rt-editor:focus{border-color:var(--accent)}
+.rt-editor ul,.rt-editor ol{margin-left:18px;padding-left:0}
+.rt-editor li{margin-bottom:2px}
 
 /* ═══ FOCUS VIEW ═══ */
 .focus-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid;white-space:nowrap}
@@ -1070,6 +1082,30 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 .cal-day-item-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:var(--text)}
 .cal-day-item-meta{font-size:10px;color:var(--text3);white-space:nowrap}
 
+/* ═══ GLOSSARY ═══ */
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px}
+.gloss-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color .12s,box-shadow .12s}
+.gloss-card:hover{border-color:var(--border2);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.gloss-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.gloss-id{font-size:10px;font-weight:700;font-family:monospace;color:var(--accent);background:rgba(232,80,10,.08);border-radius:4px;padding:2px 6px}
+.gloss-term{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:var(--text)}
+.gloss-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:4px;margin-left:auto}
+.gloss-cat-feature{background:rgba(53,87,212,.1);color:#3557d4}
+.gloss-cat-trading{background:rgba(42,138,82,.1);color:#2a8a52}
+.gloss-cat-data{background:rgba(107,79,168,.1);color:var(--purple)}
+.gloss-cat-ops{background:rgba(176,125,16,.1);color:#b07d10}
+.gloss-cat-dashboard{background:rgba(138,130,120,.1);color:#6b6560}
+.gloss-def{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:6px}
+.gloss-flag{font-size:11px;color:var(--amber);font-style:italic;margin-top:4px}
+.gloss-actions{display:flex;gap:4px;margin-top:8px;opacity:0;transition:opacity .12s}
+.gloss-card:hover .gloss-actions{opacity:1}
+.gloss-act{background:none;border:none;font-size:11px;color:var(--text3);cursor:pointer;padding:3px 8px;border-radius:4px;font-family:'Outfit',sans-serif}
+.gloss-act:hover{color:var(--text);background:var(--bg3)}
+.gloss-act.del:hover{color:var(--red)}
+.gloss-form{background:var(--bg2);border:1px solid var(--accent);border-radius:10px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(232,80,10,.08)}
+.gloss-form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.gloss-form-full{grid-column:1/-1}
+
 /* ═══ LOADING SKELETON ═══ */
 .skel-row{display:flex;gap:14px;padding:12px 14px;border-bottom:1px solid var(--border)}
 .skel-bar{background:var(--bg3);border-radius:4px;height:14px;animation:skelPulse 1.2s ease-in-out infinite}
@@ -1091,6 +1127,25 @@ button:focus-visible, input:focus-visible, select:focus-visible{
 }
 .fpill-x:hover{opacity:1}
 .fpill-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:rgba(232,80,10,.6)}
+
+/* ═══ DATE RANGE FILTER ═══ */
+.df-dropdown{
+  position:fixed;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:500;min-width:260px;padding:12px;
+  animation:popIn .12s ease;
+}
+.df-mode{display:flex;background:var(--bg3);border-radius:6px;overflow:hidden;margin-bottom:10px}
+.df-mode-btn{flex:1;background:none;border:none;padding:7px;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;color:var(--text3);cursor:pointer;transition:all .12s}
+.df-mode-btn.active{background:var(--accent);color:#fff}
+.df-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.df-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);width:36px;flex-shrink:0}
+.df-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-size:12px;font-family:'Outfit',sans-serif;outline:none}
+.df-input:focus{border-color:var(--accent)}
+.df-actions{display:flex;gap:6px;margin-top:8px}
+.df-apply{flex:1;background:var(--accent);border:none;border-radius:6px;color:#fff;padding:7px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
+.df-apply:hover{background:var(--ag)}
+.df-clear{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text3);padding:7px 12px;font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer}
+.df-clear:hover{color:var(--text)}
 
 /* ═══ BULK SELECTION HIGHLIGHT ═══ */
 tbody tr.bulk-checked{background:rgba(232,80,10,.05)!important;box-shadow:inset 3px 0 0 var(--accent)}
@@ -1123,13 +1178,15 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
     </div>
     <div class="navsep"></div>
     <div class="navr">
-      <button class="btnout adminonly" id="btnNotif" onclick="openNotifCentre()" style="gap:6px">📬 Notifications<span id="notif-count" style="display:none;background:var(--accent);color:#fff;border-radius:10px;padding:0 6px;font-size:10px;font-weight:700;margin-left:2px">0</span></button>
-      <button class="btnout adminonly" onclick="openUserMgmt()" title="Content Management" style="font-size:15px;padding:5px 10px">🛡</button>
+      <button class="btnout adminonly" id="btnNotif" onclick="openNotifCentre()">📬 Notifications <span id="notif-count" style="display:none;background:var(--accent);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700">0</span></button>
+      <button class="btnout adminonly" onclick="openUserMgmt()" title="Content Management">🛡</button>
+      <span class="navsep"></span>
       <div class="uchip">
         <div class="uav" id="nAv">?</div>
         <span id="nName">—</span>
         <span class="rbadge" id="nRole">—</span>
       </div>
+      <span class="navsep"></span>
       <button class="dm-toggle" id="dmToggle" onclick="toggleDarkMode()" title="Toggle dark mode">
         <span class="dm-icon" id="dmIcon">🌙</span>
         <span id="dmLabel">Dark</span>
@@ -1155,6 +1212,9 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
     <button class="tabbtn" id="tab-calendar" onclick="switchTab('calendar',this)">
       📅 Calendar
     </button>
+    <button class="tabbtn" id="tab-glossary" onclick="switchTab('glossary',this)">
+      📖 Glossary
+    </button>
   </div>
 
   <div class="wrap">
@@ -1170,12 +1230,12 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
 
       <!-- STATS -->
       <div class="scrow">
-      <div class="sc" id="sc0" style="--c:#1a1814" onclick="sF('')"><div class="sclabel">📊 Active items</div><div class="scval" id="sv0">0</div></div>
-      <div class="sc" id="sc1" style="--c:#6b6560" onclick="sF('Proposed')"><div class="sclabel">💡 Proposed</div><div class="scval" id="sv1">0</div></div>
-      <div class="sc" id="sc2" style="--c:#3557d4" onclick="sF('Scoping')"><div class="sclabel">🔍 In scoping</div><div class="scval" id="sv2">0</div></div>
-      <div class="sc" id="sc3" style="--c:#3557d4" onclick="sF('In Progress')"><div class="sclabel">⚙️ In progress</div><div class="scval" id="sv3">0</div></div>
-      <div class="sc" id="sc4" style="--c:#c0392b" onclick="sF('__ov__')"><div class="sclabel">⚠️ Overdue</div><div class="scval" id="sv4">0</div></div>
-      <div class="sc" id="sc5" style="--c:#b07d10" onclick="sF('__nt__')"><div class="sclabel">🎫 No ticket</div><div class="scval" id="sv5">0</div></div>
+      <div class="sc" id="sc0" style="background:linear-gradient(135deg,#1a1814,#2d2a26)" onclick="sF('')"><div class="sclabel">📊 Active Items</div><div class="scval" id="sv0">0</div><div class="scdesc">in tracker</div></div>
+      <div class="sc" id="sc1" style="background:linear-gradient(135deg,#6b6560,#8a8278)" onclick="sF('Proposed')"><div class="sclabel">💡 Proposed</div><div class="scval" id="sv1">0</div><div class="scdesc">awaiting review</div></div>
+      <div class="sc" id="sc2" style="background:linear-gradient(135deg,#2a44a8,#4466dd)" onclick="sF('Scoping')"><div class="sclabel">🔍 In Scoping</div><div class="scval" id="sv2">0</div><div class="scdesc">being scoped</div></div>
+      <div class="sc" id="sc3" style="background:linear-gradient(135deg,#1a6b3a,#2a9a52)" onclick="sF('In Progress')"><div class="sclabel">⚙️ In Progress</div><div class="scval" id="sv3">0</div><div class="scdesc">work started</div></div>
+      <div class="sc" id="sc4" style="background:linear-gradient(135deg,#c0392b,#e05040)" onclick="sF('__ov__')"><div class="sclabel">⚠️ Overdue</div><div class="scval" id="sv4">0</div><div class="scdesc">past due date</div></div>
+      <div class="sc" id="sc5" style="background:linear-gradient(135deg,#8a5f08,#c9920a)" onclick="sF('__nt__')"><div class="sclabel">🎫 No Ticket</div><div class="scval" id="sv5">0</div><div class="scdesc">no jira link</div></div>
       </div>
 
       <!-- LEGEND -->
@@ -1243,6 +1303,9 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
         <div class="mf-wrap" id="mf-type"><button class="mf-btn" onclick="toggleMF('type',this)">All Types <span class="mf-arrow">▾</span></button></div>
         <div class="mf-wrap" id="mf-owner"><button class="mf-btn" onclick="toggleMF('owner',this)">All Owners <span class="mf-arrow">▾</span></button></div>
         <div class="mf-wrap" id="mf-source"><button class="mf-btn" onclick="toggleMF('source',this)">All Sources <span class="mf-arrow">▾</span></button></div>
+        <div class="mf-wrap" id="mf-daterange">
+          <button class="mf-btn" id="dateFilterBtn" onclick="toggleDateFilter(this)">📅 Due Date <span class="mf-arrow">▾</span></button>
+        </div>
         <div class="mf-wrap" id="mf-jira"><button class="mf-btn" onclick="toggleMF('jira',this)">All Jira <span class="mf-arrow">▾</span></button></div>
         <!-- Hidden selects kept for syncSF compatibility -->
         <select id="fSt" style="display:none"></select>
@@ -1447,6 +1510,27 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
       <div id="calGrid"></div>
     </div>
 
+    <!-- ══ GLOSSARY TAB ══ -->
+    <div id="view-glossary" style="display:none">
+      <div class="phead">
+        <div class="phtitle">📖 Risk Glossary</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="swrap" style="max-width:260px">
+            <span class="sico">⌕</span>
+            <input class="sinput" id="glossarySearch" type="text" placeholder="Search terms…" oninput="renderGlossary()">
+          </div>
+          <select class="fsel" id="glossaryCatFilter" onchange="renderGlossary()" style="font-size:12px">
+            <option value="">All Categories</option>
+          </select>
+          <button class="btnadd adminonly" id="btnAddGloss" onclick="openGlossaryForm()" style="display:none">＋ Add Term</button>
+          <button onclick="exportGlossaryPDF()" style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;padding:8px 14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px;transition:border-color .15s,color .15s;white-space:nowrap" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">📄 Export PDF</button>
+        </div>
+      </div>
+      <div id="glossaryFormSlot"></div>
+      <div id="glossaryList"></div>
+      <div id="glossaryEmpty" class="empty" style="display:none"><div class="emptyico">📖</div><div>No glossary terms yet</div></div>
+    </div>
+
   </div><!-- /wrap -->
 </div><!-- /app -->
 
@@ -1467,6 +1551,7 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
 <!-- DRAWER OVERLAY -->
 <div class="dov" id="dov" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
+<div class="drawer-inner">
   <div class="dhdr">
     <div class="dtitle" id="dtitle">Item Details</div>
     <span class="dmode" id="dmode"></span>
@@ -1485,10 +1570,18 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
     <div class="cinput-wrap">
       <div class="cinput-box">
         <div class="mention-popup" id="mentionPopup" style="display:none"></div>
-        <textarea class="cinput" id="cinput" placeholder="Add a comment… Use @ to mention someone" rows="1" oninput="autoGrowTextarea(this);handleMentionInput(event)" onkeydown="handleMentionKeydown(event)"></textarea>
-        <button class="cinput-send" id="cinputSend" onclick="postComment()" title="Send">↑</button>
+        <div class="rt-toolbar" id="commentToolbar">
+          <button class="rt-btn" onclick="rtCmd('bold')" title="Bold"><b>B</b></button>
+          <button class="rt-btn" onclick="rtCmd('italic')" title="Italic"><i>I</i></button>
+          <button class="rt-btn" onclick="rtCmd('underline')" title="Underline"><u>U</u></button>
+          <button class="rt-btn" onclick="rtCmd('strikeThrough')" title="Strikethrough"><s>S</s></button>
+          <button class="rt-btn" onclick="rtCmd('insertUnorderedList')" title="Bullet list">•</button>
+          <button class="rt-btn" onclick="rtCmd('insertOrderedList')" title="Numbered list">1.</button>
+        </div>
+        <div class="rt-editor" id="cinput" contenteditable="true" data-placeholder="Add a comment… Use @ to mention someone" oninput="handleMentionInput(event)" onkeydown="handleMentionKeydown(event)"></div>
+        <button class="cinput-send" id="cinputSend" onclick="postComment()" title="Send" style="position:absolute;right:6px;bottom:6px">↑</button>
       </div>
-      <div class="cinput-hint">Press Enter to send · Shift+Enter for new line · @ to mention</div>
+      <div class="cinput-hint">Enter to send · Shift+Enter for new line · @ to mention · Use toolbar for formatting</div>
     </div>
   </div>
   <!-- EDIT PANE -->
@@ -1498,7 +1591,19 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
     <input type="hidden" id="dItemId">
     <div class="dgrid">
       <div class="dfull"><label class="dlabel">Title *</label><input class="dinput" id="d_title" type="text" placeholder="Item title…"></div>
-      <div class="dfull"><label class="dlabel">Description</label><textarea class="dtarea" id="d_desc" placeholder="Full description…" style="min-height:100px"></textarea></div>
+      <div class="dfull">
+        <label class="dlabel">Description</label>
+        <div class="rt-toolbar">
+          <button class="rt-btn" onclick="rtCmd('bold','d_desc_rt')" title="Bold"><b>B</b></button>
+          <button class="rt-btn" onclick="rtCmd('italic','d_desc_rt')" title="Italic"><i>I</i></button>
+          <button class="rt-btn" onclick="rtCmd('underline','d_desc_rt')" title="Underline"><u>U</u></button>
+          <button class="rt-btn" onclick="rtCmd('strikeThrough','d_desc_rt')" title="Strikethrough"><s>S</s></button>
+          <button class="rt-btn" onclick="rtCmd('insertUnorderedList','d_desc_rt')" title="Bullet list">•</button>
+          <button class="rt-btn" onclick="rtCmd('insertOrderedList','d_desc_rt')" title="Numbered list">1.</button>
+        </div>
+        <div class="rt-editor" id="d_desc_rt" contenteditable="true" style="min-height:100px" data-placeholder="Full description…"></div>
+        <textarea class="dtarea" id="d_desc" style="display:none"></textarea>
+      </div>
       <div><label class="dlabel">Owner(s)</label>
         <input class="dinput" id="d_owner" type="text" placeholder="Name; Name2; Name3" list="owner-list" autocomplete="off">
         <datalist id="owner-list"></datalist>
@@ -1544,6 +1649,7 @@ tbody tr.bulk-checked td.td-sticky{background:rgba(232,80,10,.05)}
     <button class="btdel" id="btdel" onclick="deleteItem()">Delete</button>
   </div>
   </div><!-- /dpane-edit -->
+</div><!-- /drawer-inner -->
 </div>
 
   <!-- Mobile FAB -->
@@ -1634,6 +1740,7 @@ async function doLogin(){
     buildOwnerFilter();restoreFilterState();ra();
     loadUserEmails(); // pull emails from Supabase app_users
     loadSavedViews().then(applyDefaultView); // load & apply default saved view
+    loadGlossary(); // load glossary from Supabase
     // Start 9:55am daily auto-email scheduler for admins
     if(CU.role==='admin') startDailyScheduler();
     // Check for overdue items → Slack (once on login, not on every render)
@@ -1734,7 +1841,6 @@ function subscribeRealtime(){
 
 // TODAY as a function so it's always accurate — never stale from page load time
 function getToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
-const TODAY=getToday(); // kept for legacy isOv/isSn calls — always re-evaluated via getToday() in daysUntil
 let sKey='',sDir=1,activeSF='',currentTab='active';
 
 /* ════════════════════════════════════════
@@ -1776,12 +1882,14 @@ function switchTab(t,btn){
   document.getElementById('view-audit').style.display    =t==='audit'    ?'block':'none';
   document.getElementById('view-focus').style.display    =t==='focus'    ?'block':'none';
   document.getElementById('view-calendar').style.display =t==='calendar' ?'block':'none';
+  document.getElementById('view-glossary').style.display =t==='glossary' ?'block':'none';
   document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(t==='archive')  renderArchive();
   if(t==='audit')    loadAuditLog();
   if(t==='focus')    renderFocusView();
   if(t==='calendar') renderCalendar();
+  if(t==='glossary') renderGlossary();
 }
 
 /* ════════════════════════════════════════
@@ -1966,6 +2074,13 @@ function getF(){
     if(MF.source.size   && !MF.source.has(i.source))    return false;
     if(MF.owner.size    && !owners(i).some(o=>MF.owner.has(o))) return false;
     if(MF.jira.size     && !MF.jira.has(parseJira(i.jira).key)) return false;
+    // Date range filter
+    if(dateFilterFrom || dateFilterTo){
+      if(!i.due) return false;
+      const d = parseLocalDate(i.due);
+      if(dateFilterFrom && d < parseLocalDate(dateFilterFrom)) return false;
+      if(dateFilterTo && d > parseLocalDate(dateFilterTo)) return false;
+    }
     if(activeSF==='__ov__')return isOv(i);
     if(activeSF==='__nt__')return!i.jira;
     if(activeSF)return i.status===activeSF;
@@ -2084,11 +2199,11 @@ function renderTable(items){
       ? `<div class="htip" style="display:inline-block">${owDisplay}<div class="htip-box" id="ht-ow-${idx}">${owTipHtml}</div></div>`
       : owDisplay;
 
-    // title cell with description hover tooltip
-    const descSafe = (item.desc||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-    const titleTip = item.desc
-      ? `<div class="htip-box" id="ht-ti-${idx}"><div class="htip-label">Description</div>${descSafe}</div>`
-      : '';
+    // title cell with full title + description hover tooltip
+    const descSafe = (item.desc||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const titleSafe = (item.title||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    const tipContent = `<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px">${titleSafe}</div>${item.desc?`<div style="font-size:12px;color:var(--text2);line-height:1.6">${descSafe}</div>`:'<div style="font-size:12px;color:var(--text3);font-style:italic">No description</div>'}`;
+    const titleTip = `<div class="htip-box" id="ht-ti-${idx}">${tipContent}</div>`;
 
     // jira cell
     const j=parseJira(item.jira);
@@ -2110,9 +2225,8 @@ function renderTable(items){
       </td>
       <td class="ctit td-sticky" style="cursor:pointer;min-width:220px;max-width:300px">
         <div style="display:flex;align-items:center;gap:6px">
-          <div class="htip" style="flex:1;min-width:0;overflow:hidden" onclick="openDrawer(${idx})">
-            <span title="${item.title}">${item.title}</span>
-            ${titleTip}
+          <div class="htip" style="flex:1;min-width:0" onclick="openDrawer(${idx})" onmouseenter="showItemTip(event,${idx})" onmouseleave="hideItemTip()">
+            <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.title}</span>
           </div>
           <span title="View history" onclick="event.stopPropagation();openHistory('${item.id}')" style="color:var(--text3);font-size:12px;cursor:pointer;opacity:0;transition:opacity .15s;flex-shrink:0" class="hist-btn">🕓</span>
         </div>
@@ -2247,6 +2361,7 @@ function clearAllFilters(){
   Object.keys(MF).forEach(k=>{ MF[k].clear(); updateMFBtn(k); });
   document.getElementById('qInput').value='';
   activeSF='';
+  dateFilterFrom=''; dateFilterTo=''; updateDateFilterBtn();
   document.querySelectorAll('.sc').forEach(c=>c.classList.remove('active'));
   ra();
 }
@@ -2266,7 +2381,110 @@ function renderFilterPills(){
       pills += `<span class="fpill"><span class="fpill-label">${MF_LABELS[k]?.replace(/s$/,'')||k}</span> ${label} <button class="fpill-x" onclick="MF['${k}'].delete('${v.replace(/'/g,"\\'")}');updateMFBtn('${k}');ra()">✕</button></span>`;
     });
   });
+  if(dateFilterFrom || dateFilterTo){
+    const dlabel = dateFilterFrom === dateFilterTo ? fd(dateFilterFrom) : `${dateFilterFrom?fd(dateFilterFrom):'…'} → ${dateFilterTo?fd(dateFilterTo):'…'}`;
+    pills += `<span class="fpill"><span class="fpill-label">Due</span> ${dlabel} <button class="fpill-x" onclick="clearDateFilter();ra()">✕</button></span>`;
+  }
   container.innerHTML = pills;
+}
+
+/* ════════════════════════════════════════
+   DATE RANGE FILTER
+════════════════════════════════════════ */
+let dateFilterFrom = '';
+let dateFilterTo = '';
+let dateFilterMode = 'range'; // 'single' or 'range'
+let dateFilterOpen = false;
+
+function toggleDateFilter(btnEl){
+  if(dateFilterOpen){ closeDateFilter(); return; }
+  closeMF(); closePopup();
+  dateFilterOpen = true;
+
+  const drop = document.createElement('div');
+  drop.className = 'df-dropdown';
+  drop.id = 'df-drop';
+  drop.innerHTML = `
+    <div class="df-mode">
+      <button class="df-mode-btn${dateFilterMode==='single'?' active':''}" onclick="setDateFilterMode('single')">Single Day</button>
+      <button class="df-mode-btn${dateFilterMode==='range'?' active':''}" onclick="setDateFilterMode('range')">Date Range</button>
+    </div>
+    <div id="dfFields">
+      ${dateFilterMode==='single'
+        ?`<div class="df-row"><div class="df-label">Date</div><input class="df-input" type="date" id="dfFrom" value="${dateFilterFrom}"></div>`
+        :`<div class="df-row"><div class="df-label">From</div><input class="df-input" type="date" id="dfFrom" value="${dateFilterFrom}"></div>
+          <div class="df-row"><div class="df-label">To</div><input class="df-input" type="date" id="dfTo" value="${dateFilterTo}"></div>`}
+    </div>
+    <div class="df-actions">
+      <button class="df-apply" onclick="applyDateFilter()">Apply</button>
+      <button class="df-clear" onclick="clearDateFilter()">Clear</button>
+    </div>`;
+  document.body.appendChild(drop);
+
+  const r = btnEl.getBoundingClientRect();
+  let top = r.bottom + 5, left = r.left;
+  if(left + 270 > window.innerWidth) left = window.innerWidth - 280;
+  drop.style.top = top+'px'; drop.style.left = left+'px';
+
+  setTimeout(()=>document.addEventListener('click', outsideDateFilter, {once:true, capture:true}), 0);
+}
+
+function outsideDateFilter(e){
+  const drop = document.getElementById('df-drop');
+  if(drop && !drop.contains(e.target) && e.target.id !== 'dateFilterBtn'){
+    closeDateFilter();
+  } else if(drop){
+    setTimeout(()=>document.addEventListener('click', outsideDateFilter, {once:true, capture:true}), 0);
+  }
+}
+
+function closeDateFilter(){
+  document.getElementById('df-drop')?.remove();
+  dateFilterOpen = false;
+}
+
+function setDateFilterMode(mode){
+  dateFilterMode = mode;
+  closeDateFilter();
+  toggleDateFilter(document.getElementById('dateFilterBtn'));
+}
+
+function applyDateFilter(){
+  const from = document.getElementById('dfFrom')?.value || '';
+  const to = document.getElementById('dfTo')?.value || '';
+  if(dateFilterMode === 'single'){
+    dateFilterFrom = from;
+    dateFilterTo = from;
+  } else {
+    dateFilterFrom = from;
+    dateFilterTo = to;
+  }
+  updateDateFilterBtn();
+  closeDateFilter();
+  ra();
+}
+
+function clearDateFilter(){
+  dateFilterFrom = '';
+  dateFilterTo = '';
+  updateDateFilterBtn();
+  closeDateFilter();
+  ra();
+}
+
+function updateDateFilterBtn(){
+  const btn = document.getElementById('dateFilterBtn');
+  if(!btn) return;
+  if(dateFilterFrom || dateFilterTo){
+    const label = dateFilterFrom === dateFilterTo
+      ? fd(dateFilterFrom)
+      : `${dateFilterFrom?fd(dateFilterFrom):'…'} → ${dateFilterTo?fd(dateFilterTo):'…'}`;
+    btn.innerHTML = `📅 ${label} <span class="mf-arrow">▾</span>`;
+    btn.classList.add('active');
+  } else {
+    btn.innerHTML = '📅 Due Date <span class="mf-arrow">▾</span>';
+    btn.classList.remove('active');
+  }
 }
 
 /* ── Loading skeleton (shown while Supabase loads) ── */
@@ -2594,6 +2812,9 @@ function openDrawer(idx){
     riskPriority:'riskPriority',type:'type',team:'team',reqBy:'requestedBy',
     source:'source',jira:'jira',estimate:'estimate',notes:'notes'};
   Object.keys(map).forEach(f=>{const el=document.getElementById('d_'+f);if(el)el.value=item[map[f]]||'';});
+  // Sync rich text description editor
+  const descRt = document.getElementById('d_desc_rt');
+  if(descRt) descRt.innerHTML = (item.desc||'').replace(/\n/g,'<br>') || '';
   // Populate custom date pickers
   ['dateReq','due'].forEach(f=>{
     const iso = item[f]||'';
@@ -2621,19 +2842,26 @@ function openDrawer(idx){
     switchDrawerTab('edit');
   } else {
     tabsEl.style.display = 'flex';
-    // Populate summary card
+    // Populate summary card with description and key info
     const sum = document.getElementById('cthread-summary');
     sum.style.display = 'flex';
-    const descHtml = item.desc ? `<div class="csum-desc">${esc(item.desc)}</div>` : '';
+    const descHtml = item.desc ? `<div class="csum-desc" style="max-height:none;font-size:13px;line-height:1.6;color:var(--text2)">${esc(item.desc)}</div>` : '<div style="font-size:12px;color:var(--text3);font-style:italic">No description</div>';
     const ownerList = owners(item);
     const ownerPills = ownerList.length
       ? ownerList.map(o=>`<span class="csum-pill">${esc(o)}</span>`).join('')
       : '<span style="font-size:11px;color:var(--text3)">Unassigned</span>';
+    const j = parseJira(item.jira);
+    const jiraLink = j.key ? `<a class="jchip" href="${j.url}" target="_blank" onclick="event.stopPropagation()" style="font-size:11px">⎗ ${j.key}</a>` : '';
+    const dueLabel = item.due ? `<span style="font-size:11px;color:${isOv(item)?'var(--red)':'var(--text2)'};font-weight:${isOv(item)?'600':'400'}">${fd(item.due)}${isOv(item)?' ⚠':''}</span>` : '';
     sum.innerHTML = `${descHtml}
-      <div class="csum-meta">
+      <div class="csum-meta" style="margin-top:10px;gap:10px">
         <span class="csum-pill-label">Owners</span>${ownerPills}
-        <span style="margin-left:auto">${prioH(item.priority)}</span>
-        ${sbadge(item.status)}
+        <span style="margin-left:auto;display:flex;align-items:center;gap:8px">
+          ${dueLabel}
+          ${jiraLink}
+          ${prioH(item.priority)}
+          ${sbadge(item.status)}
+        </span>
       </div>`;
     switchDrawerTab('comments');
     loadComments(item.id);
@@ -2666,7 +2894,7 @@ async function saveItem(){
   if(saveBtn){ saveBtn.textContent='Saving…'; saveBtn.classList.add('saving'); }
 
   const obj={
-    title:t,desc:document.getElementById('d_desc').value.trim(),
+    title:t,desc:(document.getElementById('d_desc_rt')?.innerText||document.getElementById('d_desc').value).trim(),
     owner:document.getElementById('d_owner').value.trim(),
     status:document.getElementById('d_status').value,
     priority:document.getElementById('d_priority').value,
@@ -2781,6 +3009,41 @@ document.addEventListener('mouseover',e=>{
     box.style.visibility='';box.style.opacity='';
   });
 });
+
+/* ── Item hover tooltip (rendered outside table to avoid overflow clipping) ── */
+let itemTipEl = null;
+let itemTipTimer = null;
+
+function showItemTip(e, idx){
+  hideItemTip();
+  const item = D[idx];
+  if(!item) return;
+  itemTipTimer = setTimeout(()=>{
+    const tip = document.createElement('div');
+    tip.id = 'itemTip';
+    tip.style.cssText = 'position:fixed;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;max-width:400px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:1000;pointer-events:none;font-family:Outfit,sans-serif;animation:popIn .12s ease';
+    const titleSafe = (item.title||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    const descSafe = (item.desc||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    tip.innerHTML = `<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.4">${titleSafe}</div>${item.desc?`<div style="font-size:12px;color:var(--text2);line-height:1.6">${descSafe}</div>`:'<div style="font-size:12px;color:var(--text3);font-style:italic">No description</div>'}`;
+    document.body.appendChild(tip);
+    itemTipEl = tip;
+    // Position below the hovered element
+    const r = e.target.closest('.htip').getBoundingClientRect();
+    let top = r.bottom + 8, left = r.left;
+    requestAnimationFrame(()=>{
+      const tw = tip.offsetWidth, th = tip.offsetHeight;
+      if(left + tw > window.innerWidth - 10) left = window.innerWidth - tw - 10;
+      if(top + th > window.innerHeight - 10) top = r.top - th - 8;
+      if(left < 10) left = 10;
+      tip.style.top = top+'px'; tip.style.left = left+'px';
+    });
+  }, 300);
+}
+
+function hideItemTip(){
+  clearTimeout(itemTipTimer);
+  if(itemTipEl){ itemTipEl.remove(); itemTipEl = null; }
+}
 
 /* ════════════════════════════════════════
    DRAG AND DROP
@@ -3222,6 +3485,7 @@ function attachUserRowEvents(overlay){
       const newActive = btn.dataset.active==='true' ? false : true;
       await sbc.from('app_users').update({active:newActive}).eq('id',btn.dataset.id);
       showToast(newActive?'User enabled':'User disabled', newActive?'green':'amber');
+      loadUserEmails(); // refresh email directory immediately
       openUserMgmt(); overlay.remove();
     });
   });
@@ -3289,6 +3553,7 @@ async function saveNewUser(btn){
   btn.closest('div[style*="fixed"]').remove();
   showToast(`${name} added ✓`,'green');
   document.getElementById('um-overlay')?.remove();
+  loadUserEmails(); // refresh email directory immediately
   openUserMgmt();
 }
 
@@ -3322,6 +3587,7 @@ async function saveEditUser(id, btn){
   btn.closest('div[style*="fixed"]').remove();
   showToast('User updated ✓','green');
   document.getElementById('um-overlay')?.remove();
+  loadUserEmails(); // refresh email directory immediately
   openUserMgmt();
 }
 
@@ -3382,90 +3648,7 @@ function daysUntil(d){
   return Math.round((due - today) / 86400000);
 }
 
-/* Build all pending notifications, grouped by owner */
-/* ════════════════════════════════════════
-   SYSTEM ALERTS (in-app notifications)
-   Separate from email notifications
-════════════════════════════════════════ */
-function buildSystemAlerts(){
-  const active = D.filter(i => !isArchived(i) && i.status !== 'Parking Lot');
-  const alerts = [];
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  // Dismissed key — resets daily
-  const dimissedKey = `dismissed_alerts_${new Date().toISOString().slice(0,10)}`;
-  const dismissed = JSON.parse(localStorage.getItem(dimissedKey)||'[]');
-
-  function alertKey(type, itemId){ return `${type}::${itemId}`; }
-  function isDismissed(type, itemId){ return dismissed.includes(alertKey(type,itemId)); }
-
-  active.forEach(item => {
-    // Skip if marked done or dismissed for today
-    if(isDoneToday(item.id)) return;
-    if(isItemDismissedToday(item.id)) return;
-
-    // 1. Overdue
-    const days = daysUntil(item.due);
-    if(days !== null && days < 0 && !isDismissed('overdue', item.id)){
-      alerts.push({
-        type:'overdue', severity:'critical',
-        key: alertKey('overdue', item.id),
-        title: item.title, itemId: item.id,
-        message: `Overdue by ${Math.abs(days)} day${Math.abs(days)!==1?'s':''}`,
-        owner: item.owner, status: item.status,
-        due: item.due,
-      });
-    }
-
-    // 2. Stuck in Scoping > 5 days
-    if(item.status === 'Scoping' && !isDismissed('stuck_scoping', item.id)){
-      // Use updated_at from Supabase if available, else fallback to created_at
-      const lastChange = item.updatedAt || item.createdAt;
-      if(lastChange){
-        const daysSince = Math.round((today - new Date(lastChange).setHours(0,0,0,0)) / 86400000);
-        if(daysSince > 5){
-          alerts.push({
-            type:'stuck_scoping', severity:'warning',
-            key: alertKey('stuck_scoping', item.id),
-            title: item.title, itemId: item.id,
-            message: `Stuck in Scoping for ${daysSince} days — no update recorded`,
-            owner: item.owner, status: item.status,
-          });
-        }
-      }
-    }
-
-    // 3. No update in 14 days (for In Progress items)
-    if(item.status === 'In Progress' && !isDismissed('no_update', item.id)){
-      const lastChange = item.updatedAt || item.createdAt;
-      if(lastChange){
-        const daysSince = Math.round((today - new Date(lastChange).setHours(0,0,0,0)) / 86400000);
-        if(daysSince > 14){
-          alerts.push({
-            type:'no_update', severity:'warning',
-            key: alertKey('no_update', item.id),
-            title: item.title, itemId: item.id,
-            message: `No update for ${daysSince} days while In Progress`,
-            owner: item.owner, status: item.status,
-          });
-        }
-      }
-    }
-  });
-
-  // Sort: critical first
-  alerts.sort((a,b) => a.severity==='critical' && b.severity!=='critical' ? -1 : 1);
-  return alerts;
-}
-
-function dismissAlert(key){
-  const dimissedKey = `dismissed_alerts_${new Date().toISOString().slice(0,10)}`;
-  const dismissed = JSON.parse(localStorage.getItem(dimissedKey)||'[]');
-  if(!dismissed.includes(key)) dismissed.push(key);
-  localStorage.setItem(dimissedKey, JSON.stringify(dismissed));
-}
-
-/* ── Build email notification groups (existing, unchanged) ── */
+/* ── Build email notification groups ── */
 function buildNotifications(){
   const active = D.filter(i => !isArchived(i));
   const groups = {};
@@ -3501,60 +3684,7 @@ function buildNotifications(){
   return groups;
 }
 
-function formatItemLine(item, showDue=true){
-  const days = daysUntil(item.due);
-  const dueStr = showDue && item.due ? ` (due ${fd2(item.due)}${days!==null?`, ${Math.abs(days)}d ${days<0?'overdue':'remaining'}`:''})`:'';
-  return `  • ${item.title}${dueStr} — ${item.status}, ${item.priority} priority`;
-}
-
-function openNotificationEmail(email, ownerName, cats){
-  const catOrder = ['overdue7','overdue','due2','due7'];
-  const catConfig = {
-    overdue7: { label:'🔴 Overdue by more than 7 days' },
-    overdue:  { label:'🟠 Overdue' },
-    due2:     { label:'🟡 Due within 2 days' },
-    due7:     { label:'📅 Due within 7 days' },
-  };
-
-  const firstName = ownerName.split(' ')[0];
-  const totalItems = Object.values(cats).flat().length;
-
-  const bodyLines = [`Hi ${firstName},`,``,`Please see below a summary of your Risk Tracker items that need attention:`,``];
-  catOrder.forEach(cat => {
-    if(!cats[cat]) return;
-    bodyLines.push(catConfig[cat].label);
-    cats[cat].forEach(item => bodyLines.push(formatItemLine(item)));
-    bodyLines.push('');
-  });
-  bodyLines.push(`View and update your items here: ${TRACKER_URL}`);
-  bodyLines.push('');
-  const creds = USER_CREDS[email];
-  if(creds && creds.username){
-    bodyLines.push('Your login details:');
-    bodyLines.push(`  Username: ${creds.username}`);
-    bodyLines.push(`  Password: ${creds.password}`);
-    bodyLines.push('');
-  }
-  bodyLines.push('Thanks,');
-  bodyLines.push('Angstrom Risk Tracker');
-
-  const urgentCats = cats.overdue7 || cats.overdue;
-  const subject = urgentCats
-    ? `⚠️ ACTION REQUIRED — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Need Your Attention`
-    : `📅 REMINDER — ${totalItems} Risk Tracker Item${totalItems!==1?'s':''} Due Soon`;
-
-  const a = document.createElement('a');
-  a.href = buildMailto(email, subject, bodyLines.join('\n'));
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => a.remove(), 500);
-}
-
-/* ── Sent tracking ── */
-function getSentKey(email){ return `notif_sent_${email}_${new Date().toISOString().slice(0,10)}`; }
-function markSent(email){ localStorage.setItem(getSentKey(email), '1'); }
-function wasSentToday(email){ return !!localStorage.getItem(getSentKey(email)); }
+/* ── (Email sending function and sent tracking are defined below) ── */
 function clearSent(email){ localStorage.removeItem(getSentKey(email)); }
 
 /* ── Done tracking — marks a specific item's alert as resolved for the day ── */
@@ -3587,7 +3717,8 @@ function openNotifCentre(){
       <div style="background:var(--bg2);border-radius:12px;width:420px;box-shadow:0 8px 40px rgba(0,0,0,.18);font-family:'Outfit',sans-serif;overflow:hidden">
         <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
           <div style="font-size:15px;font-weight:600;color:var(--text)">Notifications</div>
-          <div style="display:flex;align-items:center;gap:8px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <button onclick="toggleAutoEmail();this.querySelector('span').textContent=isAutoEmailEnabled()?'ON':'OFF';this.style.borderColor=isAutoEmailEnabled()?'rgba(42,138,82,.4)':'';this.style.color=isAutoEmailEnabled()?'#3aaf6a':''" style="font-size:11px;background:none;border:1px solid ${isAutoEmailEnabled()?'rgba(42,138,82,.4)':'var(--border)'};border-radius:5px;padding:4px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:${isAutoEmailEnabled()?'#3aaf6a':'var(--text3)'};display:flex;align-items:center;gap:4px">✉ Auto-email: <span>${isAutoEmailEnabled()?'ON':'OFF'}</span></button>
             <button onclick="toggleSlack();this.querySelector('span').textContent=isSlackEnabled()?'ON':'OFF';this.style.borderColor=isSlackEnabled()?'rgba(42,138,82,.4)':'';this.style.color=isSlackEnabled()?'#3aaf6a':''" style="font-size:11px;background:none;border:1px solid ${isSlackEnabled()?'rgba(42,138,82,.4)':'var(--border)'};border-radius:5px;padding:4px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:${isSlackEnabled()?'#3aaf6a':'var(--text3)'};display:flex;align-items:center;gap:4px">🔔 Slack: <span>${isSlackEnabled()?'ON':'OFF'}</span></button>
             <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer">✕</button>
           </div>
@@ -3665,7 +3796,8 @@ function openNotifCentre(){
           <span style="font-size:15px;font-weight:600;color:var(--text)">Notifications</span>
           <span style="font-size:11px;background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-weight:600">${totalCount}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <button onclick="toggleAutoEmail();this.querySelector('span').textContent=isAutoEmailEnabled()?'ON':'OFF';this.style.borderColor=isAutoEmailEnabled()?'rgba(42,138,82,.4)':'';this.style.color=isAutoEmailEnabled()?'#3aaf6a':''" style="font-size:11px;background:none;border:1px solid ${isAutoEmailEnabled()?'rgba(42,138,82,.4)':'var(--border)'};border-radius:5px;padding:4px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:${isAutoEmailEnabled()?'#3aaf6a':'var(--text3)'};display:flex;align-items:center;gap:4px">✉ Auto-email: <span>${isAutoEmailEnabled()?'ON':'OFF'}</span></button>
           <button onclick="toggleSlack();this.querySelector('span').textContent=isSlackEnabled()?'ON':'OFF';this.style.borderColor=isSlackEnabled()?'rgba(42,138,82,.4)':'';this.style.color=isSlackEnabled()?'#3aaf6a':''" style="font-size:11px;background:none;border:1px solid ${isSlackEnabled()?'rgba(42,138,82,.4)':'var(--border)'};border-radius:5px;padding:4px 9px;cursor:pointer;font-family:'Outfit',sans-serif;color:${isSlackEnabled()?'#3aaf6a':'var(--text3)'};display:flex;align-items:center;gap:4px">🔔 Slack: <span>${isSlackEnabled()?'ON':'OFF'}</span></button>
           <button onclick="document.getElementById('notif-overlay').remove()" style="background:none;border:none;font-size:18px;color:var(--text3);cursor:pointer;line-height:1">✕</button>
         </div>
@@ -3726,8 +3858,6 @@ function openNotifCentre(){
     });
   });
 }
-
-function refreshCard(overlay, email, group){ /* handled by reopen */ }
 
 function formatItemLine(item, showDue=true){
   const days = daysUntil(item.due);
@@ -3799,6 +3929,7 @@ function clearSent(email){ localStorage.removeItem(getSentKey(email)); }
 ════════════════════════════════════════ */
 function startDailyScheduler(){
   if(localStorage.getItem(AUTO_FIRED_KEY)) return;
+  if(!isAutoEmailEnabled()) return;
 
   function msUntil955amUK(){
     const now = new Date();
@@ -4148,7 +4279,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     rb.textContent = 'Admin'; rb.className = 'rbadge r-admin';
     document.querySelectorAll('.adminonly').forEach(el=>el.classList.add('show'));
     document.querySelectorAll('.adminonly-blk').forEach(el=>el.classList.add('show'));
-    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); restoreFilterState(); ra(); loadUserEmails(); startDailyScheduler(); loadSavedViews().then(applyDefaultView); checkOverdueSlack(); updateSlackToggleUI(); })
+    loadFromSupabase().then(()=>{ subscribeRealtime(); buildOwnerFilter(); restoreFilterState(); ra(); loadUserEmails(); startDailyScheduler(); loadSavedViews().then(applyDefaultView); loadGlossary(); checkOverdueSlack(); updateSlackToggleUI(); })
       .catch(err=>{ console.warn('DEV_BYPASS: Supabase unavailable, running with empty data.', err); ra(); });
   }
 });
@@ -4493,7 +4624,7 @@ function renderComments(){
 /* ── Post a new comment ── */
 async function postComment(){
   const input = document.getElementById('cinput');
-  const body = input.value.trim();
+  const body = (input.innerText || input.value || '').trim();
   if(!body) return;
   const itemId = document.getElementById('dItemId').value;
   if(!itemId){ showToast('Save the item first before commenting','amber'); return; }
@@ -4512,10 +4643,8 @@ async function postComment(){
     }]).select().single();
     if(error) throw error;
     itemComments.push(data);
-    input.value = '';
-    autoGrowTextarea(input);
+    input.innerHTML = '';
     renderComments();
-    // Create notifications for @mentions
     createMentionNotifications(itemId, data.id, body);
   }catch(ex){
     showToast('Comment failed: '+(ex.message||ex),'red');
@@ -4528,9 +4657,8 @@ function startEditComment(commentId){
   if(!c) return;
   editingCommentId = commentId;
   const input = document.getElementById('cinput');
-  input.value = c.body;
+  input.innerText = c.body;
   input.focus();
-  autoGrowTextarea(input);
   document.querySelector('.cinput-hint').textContent = 'Editing comment · Press Escape to cancel';
 }
 
@@ -4543,7 +4671,6 @@ async function saveEditComment(commentId, newBody){
     cancelEditComment();
     renderComments();
     showToast('Comment updated','green');
-    // Check for new @mentions in edited text
     const itemId = document.getElementById('dItemId').value;
     createMentionNotifications(itemId, commentId, newBody);
   }catch(ex){
@@ -4554,9 +4681,16 @@ async function saveEditComment(commentId, newBody){
 function cancelEditComment(){
   editingCommentId = null;
   const input = document.getElementById('cinput');
-  input.value = '';
-  autoGrowTextarea(input);
-  document.querySelector('.cinput-hint').textContent = 'Press Enter to send · Shift+Enter for new line · @ to mention';
+  input.innerHTML = '';
+  document.querySelector('.cinput-hint').textContent = 'Enter to send · Shift+Enter for new line · @ to mention · Use toolbar for formatting';
+}
+
+/* ── Rich text command ── */
+function rtCmd(cmd, targetId){
+  if(targetId){
+    document.getElementById(targetId)?.focus();
+  }
+  document.execCommand(cmd, false, null);
 }
 
 /* ── Delete comment ── */
@@ -4571,12 +4705,6 @@ async function deleteComment(commentId){
   }catch(ex){
     showToast('Delete failed: '+(ex.message||ex),'red');
   }
-}
-
-/* ── Auto-grow textarea ── */
-function autoGrowTextarea(el){
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120)+'px';
 }
 
 /* ════════════════════════════════════════
@@ -5181,6 +5309,16 @@ function updateSlackToggleUI(){
   // Slack toggle is now rendered inline in the notification panel — no persistent DOM element needed
 }
 
+/* ── Auto-email toggle (persisted in localStorage) ── */
+function isAutoEmailEnabled(){ return localStorage.getItem('auto_email_enabled') !== '0'; } // ON by default
+function toggleAutoEmail(){
+  const on = !isAutoEmailEnabled();
+  localStorage.setItem('auto_email_enabled', on ? '1' : '0');
+  showToast(on ? 'Daily auto-email ON (9:55am)' : 'Daily auto-email OFF', on ? 'green' : 'amber');
+  // If turning on and scheduler hasn't fired today, start it
+  if(on && CU?.role==='admin') startDailyScheduler();
+}
+
 /* ── Trigger Slack notification by event type ── */
 function slackNotify(type, item, extra){
   if(!SLACK_WEBHOOK_URL) return;
@@ -5234,6 +5372,289 @@ function checkOverdueSlack(){
   D.filter(i => !isArchived(i) && isOv(i)).forEach(item => {
     slackNotify('overdue', item);
   });
+}
+
+/* ════════════════════════════════════════
+   GLOSSARY
+════════════════════════════════════════ */
+let glossary = [];
+const GLOSSARY_SEED = [
+  // ── Features (from Confluence + Jira RW board + cheat sheet) ──
+  {id:'F001',term:'ALM Recommended',fullName:'Auto Line Mover — Recommended Mode',category:'Feature',
+   def:'Automated pricing adjustment system that suggests line moves to traders based on betflow data, net liability thresholds, and customer stake factoring. Operates as recommendation-only — traders review and approve moves before execution. Triggered when net volume on a selection exceeds thresholds linked to max stake of unfactored customers.',
+   source:'Confluence: Overview - Action on Wagering/Liability v1'},
+  {id:'F002',term:'ALM Automated',fullName:'Auto Line Mover — Automated Mode',category:'Feature',
+   def:'Fully automated line movement that executes price adjustments without trader intervention. Moves are determined by betflow confidence (sharp/VIP/arber cohort weighting), time to kick-off, and lineup certainty. Prices diverge from the SIM independently. Includes auto-suspension when price divergence exceeds thresholds.',
+   source:'Confluence: Overview - Action on Wagering/Liability v1'},
+  {id:'F003',term:'Margin Config (In Fixture)',fullName:'In-Fixture Margin Configuration',category:'Feature',
+   def:'Allows configuration and application of variable margins to pricing within a live fixture. Enables traders to adjust the bookmaker edge on specific markets during in-play trading.',
+   source:'Confluence: Margin Application'},
+  {id:'F004',term:'Alerts — Liability',fullName:'Liability Alerting',category:'Feature',
+   def:'Notification system that alerts traders when net liabilities on a selection or market exceed defined thresholds. Enables reactive pricing and suspension decisions based on real-time exposure data.',
+   source:'Confluence: Overview - Liability Adjustments'},
+  {id:'F005',term:'Alerts — Sharp/Threshold',fullName:'Sharp Betflow & Stake Threshold Alerting',category:'Feature',
+   def:'Alerts triggered by wagering activity from stake-factored (sharp) customers or when individual bet stakes exceed configured thresholds. Tightly coupled with ALM — provides the signal layer that feeds automated and manual responses.',
+   source:'Confluence: Overview - Action on Wagering/Liability v1'},
+  {id:'F006',term:'MPA',fullName:'Manual Price Adjustment',category:'Feature',
+   def:'Trader tool for manually adjusting singles pricing on individual selections. Built as a sport-agnostic platform — the same interface works across all sports. Covers pre-match only, singles only. Includes Swish market replacement targeting. Currently accessible via the Portal for NFL & NBA.',
+   source:'Cheat sheet + Confluence: Manual Adjustments (Single Price Movement)'},
+  {id:'F007',term:'Multi Game Trading',fullName:'Multi Game Trading Console',category:'Feature',
+   def:'Central console allowing traders to view and adjust mainline 6-pack pricing across multiple fixtures within a sport on a single screen. Price adjustments persist through new simulations until manually removed. Available pre-match and in-play. An earnout deliverable.',
+   source:'Confluence: Business Case - Multi Game Trading'},
+  {id:'F008',term:'MALO',fullName:'Manual Ledger Overlay',category:'Feature',
+   def:'Manual settlement and ledger management tool in the New UI. Allows traders to manually settle markets and manage ledger entries. Initially read-only, with editable capabilities planned.',
+   source:'Cheat sheet'},
+  {id:'F009',term:'Settlement Alerts',fullName:'Settlement Alerting System',category:'Feature',
+   def:'Alerts for end-of-game settlement conflicts and updates to third-party stats that may affect settlement outcomes. Includes two epics: End of Game Conflicts (RW-740) and Update of 3rd Party Stats (RW-741).',
+   source:'Jira RW board'},
+  {id:'F010',term:'Competitor View',fullName:'Market Consensus / Competitor View',category:'Feature',
+   def:'Dashboard comparing Angstrom pricing against competitor market prices. Feeds into trader alerting to flag significant pricing discrepancies. Will link to the trader alerting system for automated notifications on divergence.',
+   source:'Cheat sheet'},
+  {id:'F011',term:'In Fixture Margin Adjustment',fullName:'In-Fixture Margin Adjustment',category:'Feature',
+   def:'Ability to adjust margins on markets during a live fixture. Separate from the pre-match margin configuration — this operates in the in-play trading context.',
+   source:'Feature list'},
+  {id:'F012',term:'MALA',fullName:'Manual Ledger Adjustment',category:'Feature',
+   def:'Tool for adjusting in-play stats and correcting mismatches against third-party data sources. Allows traders to correct when data providers (e.g. Radar) have errors, increasing market uptime. Includes read-only view and editable modes across ATP UI and LedgerManager components.',
+   source:'Cheat sheet + Jira RW board (RW-746 to RW-758)'},
+  {id:'F014',term:'Alerts — Arb/Comp Diff',fullName:'Arbitrage & Competitor Difference Alerting',category:'Feature',
+   def:'Alerts based on pricing differences between Angstrom and competitors that may indicate arbitrage opportunities or significant market divergence.',
+   source:'Feature list'},
+  {id:'F015',term:'Auto Suspension',fullName:'Automated Market Suspension',category:'Feature',
+   def:'System that automatically suspends markets based on defined triggers: betflow-based liability thresholds (MDE driven), price divergence from SIM, negatively correlated parlay detection, and IPP suspension rules. Includes manual override capability. NFL complete, NBA ongoing.',
+   source:'Cheat sheet + Confluence: Auto-Suspensions (PM/IP)'},
+  {id:'F016',term:'In Fixture Liability',fullName:'In-Fixture Liability View',category:'Feature',
+   def:'Real-time display of net liabilities per selection during a live fixture, covering both singles and parlay/SGP exposure. Part of the broader liability tooling initiative.',
+   source:'Feature list + Confluence: Overview - Liability Adjustments'},
+  {id:'F017',term:'Liability View',fullName:'Liability View Dashboard',category:'Feature',
+   def:'Dashboard displaying net liabilities per selection per market. Shows relevant wagers (by size, individual liability, stake factoring). Covers all Angstrom markets — singles, SGP, pre-match, and in-play. An earnout deliverable valued at $2M.',
+   source:'Confluence: Overview - Liability Adjustments'},
+  {id:'F018',term:'Bet Explorer',fullName:'Bet Explorer',category:'Feature',
+   def:'Tool for exploring and analysing individual bets and betting patterns across markets and fixtures.',
+   flag:'Limited documentation found in Confluence. Definition based on feature list context only.'},
+  {id:'F019',term:'Bet Ticker',fullName:'Bet Ticker',category:'Feature',
+   def:'Real-time feed displaying bets as they are placed, allowing traders to monitor wagering activity live. Part of the trader tooling suite.',
+   flag:'Limited documentation found in Confluence. Definition based on feature list context only.'},
+  {id:'F020',term:'Margin Config Hub',fullName:'Margin Configuration Hub',category:'Feature',
+   def:'Central configuration interface for managing margin settings across sports, markets, and market classes.',
+   flag:'Limited documentation found in Confluence. Definition based on feature list context only.'},
+
+  // ── Trading concepts ──
+  {id:'T001',term:'SIM',fullName:'Simulation Engine',category:'Trading',
+   def:'The core pricing model that generates odds for all markets. Produces the base price before any manual adjustments, margin application, or ALM modifications. ALM prices can diverge from SIM prices independently.'},
+  {id:'T002',term:'SIM Weighting',fullName:'Simulation Weighting / Parlay Pricing',category:'Trading',
+   def:'The weighting system used to price parlays (multi-leg bets). Determines how individual selection prices combine into parlay odds. Has significant dependencies across the platform.',
+   source:'Confluence: SIM Weighting page (empty) + Cheat sheet'},
+  {id:'T003',term:'Betflow',fullName:'Bet Flow Data',category:'Data',
+   def:'Real-time stream of wagering activity data from Entain/BetMGM. Includes bet placement details, stake amounts, customer cohort information (sharp/VIP/arber/standard), and timing. Critical input for ALM, liability calculations, and trader alerting.'},
+  {id:'T004',term:'Stake Factoring',fullName:'Customer Stake Factoring',category:'Trading',
+   def:'System that assigns weighting factors to customers based on their betting profile (sharp, VIP, arber, standard). Used by ALM to determine the size of automated price adjustments — bets from higher-factored customers trigger larger moves.'},
+  {id:'T005',term:'Confidence',fullName:'Price Confidence Score',category:'Trading',
+   def:'A measure of how reliable the current price is, determined by time to live (time until fixture starts), lineup certainty, and the volume/quality of betflow data. Higher confidence means smaller ALM adjustments; lower confidence means larger moves.',
+   source:'Confluence: Overview - Action on Wagering/Liability v1'},
+  {id:'T006',term:'6-Pack',fullName:'6-Pack Markets / Mainline Markets',category:'Trading',
+   def:'The six core market types for a fixture (e.g. moneyline, spread, total). These are the primary markets displayed to customers and the focus of the Multi Game Trading console.'},
+  {id:'T007',term:'SGP',fullName:'Same Game Parlay',category:'Trading',
+   def:'A parlay bet where all selections come from the same fixture. SGP pricing is handled separately from singles pricing. ALM adjustments to singles do not currently flow through to SGP pricing.'},
+  {id:'T008',term:'Player Props',fullName:'Player Proposition Markets',category:'Trading',
+   def:'Markets based on individual player performance (e.g. passing yards, rebounds, strikeouts). Historically vulnerable to exploitable early-season pricing, particularly in NBA. The initial focus for ALM deployment.'},
+  {id:'T009',term:'Player Milestones',fullName:'Player Milestone Markets',category:'Trading',
+   def:'Markets based on players reaching specific statistical thresholds during a game (e.g. 1+/2+/3+ touchdowns, first TD scorer). Related to player props — built on the sport-agnostic platform so NBA milestones architecture works for NFL too.'},
+
+  // ── Platform / Infrastructure ──
+  {id:'P001',term:'ATP',fullName:'Angstrom Trading Platform (New UI)',category:'Feature',
+   def:'The new trader-facing user interface replacing the legacy workbook. Hosts MALA, liability views, ALM controls, suspension management, and multi-game trading. All new features are built for ATP.'},
+  {id:'P002',term:'Trader SOS',fullName:'Trader SOS Dashboard',category:'Feature',
+   def:'The trader operations dashboard providing visibility on pricing, suspension, publishing, and liabilities. Serves as the primary interface for trader monitoring and intervention. Being enhanced to support Multi Game Trading.',
+   source:'Confluence: Overview - Trader SOS'},
+  {id:'P003',term:'Market Data',fullName:'Market Data Pipeline',category:'Data',
+   def:'Combination of internal and external data payloads that populate the New UI. Intended to be the source of truth for all pricing data. Currently tracked as an epic under MPA on the Jira board.',
+   source:'Cheat sheet'},
+  {id:'P004',term:'SIM Fast Track',fullName:'SIM Fast Track / Competitor Scraping',category:'Feature',
+   def:'System for scraping competitor pricing to generate prices for markets not yet covered by the SIM. Prototype by Darragh. Initially targeted at NCAAF player props (passing yards, passing TDs, receiving yards, rushing yards, 1+/2+/3+ TDs, first TD scorer).',
+   source:'Cheat sheet'},
+  {id:'P005',term:'MDE',fullName:'Market Data Engine',category:'Data',
+   def:'The engine responsible for processing and distributing market data. Drives betflow-based liability suspension of individual markets. Core dependency for auto-suspension and liability features.'},
+
+  // ── Dashboards ──
+  {id:'D001',term:'Settlement Dashboard',fullName:'Settlement Dashboard (MALO)',category:'Dashboard',
+   def:'Dashboard for monitoring and managing market settlement outcomes. Part of the MALO feature set.'},
+  {id:'D002',term:'Liabilities Dashboard',fullName:'Liabilities Dashboard',category:'Dashboard',
+   def:'Dashboard displaying real-time liability exposure across markets, selections, and fixtures.'},
+  {id:'D003',term:'ALM Dashboard',fullName:'ALM Dashboard',category:'Dashboard',
+   def:'Dashboard for monitoring ALM activity — automated price moves, suspension triggers, and recommendation history.'},
+  {id:'D004',term:'Suspension Dashboard',fullName:'Suspension Dashboard',category:'Dashboard',
+   def:'Dashboard showing current suspension states across all markets, with history and override controls.'},
+  {id:'D005',term:'Market Consensus Dashboard',fullName:'Market Consensus Dashboard',category:'Dashboard',
+   def:'Dashboard comparing Angstrom pricing against competitor consensus. Feeds into trader alerting.'},
+
+  // ── Operations ──
+  {id:'O001',term:'Player Transfer Tool',fullName:'Player Transfer Tool',category:'Ops',
+   def:'Tool for managing player transfers and their impact on market pricing. Built by Neal\'s team.',
+   source:'Cheat sheet'},
+  {id:'O002',term:'Workbook',fullName:'Trader Workbook (Legacy)',category:'Ops',
+   def:'The legacy Excel-based trader interface for managing pricing, suspensions, and market operations. Being replaced by the ATP (New UI). Ongoing upgrades continue in parallel with ATP development.',
+   source:'Cheat sheet + Confluence: Trader Workbook Overview'},
+];
+
+let glossaryNextId = 100;
+let editingGlossId = null;
+
+/* ── Load glossary from Supabase (seed if empty) ── */
+async function loadGlossary(){
+  try{
+    const {data,error} = await sbc.from('glossary').select('*').order('id');
+    if(error) throw error;
+    if(data && data.length > 0){
+      glossary = data.map(r=>({id:r.id, term:r.term, fullName:r.full_name||'', category:r.category, def:r.definition, source:r.source||'', flag:r.flag||''}));
+    } else {
+      // First load — seed from hardcoded data
+      glossary = [...GLOSSARY_SEED];
+      await seedGlossary();
+    }
+  }catch(ex){
+    console.warn('Glossary load failed, using seed data:', ex);
+    glossary = [...GLOSSARY_SEED];
+  }
+}
+
+async function seedGlossary(){
+  try{
+    const rows = GLOSSARY_SEED.map(g=>({id:g.id, term:g.term, full_name:g.fullName||'', category:g.category, definition:g.def, source:g.source||null, flag:g.flag||null}));
+    await sbc.from('glossary').insert(rows);
+  }catch(ex){ console.warn('Glossary seed failed:', ex); }
+}
+
+function renderGlossary(){
+  const q = (document.getElementById('glossarySearch')?.value||'').toLowerCase();
+  const catFilter = document.getElementById('glossaryCatFilter')?.value||'';
+  let filtered = glossary;
+  if(q) filtered = filtered.filter(g=>g.term.toLowerCase().includes(q)||g.def.toLowerCase().includes(q)||(g.fullName||'').toLowerCase().includes(q));
+  if(catFilter) filtered = filtered.filter(g=>g.category===catFilter);
+
+  // Populate category filter
+  const catSel = document.getElementById('glossaryCatFilter');
+  if(catSel && catSel.options.length <= 1){
+    const cats = [...new Set(glossary.map(g=>g.category))].sort();
+    cats.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o); });
+  }
+
+  const list = document.getElementById('glossaryList');
+  const empty = document.getElementById('glossaryEmpty');
+  const isAdmin = CU?.role==='admin';
+
+  if(filtered.length===0){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+
+  const sorted = [...filtered].sort((a,b)=>a.term.localeCompare(b.term));
+  const catClass = {Feature:'gloss-cat-feature',Trading:'gloss-cat-trading',Data:'gloss-cat-data',Ops:'gloss-cat-ops',Dashboard:'gloss-cat-dashboard'};
+
+  list.innerHTML = `<div class="gloss-grid">${sorted.map(g=>`
+    <div class="gloss-card" data-id="${g.id}">
+      <div class="gloss-hdr">
+        <span class="gloss-id">${g.id}</span>
+        <span class="gloss-term">${esc(g.term)}</span>
+        <span class="gloss-cat ${catClass[g.category]||''}">${g.category}</span>
+      </div>
+      ${g.fullName && g.fullName!==g.term?`<div style="font-size:12px;color:var(--text3);margin-bottom:6px;font-style:italic">${esc(g.fullName)}</div>`:''}
+      <div class="gloss-def">${esc(g.def)}</div>
+      ${g.flag?`<div class="gloss-flag">⚠ ${esc(g.flag)}</div>`:''}
+      ${g.source?`<div style="font-size:10px;color:var(--text3);margin-top:4px">Source: ${esc(g.source)}</div>`:''}
+      ${isAdmin?`<div class="gloss-actions">
+        <button class="gloss-act" onclick="editGlossary('${g.id}')">Edit</button>
+        <button class="gloss-act del" onclick="deleteGlossary('${g.id}')">Delete</button>
+      </div>`:''}
+    </div>`).join('')}</div>`;
+}
+
+function openGlossaryForm(existing){
+  editingGlossId = existing ? existing.id : null;
+  document.getElementById('glossFormSlot')?.replaceChildren();
+  const form = document.createElement('div');
+  form.className='gloss-form'; form.id='glossForm';
+  form.innerHTML=`
+    <div class="gloss-form-grid">
+      <div><label class="dlabel">Term *</label><input class="dinput" id="gf_term" value="${existing?esc(existing.term):''}" placeholder="e.g. ALM"></div>
+      <div><label class="dlabel">Full Name</label><input class="dinput" id="gf_full" value="${existing?esc(existing.fullName||''):''}" placeholder="e.g. Auto Line Mover"></div>
+      <div><label class="dlabel">Category</label><input class="dinput" id="gf_cat" value="${existing?esc(existing.category):''}" placeholder="Feature / Trading / Data / Ops / Dashboard"></div>
+      <div class="gloss-form-full"><label class="dlabel">Definition *</label><textarea class="dtarea" id="gf_def" placeholder="What does this term mean…" style="min-height:80px">${existing?esc(existing.def):''}</textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btsave" onclick="saveGlossary()" style="padding:8px 18px;font-size:12px">${existing?'Update':'Add Term'}</button>
+      <button class="btcancel" onclick="document.getElementById('glossForm')?.remove()" style="padding:8px 14px;font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text3);cursor:pointer;font-family:'Outfit',sans-serif">Cancel</button>
+    </div>`;
+  document.getElementById('glossFormSlot').appendChild(form);
+  document.getElementById('gf_term').focus();
+}
+
+async function saveGlossary(){
+  const term=document.getElementById('gf_term').value.trim();
+  const full=document.getElementById('gf_full').value.trim();
+  const cat=document.getElementById('gf_cat').value.trim();
+  const def=document.getElementById('gf_def').value.trim();
+  if(!term||!def){showToast('Term and definition are required','red');return;}
+  if(editingGlossId){
+    const {error}=await sbc.from('glossary').update({term, full_name:full, category:cat||'Feature', definition:def}).eq('id',editingGlossId);
+    if(error){showToast('Save failed: '+error.message,'red');return;}
+    const g=glossary.find(x=>x.id===editingGlossId);
+    if(g){g.term=term;g.fullName=full;g.category=cat;g.def=def;}
+    showToast('Term updated','green');
+  } else {
+    const newId='C'+(glossaryNextId++);
+    const {error}=await sbc.from('glossary').insert([{id:newId, term, full_name:full, category:cat||'Feature', definition:def}]);
+    if(error){showToast('Save failed: '+error.message,'red');return;}
+    glossary.push({id:newId,term,fullName:full,category:cat||'Feature',def});
+    showToast('Term added','green');
+  }
+  editingGlossId=null;
+  document.getElementById('glossForm')?.remove();
+  renderGlossary();
+}
+
+function editGlossary(id){
+  const g=glossary.find(x=>x.id===id);
+  if(g) openGlossaryForm(g);
+}
+
+async function deleteGlossary(id){
+  const idx=glossary.findIndex(x=>x.id===id);
+  if(idx<0) return;
+  if(!confirm(`Delete "${glossary[idx].term}"?`)) return;
+  const {error}=await sbc.from('glossary').delete().eq('id',id);
+  if(error){showToast('Delete failed: '+error.message,'red');return;}
+  glossary.splice(idx,1);
+  renderGlossary();
+  showToast('Term deleted','amber');
+}
+
+/* ── Export glossary as printable PDF (opens print dialog) ── */
+function exportGlossaryPDF(){
+  const sorted=[...glossary].sort((a,b)=>a.term.localeCompare(b.term));
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Risk Glossary</title>
+    <style>body{font-family:Arial,sans-serif;padding:40px;color:#1a1814}
+    h1{font-size:22px;margin-bottom:4px}h2{font-size:11px;color:#888;margin-bottom:24px}
+    .entry{margin-bottom:16px;page-break-inside:avoid}
+    .term{font-size:14px;font-weight:700;margin-bottom:2px}
+    .full{font-size:11px;color:#888;font-style:italic;margin-bottom:4px}
+    .cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#3557d4;margin-bottom:4px}
+    .def{font-size:12px;line-height:1.6;color:#333}
+    .flag{font-size:11px;color:#b07d10;font-style:italic;margin-top:2px}
+    .src{font-size:10px;color:#999;margin-top:2px}
+    hr{border:none;border-top:1px solid #eee;margin:12px 0}
+    @media print{body{padding:20px}}</style></head><body>
+    <h1>📖 Angstrom Risk Glossary</h1>
+    <h2>Generated ${new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})} · ${sorted.length} terms</h2>
+    ${sorted.map(g=>`<div class="entry">
+      <div class="term">${g.id} — ${g.term}</div>
+      ${g.fullName&&g.fullName!==g.term?`<div class="full">${g.fullName}</div>`:''}
+      <div class="cat">${g.category}</div>
+      <div class="def">${g.def}</div>
+      ${g.flag?`<div class="flag">⚠ ${g.flag}</div>`:''}
+      ${g.source?`<div class="src">Source: ${g.source}</div>`:''}
+    </div><hr>`).join('')}
+    </body></html>`);
+  win.document.close();
+  setTimeout(()=>win.print(), 300);
 }
 </script>
 </body>
